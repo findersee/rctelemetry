@@ -58,6 +58,8 @@ DMA_HandleTypeDef hdma_usart1_tx;
 DMA_HandleTypeDef hdma_usart2_rx;
 
 osThreadId defaultTaskHandle;
+osThreadId SendTelemetryHandle;
+osThreadId ParsePowerHandle;
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -72,6 +74,8 @@ static void MX_TIM2_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_USART2_UART_Init(void);
 void StartDefaultTask(void const * argument);
+void StartSendTelemetry(void const * argument);
+void StartPower(void const * argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -141,6 +145,14 @@ int main(void)
   /* definition and creation of defaultTask */
   osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+
+  /* definition and creation of SendTelemetry */
+  osThreadDef(SendTelemetry, StartSendTelemetry, osPriorityIdle, 0, 128);
+  SendTelemetryHandle = osThreadCreate(osThread(SendTelemetry), NULL);
+
+  /* definition and creation of ParsePower */
+  osThreadDef(ParsePower, StartPower, osPriorityIdle, 0, 128);
+  ParsePowerHandle = osThreadCreate(osThread(ParsePower), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -525,6 +537,42 @@ void StartDefaultTask(void const * argument)
     osDelay(1);
   }
   /* USER CODE END 5 */ 
+}
+
+/* USER CODE BEGIN Header_StartSendTelemetry */
+/**
+* @brief Function implementing the SendTelemetry thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartSendTelemetry */
+void StartSendTelemetry(void const * argument)
+{
+  /* USER CODE BEGIN StartSendTelemetry */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END StartSendTelemetry */
+}
+
+/* USER CODE BEGIN Header_StartPower */
+/**
+* @brief Function implementing the ParsePower thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartPower */
+void StartPower(void const * argument)
+{
+  /* USER CODE BEGIN StartPower */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END StartPower */
 }
 
 /**
