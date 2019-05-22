@@ -20,7 +20,7 @@ U 1 1 5CE3A7DE
 P 6750 2100
 F 0 "U302" H 6800 2350 50  0000 L CNN
 F 1 "ACS770xCB-100U-PSF" H 6800 1850 50  0000 L CNN
-F 2 "Sensor_Current:Allegro_CB_PSF" H 6750 2100 50  0001 C CNN
+F 2 "PCBDecals:Allegro_PFF" H 6750 2100 50  0001 C CNN
 F 3 "http://www.allegromicro.com/~/media/Files/Datasheets/ACS758-Datasheet.ashx?la=en" H 6750 2100 50  0001 C CNN
 	1    6750 2100
 	1    0    0    -1  
@@ -31,7 +31,7 @@ U 1 1 5CE3A9FD
 P 6650 4350
 F 0 "U304" H 6700 4600 50  0000 L CNN
 F 1 "ACS770xCB-100U-PSF" H 6700 4100 50  0000 L CNN
-F 2 "Sensor_Current:Allegro_CB_PSF" H 6650 4350 50  0001 C CNN
+F 2 "PCBDecals:Allegro_PFF" H 6650 4350 50  0001 C CNN
 F 3 "http://www.allegromicro.com/~/media/Files/Datasheets/ACS758-Datasheet.ashx?la=en" H 6650 4350 50  0001 C CNN
 	1    6650 4350
 	1    0    0    -1  
@@ -118,7 +118,7 @@ U 1 1 5CE3D224
 P 7100 2750
 F 0 "J301" H 7180 2742 50  0000 L CNN
 F 1 "Conn_01x02" H 7180 2651 50  0000 L CNN
-F 2 "Connectors_Phoenix:PhoenixContact_MCV-G_02x3.81mm_Vertical" H 7100 2750 50  0001 C CNN
+F 2 "PCBDecals:2Pin_4mm" H 7100 2750 50  0001 C CNN
 F 3 "~" H 7100 2750 50  0001 C CNN
 	1    7100 2750
 	1    0    0    -1  
@@ -129,7 +129,7 @@ U 1 1 5CE3D378
 P 7100 5050
 F 0 "J302" H 7180 5042 50  0000 L CNN
 F 1 "Conn_01x02" H 7180 4951 50  0000 L CNN
-F 2 "Connectors_Phoenix:PhoenixContact_MCV-G_02x3.81mm_Vertical" H 7100 5050 50  0001 C CNN
+F 2 "PCBDecals:2Pin_4mm" H 7100 5050 50  0001 C CNN
 F 3 "~" H 7100 5050 50  0001 C CNN
 	1    7100 5050
 	1    0    0    -1  
@@ -388,7 +388,7 @@ U 1 1 5CE5D469
 P 7850 5550
 F 0 "U305" H 7850 5700 50  0000 L CNN
 F 1 "OP179GRT" H 7850 5400 50  0000 L CNN
-F 2 "Package_TO_SOT_SMD:SOT-23-5" H 7850 5550 50  0001 C CNN
+F 2 "TO_SOT_Packages_SMD:SOT-23-5_HandSoldering" H 7850 5550 50  0001 C CNN
 F 3 "http://www.analog.com/media/en/technical-documentation/data-sheets/OP179_279.pdf" H 7850 5750 50  0001 C CNN
 	1    7850 5550
 	1    0    0    -1  
@@ -399,7 +399,7 @@ U 1 1 5CE5D4E3
 P 7950 3250
 F 0 "U303" H 7950 3400 50  0000 L CNN
 F 1 "OP179GRT" H 7950 3100 50  0000 L CNN
-F 2 "Package_TO_SOT_SMD:SOT-23-5" H 7950 3250 50  0001 C CNN
+F 2 "TO_SOT_Packages_SMD:SOT-23-5_HandSoldering" H 7950 3250 50  0001 C CNN
 F 3 "http://www.analog.com/media/en/technical-documentation/data-sheets/OP179_279.pdf" H 7950 3450 50  0001 C CNN
 	1    7950 3250
 	1    0    0    -1  
@@ -554,7 +554,7 @@ U 1 1 5CEB32A3
 P 3700 1150
 F 0 "U301" H 3700 1392 50  0000 C CNN
 F 1 "LF50_TO220" H 3700 1301 50  0000 C CNN
-F 2 "Package_TO_SOT_THT:TO-220-3_Vertical" H 3700 1375 50  0001 C CIN
+F 2 "digikey-footprints:TO-220-3" H 3700 1375 50  0001 C CIN
 F 3 "http://www.st.com/content/ccc/resource/technical/document/datasheet/c4/0e/7e/2a/be/bc/4c/bd/CD00000546.pdf/files/CD00000546.pdf/jcr:content/translations/en.CD00000546.pdf" H 3700 1100 50  0001 C CNN
 	1    3700 1150
 	1    0    0    -1  
@@ -632,4 +632,8 @@ F 3 "" H 2600 1150 50  0001 C CNN
 	1    2600 1150
 	1    0    0    -1  
 $EndComp
+Text Label 6300 2700 1    50   ~ 0
+ESC1_C_Negative
+Text Label 6200 5000 1    50   ~ 0
+ESC2_C_Negative
 $EndSCHEMATC

@@ -450,17 +450,6 @@ Wire Wire Line
 Connection ~ 3800 6800
 Wire Wire Line
 	4850 6150 4850 6100
-$Comp
-L Oscillator:TXC-7C X101
-U 1 1 5CE21410
-P 3900 2000
-F 0 "X101" H 4000 2250 50  0000 L CNN
-F 1 "TXC-7C" H 4000 1750 50  0000 L CNN
-F 2 "Oscillator:Oscillator_SMD_TXC_7C-4Pin_5.0x3.2mm" H 4600 1650 50  0001 C CNN
-F 3 "http://www.txccorp.com/download/products/osc/7C_o.pdf" H 3800 2000 50  0001 C CNN
-	1    3900 2000
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	4850 2000 4200 2000
 $Comp
@@ -592,7 +581,7 @@ U 1 1 5CE750E0
 P 4400 850
 F 0 "SW101" H 4400 1135 50  0000 C CNN
 F 1 "SW_Push" H 4400 1044 50  0000 C CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 4400 1050 50  0001 C CNN
+F 2 "digikey-footprints:Switch_Tactile_SMD_B3U-1000P" H 4400 1050 50  0001 C CNN
 F 3 "" H 4400 1050 50  0001 C CNN
 	1    4400 850 
 	1    0    0    -1  
@@ -651,14 +640,14 @@ Wire Wire Line
 	6150 2500 6050 2500
 Wire Wire Line
 	6050 2700 6150 2700
-Text GLabel 6150 3600 2    50   Output ~ 0
+Text GLabel 6150 2700 2    50   Output ~ 0
 OUT2
 Wire Wire Line
 	6150 2300 6050 2300
 Text GLabel 6150 3300 2    50   Output ~ 0
 HC_OUT1
 Text GLabel 6150 3400 2    50   Output ~ 0
-HC_OUT1
+HC_OUT2
 Text GLabel 6150 2300 2    50   Output ~ 0
 OUT1
 Wire Wire Line
@@ -667,11 +656,11 @@ Wire Wire Line
 	6150 3400 6050 3400
 Wire Wire Line
 	6150 3600 6050 3600
-Text GLabel 6150 2700 2    50   Output ~ 0
-OUT3
-Text GLabel 6150 2800 2    50   Output ~ 0
-OUT4
 Text GLabel 6150 2900 2    50   Output ~ 0
+OUT3
+Text GLabel 6150 3600 2    50   Output ~ 0
+OUT4
+Text GLabel 6150 2800 2    50   Output ~ 0
 OUT5
 Text GLabel 6150 3100 2    50   Output ~ 0
 OUT6
@@ -762,7 +751,7 @@ U 1 1 5CE9AC78
 P 9800 1450
 F 0 "JP101" V 9846 1403 50  0000 R CNN
 F 1 "Jumper_NC_Small" V 9755 1403 50  0000 R CNN
-F 2 "Pin_Headers:Pin_Header_Angled_1x02" H 9800 1450 50  0001 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x02" H 9800 1450 50  0001 C CNN
 F 3 "~" H 9800 1450 50  0001 C CNN
 	1    9800 1450
 	0    -1   -1   0   
@@ -842,4 +831,15 @@ F 3 "" H 4850 6100 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	4100 6150 4850 6150
+$Comp
+L Oscillator:TXC-7C X101
+U 1 1 5CE6962F
+P 3900 2000
+F 0 "X101" H 4241 2046 50  0000 L CNN
+F 1 "TXC-7C" H 4241 1955 50  0000 L CNN
+F 2 "PCBDecals:IQXO-791" H 4600 1650 50  0001 C CNN
+F 3 "http://www.txccorp.com/download/products/osc/7C_o.pdf" H 3800 2000 50  0001 C CNN
+	1    3900 2000
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
