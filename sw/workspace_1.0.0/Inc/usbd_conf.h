@@ -73,7 +73,7 @@
 /*---------- -----------*/
 #define USBD_DEBUG_LEVEL     0U
 /*---------- -----------*/
-#define USBD_SELF_POWERED     1U
+#define USBD_SELF_POWERED     0U
 
 /****************************************/
 /* #define for FS and HS identification */

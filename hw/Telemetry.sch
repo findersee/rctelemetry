@@ -842,4 +842,9 @@ F 3 "http://www.txccorp.com/download/products/osc/7C_o.pdf" H 3800 2000 50  0001
 	1    3900 2000
 	1    0    0    -1  
 $EndComp
+NoConn ~ 4850 2200
+NoConn ~ 6050 4000
+NoConn ~ 6050 4400
+NoConn ~ 6050 4500
+NoConn ~ 6050 4600
 $EndSCHEMATC
