@@ -204,32 +204,9 @@ Wire Wire Line
 	6650 2750 6900 2750
 Wire Wire Line
 	6650 3100 6650 3150
-Wire Wire Line
-	6650 3400 6650 3450
-$Comp
-L Device:C_Small C305
-U 1 1 5CE3E1F3
-P 6850 3300
-F 0 "C305" H 6758 3254 50  0000 R CNN
-F 1 "100n" H 6758 3345 50  0000 R CNN
-F 2 "Capacitors_SMD:C_0603_HandSoldering" H 6850 3300 50  0001 C CNN
-F 3 "~" H 6850 3300 50  0001 C CNN
-	1    6850 3300
-	-1   0    0    1   
-$EndComp
-Wire Wire Line
-	6650 3450 6850 3450
-Wire Wire Line
-	6850 3450 6850 3400
-Connection ~ 6650 3450
-Wire Wire Line
-	6650 3450 6650 3500
-Wire Wire Line
-	6850 3200 6850 3150
 Connection ~ 6650 3150
 Wire Wire Line
 	6650 3150 6650 3200
-Connection ~ 6850 3150
 $Comp
 L Device:R_Small R303
 U 1 1 5CE3EEED
@@ -265,42 +242,15 @@ F 3 "" H 6650 5800 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	6650 5400 6650 5450
-Wire Wire Line
-	6650 5700 6650 5750
-$Comp
-L Device:C_Small C308
-U 1 1 5CE3EF03
-P 6850 5600
-F 0 "C308" H 6758 5554 50  0000 R CNN
-F 1 "100n" H 6758 5645 50  0000 R CNN
-F 2 "Capacitors_SMD:C_0603_HandSoldering" H 6850 5600 50  0001 C CNN
-F 3 "~" H 6850 5600 50  0001 C CNN
-	1    6850 5600
-	-1   0    0    1   
-$EndComp
-Wire Wire Line
-	6650 5750 6850 5750
-Wire Wire Line
-	6850 5750 6850 5700
-Connection ~ 6650 5750
-Wire Wire Line
-	6650 5750 6650 5800
-Wire Wire Line
-	6850 5500 6850 5450
-Wire Wire Line
-	6850 5450 6650 5450
 Connection ~ 6650 5450
 Wire Wire Line
 	6650 5450 6650 5500
-Connection ~ 6850 5450
 Wire Wire Line
 	6200 5050 6200 4450
 Wire Wire Line
 	6300 2750 6300 2200
 Wire Wire Line
 	6300 2750 6650 2750
-Wire Wire Line
-	6850 3150 6650 3150
 Wire Wire Line
 	6200 5050 6650 5050
 Wire Wire Line
@@ -312,14 +262,10 @@ Text GLabel 8300 5550 2    50   Output ~ 0
 ESC2_VOLTAGE_OUT
 Text GLabel 8400 3250 2    50   Output ~ 0
 ESC1_VOLTAGE_OUT
-Text GLabel 7200 4350 2    50   Output ~ 0
+Text GLabel 8400 4350 2    50   Output ~ 0
 ESC2_CURRENT_OUT
-Text GLabel 7250 2100 2    50   Output ~ 0
+Text GLabel 8400 2100 2    50   Output ~ 0
 ESC1_CURRENT_OUT
-Wire Wire Line
-	7250 2100 7150 2100
-Wire Wire Line
-	7200 4350 7050 4350
 $Comp
 L Device:C_Small C303
 U 1 1 5CE5A73F
@@ -427,8 +373,6 @@ F 3 "" H 7750 5150 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	6850 5450 7550 5450
-Wire Wire Line
 	7550 5650 7500 5650
 Wire Wire Line
 	7500 5650 7500 6150
@@ -487,8 +431,6 @@ Wire Wire Line
 	8100 5200 8150 5200
 Wire Wire Line
 	8150 5200 8150 5250
-Wire Wire Line
-	6850 3150 7650 3150
 $Comp
 L power:GND #PWR0311
 U 1 1 5CE672DA
@@ -548,56 +490,12 @@ Wire Wire Line
 Connection ~ 8350 3250
 Wire Wire Line
 	8350 3250 8250 3250
-$Comp
-L Regulator_Linear:LF50_TO220 U301
-U 1 1 5CEB32A3
-P 3700 1150
-F 0 "U301" H 3700 1392 50  0000 C CNN
-F 1 "LF50_TO220" H 3700 1301 50  0000 C CNN
-F 2 "digikey-footprints:TO-220-3" H 3700 1375 50  0001 C CIN
-F 3 "http://www.st.com/content/ccc/resource/technical/document/datasheet/c4/0e/7e/2a/be/bc/4c/bd/CD00000546.pdf/files/CD00000546.pdf/jcr:content/translations/en.CD00000546.pdf" H 3700 1100 50  0001 C CNN
-	1    3700 1150
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:C_Small C301
-U 1 1 5CEB3613
-P 2950 1350
-F 0 "C301" H 2858 1304 50  0000 R CNN
-F 1 "100n" H 2858 1395 50  0000 R CNN
-F 2 "Capacitors_SMD:C_0603" H 2950 1350 50  0001 C CNN
-F 3 "~" H 2950 1350 50  0001 C CNN
-	1    2950 1350
-	-1   0    0    1   
-$EndComp
-$Comp
-L Device:CP C302
-U 1 1 5CEB371B
-P 4400 1350
-F 0 "C302" H 4518 1396 50  0000 L CNN
-F 1 "2u2" H 4518 1305 50  0000 L CNN
-F 2 "Capacitors_SMD:C_0805" H 4438 1200 50  0001 C CNN
-F 3 "~" H 4400 1350 50  0001 C CNN
-	1    4400 1350
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
-	4400 1200 4400 1150
+	2950 1250 2950 1050
 Wire Wire Line
-	4400 1150 4000 1150
+	2950 1050 2600 1050
 Wire Wire Line
-	2950 1250 2950 1150
-Wire Wire Line
-	2950 1150 3400 1150
-Wire Wire Line
-	2950 1150 2600 1150
-Connection ~ 2950 1150
-Wire Wire Line
-	3700 1450 3700 1550
-Wire Wire Line
-	3700 1550 4400 1550
-Wire Wire Line
-	4400 1550 4400 1500
+	3700 1550 4250 1550
 Wire Wire Line
 	3700 1550 2950 1550
 Wire Wire Line
@@ -616,24 +514,191 @@ F 3 "" H 3700 1600 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	3700 1600 3700 1550
-Text GLabel 4650 1150 2    50   Output ~ 0
+Text GLabel 4850 1050 2    50   Output ~ 0
 +5VA
 Wire Wire Line
-	4650 1150 4400 1150
-Connection ~ 4400 1150
+	4850 1050 4600 1050
 $Comp
 L power:VCC #PWR0301
 U 1 1 5CEBEF98
-P 2600 1150
-F 0 "#PWR0301" H 2600 1000 50  0001 C CNN
-F 1 "VCC" H 2617 1323 50  0000 C CNN
-F 2 "" H 2600 1150 50  0001 C CNN
-F 3 "" H 2600 1150 50  0001 C CNN
-	1    2600 1150
+P 2600 1050
+F 0 "#PWR0301" H 2600 900 50  0001 C CNN
+F 1 "VCC" H 2617 1223 50  0000 C CNN
+F 2 "" H 2600 1050 50  0001 C CNN
+F 3 "" H 2600 1050 50  0001 C CNN
+	1    2600 1050
 	1    0    0    -1  
 $EndComp
 Text Label 6300 2700 1    50   ~ 0
 ESC1_C_Negative
 Text Label 6200 5000 1    50   ~ 0
 ESC2_C_Negative
+$Comp
+L Device:R_Small R305
+U 1 1 5CEA144F
+P 7800 2100
+F 0 "R305" V 7604 2100 50  0000 C CNN
+F 1 "12k" V 7700 2100 50  0000 C CNN
+F 2 "Resistors_SMD:R_0603_HandSoldering" H 7800 2100 50  0001 C CNN
+F 3 "~" H 7800 2100 50  0001 C CNN
+	1    7800 2100
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R_Small R306
+U 1 1 5CEA1520
+P 7950 2250
+F 0 "R306" H 8009 2296 50  0000 L CNN
+F 1 "18k" H 8009 2205 50  0000 L CNN
+F 2 "Resistors_SMD:R_0603_HandSoldering" H 7950 2250 50  0001 C CNN
+F 3 "~" H 7950 2250 50  0001 C CNN
+	1    7950 2250
+	-1   0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0320
+U 1 1 5CEA15B7
+P 7950 2400
+F 0 "#PWR0320" H 7950 2150 50  0001 C CNN
+F 1 "GND" H 7955 2227 50  0000 C CNN
+F 2 "" H 7950 2400 50  0001 C CNN
+F 3 "" H 7950 2400 50  0001 C CNN
+	1    7950 2400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7150 2100 7700 2100
+Wire Wire Line
+	7900 2100 7950 2100
+Wire Wire Line
+	7950 2100 7950 2150
+Connection ~ 7950 2100
+Wire Wire Line
+	7950 2100 8400 2100
+Wire Wire Line
+	7950 2350 7950 2400
+$Comp
+L Device:R_Small R307
+U 1 1 5CEA9170
+P 7800 4350
+F 0 "R307" V 7604 4350 50  0000 C CNN
+F 1 "12k" V 7700 4350 50  0000 C CNN
+F 2 "Resistors_SMD:R_0603_HandSoldering" H 7800 4350 50  0001 C CNN
+F 3 "~" H 7800 4350 50  0001 C CNN
+	1    7800 4350
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R_Small R308
+U 1 1 5CEA9176
+P 7950 4500
+F 0 "R308" H 8009 4546 50  0000 L CNN
+F 1 "18k" H 8009 4455 50  0000 L CNN
+F 2 "Resistors_SMD:R_0603_HandSoldering" H 7950 4500 50  0001 C CNN
+F 3 "~" H 7950 4500 50  0001 C CNN
+	1    7950 4500
+	-1   0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0321
+U 1 1 5CEA917C
+P 7950 4650
+F 0 "#PWR0321" H 7950 4400 50  0001 C CNN
+F 1 "GND" H 7955 4477 50  0000 C CNN
+F 2 "" H 7950 4650 50  0001 C CNN
+F 3 "" H 7950 4650 50  0001 C CNN
+	1    7950 4650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7900 4350 7950 4350
+Wire Wire Line
+	7950 4350 7950 4400
+Connection ~ 7950 4350
+Wire Wire Line
+	7950 4350 8400 4350
+Wire Wire Line
+	7950 4600 7950 4650
+Wire Wire Line
+	7050 4350 7700 4350
+$Comp
+L Regulator_Linear:LP2985-5.0 U301
+U 1 1 5CEB555D
+P 3700 1150
+F 0 "U301" H 3700 1492 50  0000 C CNN
+F 1 "LP2985-5.0" H 3700 1401 50  0000 C CNN
+F 2 "TO_SOT_Packages_SMD:SOT-23-5_HandSoldering" H 3700 1475 50  0001 C CNN
+F 3 "http://www.ti.com/lit/ds/symlink/lp2985.pdf" H 3700 1150 50  0001 C CNN
+	1    3700 1150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4100 1050 4600 1050
+Connection ~ 4600 1050
+$Comp
+L Device:C_Small C302
+U 1 1 5CEBF878
+P 4250 1350
+F 0 "C302" H 4342 1396 50  0000 L CNN
+F 1 "10n" H 4342 1305 50  0000 L CNN
+F 2 "Capacitors_SMD:C_0603_HandSoldering" H 4250 1350 50  0001 C CNN
+F 3 "~" H 4250 1350 50  0001 C CNN
+	1    4250 1350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4100 1150 4250 1150
+Wire Wire Line
+	4250 1150 4250 1250
+Wire Wire Line
+	4250 1450 4250 1550
+Connection ~ 4250 1550
+Wire Wire Line
+	4250 1550 4600 1550
+Wire Wire Line
+	3300 1050 3150 1050
+Connection ~ 2950 1050
+Wire Wire Line
+	3300 1150 3150 1150
+Wire Wire Line
+	3150 1150 3150 1050
+Connection ~ 3150 1050
+Wire Wire Line
+	3150 1050 2950 1050
+$Comp
+L Device:C_Small C301
+U 1 1 5CEB3613
+P 2950 1350
+F 0 "C301" H 2858 1304 50  0000 R CNN
+F 1 "1u" H 2858 1395 50  0000 R CNN
+F 2 "Capacitors_SMD:C_0603" H 2950 1350 50  0001 C CNN
+F 3 "~" H 2950 1350 50  0001 C CNN
+	1    2950 1350
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:C_Small C309
+U 1 1 5CEC8EFA
+P 4600 1350
+F 0 "C309" H 4508 1304 50  0000 R CNN
+F 1 "2u2" H 4508 1395 50  0000 R CNN
+F 2 "Capacitors_SMD:C_0805" H 4600 1350 50  0001 C CNN
+F 3 "~" H 4600 1350 50  0001 C CNN
+	1    4600 1350
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	4600 1050 4600 1250
+Wire Wire Line
+	4600 1450 4600 1550
+Wire Wire Line
+	3700 1450 3700 1550
+Wire Wire Line
+	6650 5700 6650 5800
+Wire Wire Line
+	6650 5450 7550 5450
+Wire Wire Line
+	6650 3150 7650 3150
+Wire Wire Line
+	6650 3400 6650 3500
 $EndSCHEMATC

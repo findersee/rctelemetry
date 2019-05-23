@@ -279,7 +279,7 @@ U 1 1 5CE208B4
 P 3000 1200
 F 0 "J102" H 2920 875 50  0000 C CNN
 F 1 "BOOT0" H 2920 966 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x02" H 3000 1200 50  0001 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch1.00mm" H 3000 1200 50  0001 C CNN
 F 3 "~" H 3000 1200 50  0001 C CNN
 	1    3000 1200
 	-1   0    0    1   
@@ -421,12 +421,12 @@ F 3 "~" H 3950 6300 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	4100 6350 4400 6350
+	4100 6350 4200 6350
 Wire Wire Line
-	4100 6450 4400 6450
-Text Label 4400 6450 0    50   ~ 0
+	4100 6450 4200 6450
+Text Label 4200 6450 0    50   ~ 0
 USB_D-
-Text Label 4400 6350 0    50   ~ 0
+Text Label 4200 6350 0    50   ~ 0
 USB_D+
 $Comp
 L power:GND #PWR0113
@@ -448,8 +448,6 @@ Wire Wire Line
 Wire Wire Line
 	3800 6800 3800 6750
 Connection ~ 3800 6800
-Wire Wire Line
-	4850 6150 4850 6100
 Wire Wire Line
 	4850 2000 4200 2000
 $Comp
@@ -581,7 +579,7 @@ U 1 1 5CE750E0
 P 4400 850
 F 0 "SW101" H 4400 1135 50  0000 C CNN
 F 1 "SW_Push" H 4400 1044 50  0000 C CNN
-F 2 "digikey-footprints:Switch_Tactile_SMD_B3U-1000P" H 4400 1050 50  0001 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch1.27mm" H 4400 1050 50  0001 C CNN
 F 3 "" H 4400 1050 50  0001 C CNN
 	1    4400 850 
 	1    0    0    -1  
@@ -818,19 +816,8 @@ Text Label 6750 3200 0    50   ~ 0
 XDCS
 Text Label 6750 3500 0    50   ~ 0
 DREQ
-$Comp
-L power:VCC #PWR0112
-U 1 1 5CED9BFF
-P 4850 6100
-F 0 "#PWR0112" H 4850 5950 50  0001 C CNN
-F 1 "VCC" H 4867 6273 50  0000 C CNN
-F 2 "" H 4850 6100 50  0001 C CNN
-F 3 "" H 4850 6100 50  0001 C CNN
-	1    4850 6100
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
-	4100 6150 4850 6150
+	4100 6150 4200 6150
 $Comp
 L Oscillator:TXC-7C X101
 U 1 1 5CE6962F
@@ -847,4 +834,17 @@ NoConn ~ 6050 4000
 NoConn ~ 6050 4400
 NoConn ~ 6050 4500
 NoConn ~ 6050 4600
+Wire Wire Line
+	4200 6150 4200 6100
+$Comp
+L power:VBUS #PWR0112
+U 1 1 5CEEB052
+P 4200 6100
+F 0 "#PWR0112" H 4200 5950 50  0001 C CNN
+F 1 "VBUS" H 4215 6273 50  0000 C CNN
+F 2 "" H 4200 6100 50  0001 C CNN
+F 3 "" H 4200 6100 50  0001 C CNN
+	1    4200 6100
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
