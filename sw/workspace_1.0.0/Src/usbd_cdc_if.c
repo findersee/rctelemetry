@@ -100,7 +100,7 @@ uint8_t UserTxBufferFS[APP_TX_DATA_SIZE];
 
 /* USER CODE BEGIN PRIVATE_VARIABLES */
 
-uint8_t tempbuffer[7];
+uint8_t tempbuf[7];
 
 /* USER CODE END PRIVATE_VARIABLES */
 
