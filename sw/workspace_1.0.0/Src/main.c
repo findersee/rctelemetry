@@ -1091,6 +1091,15 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 uint16_t DAC_BUFFER[30];
+
+QueueHandle_t telemetryQueue;
+
+
+struct telemetryMessage
+{
+	char ID;
+};
+
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -1124,6 +1133,7 @@ void StartDefaultTask(void const * argument)
 void StartSendTelemetry(void const * argument)
 {
   /* USER CODE BEGIN StartSendTelemetry */
+	telemetryQueue = xQueueCreate(10,sizeof(telemetryMessage * ));
   /* Infinite loop */
   for(;;)
   {
