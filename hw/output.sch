@@ -926,17 +926,6 @@ F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/21978c.pdf, SOT-23-6" H 415
 	1    0    0    -1  
 $EndComp
 $Comp
-L Amplifier_Operational:OP179GRT U404
-U 1 1 5CEBD0B8
-P 5100 7150
-F 0 "U404" H 5100 7300 50  0000 L CNN
-F 1 "OP179GRT" H 5050 6950 50  0000 L CNN
-F 2 "TO_SOT_Packages_SMD:SOT-23-5_HandSoldering" H 5100 7150 50  0001 C CNN
-F 3 "http://www.analog.com/media/en/technical-documentation/data-sheets/OP179_279.pdf" H 5100 7350 50  0001 C CNN
-	1    5100 7150
-	1    0    0    -1  
-$EndComp
-$Comp
 L power:+5VA #PWR0418
 U 1 1 5CEBD950
 P 4000 5750
@@ -1215,4 +1204,15 @@ Wire Notes Line
 	550  7750 6700 7750
 Text Notes 600  5500 0    50   ~ 0
 SERVO OUTPUTS
+$Comp
+L Amplifier_Operational:MCP6001-OT U404
+U 1 1 5CEC9F24
+P 5100 7150
+F 0 "U404" H 5100 7300 50  0000 L CNN
+F 1 "MCP6001-OT" H 5100 7000 50  0001 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-5" H 5000 6950 50  0001 L CNN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/21733j.pdf" H 5100 7350 50  0001 C CNN
+	1    5100 7150
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

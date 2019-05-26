@@ -604,12 +604,12 @@ Wire Wire Line
 Text GLabel 6150 3600 2    50   Output ~ 0
 OUT2
 Wire Wire Line
-	6150 2300 6050 2300
+	7350 2300 6850 2300
 Text GLabel 6150 3300 2    50   Output ~ 0
 HC_OUT1
 Text GLabel 6150 3400 2    50   Output ~ 0
 HC_OUT2
-Text GLabel 6150 2300 2    50   Output ~ 0
+Text GLabel 7350 2300 2    50   Output ~ 0
 OUT1
 Wire Wire Line
 	6150 3300 6050 3300
@@ -756,7 +756,7 @@ COOLING_TEMP
 Wire Wire Line
 	7950 1200 7950 1800
 Wire Wire Line
-	6050 2400 8300 2400
+	6050 2400 7850 2400
 Wire Wire Line
 	8300 2400 8300 3850
 Wire Wire Line
@@ -950,4 +950,96 @@ Wire Wire Line
 	6150 4500 6050 4500
 Wire Wire Line
 	6050 4600 6150 4600
+$Comp
+L Connector:TestPoint TP102
+U 1 1 5CECADFA
+P 6850 2300
+F 0 "TP102" H 6908 2420 50  0000 L CNN
+F 1 "SWDIO" H 6908 2329 50  0000 L CNN
+F 2 "Wire_Pads:SolderWirePad_single_0-8mmDrill" H 7050 2300 50  0001 C CNN
+F 3 "~" H 7050 2300 50  0001 C CNN
+	1    6850 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint TP103
+U 1 1 5CECB040
+P 7850 2400
+F 0 "TP103" H 7908 2520 50  0000 L CNN
+F 1 "SWCLK" H 7908 2429 50  0000 L CNN
+F 2 "Wire_Pads:SolderWirePad_single_0-8mmDrill" H 8050 2400 50  0001 C CNN
+F 3 "~" H 8050 2400 50  0001 C CNN
+	1    7850 2400
+	1    0    0    -1  
+$EndComp
+Connection ~ 7850 2400
+Wire Wire Line
+	7850 2400 8300 2400
+Connection ~ 6850 2300
+Wire Wire Line
+	6850 2300 6050 2300
+$Comp
+L Connector:TestPoint TP101
+U 1 1 5CED0971
+P 4800 850
+F 0 "TP101" H 4858 970 50  0000 L CNN
+F 1 "RST" H 4858 879 50  0000 L CNN
+F 2 "Wire_Pads:SolderWirePad_single_0-8mmDrill" H 5000 850 50  0001 C CNN
+F 3 "~" H 5000 850 50  0001 C CNN
+	1    4800 850 
+	1    0    0    -1  
+$EndComp
+Connection ~ 4800 850 
+$Comp
+L Connector:TestPoint TP104
+U 1 1 5CED1B66
+P 4000 3300
+F 0 "TP104" H 4058 3420 50  0000 L CNN
+F 1 "3V3" H 4058 3329 50  0000 L CNN
+F 2 "Wire_Pads:SolderWirePad_single_0-8mmDrill" H 4200 3300 50  0001 C CNN
+F 3 "~" H 4200 3300 50  0001 C CNN
+	1    4000 3300
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3V3 #PWR0126
+U 1 1 5CED1EA6
+P 3800 3300
+F 0 "#PWR0126" H 3800 3150 50  0001 C CNN
+F 1 "+3V3" H 3815 3473 50  0000 C CNN
+F 2 "" H 3800 3300 50  0001 C CNN
+F 3 "" H 3800 3300 50  0001 C CNN
+	1    3800 3300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4000 3300 4000 3350
+Wire Wire Line
+	4000 3350 3800 3350
+Wire Wire Line
+	3800 3350 3800 3300
+$Comp
+L Connector:TestPoint TP105
+U 1 1 5CED7BFF
+P 4000 3600
+F 0 "TP105" H 4058 3720 50  0000 L CNN
+F 1 "GND" H 4058 3629 50  0000 L CNN
+F 2 "Wire_Pads:SolderWirePad_single_0-8mmDrill" H 4200 3600 50  0001 C CNN
+F 3 "~" H 4200 3600 50  0001 C CNN
+	1    4000 3600
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0127
+U 1 1 5CED7C70
+P 4000 3650
+F 0 "#PWR0127" H 4000 3400 50  0001 C CNN
+F 1 "GND" H 4005 3477 50  0000 C CNN
+F 2 "" H 4000 3650 50  0001 C CNN
+F 3 "" H 4000 3650 50  0001 C CNN
+	1    4000 3650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4000 3600 4000 3650
 $EndSCHEMATC

@@ -329,28 +329,6 @@ Connection ~ 6650 4000
 Wire Wire Line
 	6650 4000 6650 4050
 $Comp
-L Amplifier_Operational:OP179GRT U305
-U 1 1 5CE5D469
-P 7850 5550
-F 0 "U305" H 7850 5700 50  0000 L CNN
-F 1 "OP179GRT" H 7850 5400 50  0000 L CNN
-F 2 "TO_SOT_Packages_SMD:SOT-23-5_HandSoldering" H 7850 5550 50  0001 C CNN
-F 3 "http://www.analog.com/media/en/technical-documentation/data-sheets/OP179_279.pdf" H 7850 5750 50  0001 C CNN
-	1    7850 5550
-	1    0    0    -1  
-$EndComp
-$Comp
-L Amplifier_Operational:OP179GRT U303
-U 1 1 5CE5D4E3
-P 7950 3250
-F 0 "U303" H 7950 3400 50  0000 L CNN
-F 1 "OP179GRT" H 7950 3100 50  0000 L CNN
-F 2 "TO_SOT_Packages_SMD:SOT-23-5_HandSoldering" H 7950 3250 50  0001 C CNN
-F 3 "http://www.analog.com/media/en/technical-documentation/data-sheets/OP179_279.pdf" H 7950 3450 50  0001 C CNN
-	1    7950 3250
-	1    0    0    -1  
-$EndComp
-$Comp
 L power:+5VA #PWR0307
 U 1 1 5CE5E34B
 P 7850 2850
@@ -701,4 +679,26 @@ Wire Wire Line
 	6650 3150 7650 3150
 Wire Wire Line
 	6650 3400 6650 3500
+$Comp
+L Amplifier_Operational:MCP6001-OT U303
+U 1 1 5CEC3C95
+P 7950 3250
+F 0 "U303" H 7950 3450 50  0000 L CNN
+F 1 "MCP6001-OT" H 7950 3050 50  0001 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-5" H 7850 3050 50  0001 L CNN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/21733j.pdf" H 7950 3450 50  0001 C CNN
+	1    7950 3250
+	1    0    0    -1  
+$EndComp
+$Comp
+L Amplifier_Operational:MCP6001-OT U305
+U 1 1 5CEC3EEF
+P 7850 5550
+F 0 "U305" H 7850 5750 50  0000 L CNN
+F 1 "MCP6001-OT" H 7850 5350 50  0001 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-5" H 7750 5350 50  0001 L CNN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/21733j.pdf" H 7850 5750 50  0001 C CNN
+	1    7850 5550
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
