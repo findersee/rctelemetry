@@ -62,6 +62,10 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define ERROR_LED_Pin GPIO_PIN_13
 #define ERROR_LED_GPIO_Port GPIOC
+#define AMP_DIR_Pin GPIO_PIN_14
+#define AMP_DIR_GPIO_Port GPIOC
+#define AMP_CS_Pin GPIO_PIN_15
+#define AMP_CS_GPIO_Port GPIOC
 #define ESC1_VOLTAGE_Pin GPIO_PIN_0
 #define ESC1_VOLTAGE_GPIO_Port GPIOA
 #define ESC2_VOLTAGE_Pin GPIO_PIN_1
@@ -72,8 +76,8 @@ void Error_Handler(void);
 #define ESC2_CURRENT_GPIO_Port GPIOA
 #define DAC_OUT_Pin GPIO_PIN_4
 #define DAC_OUT_GPIO_Port GPIOA
-#define OUT2_Pin GPIO_PIN_0
-#define OUT2_GPIO_Port GPIOB
+#define OUT4_Pin GPIO_PIN_0
+#define OUT4_GPIO_Port GPIOB
 #define OUT5_Pin GPIO_PIN_1
 #define OUT5_GPIO_Port GPIOB
 #define OUT3_Pin GPIO_PIN_2
@@ -88,8 +92,14 @@ void Error_Handler(void);
 #define Servo_3_GPIO_Port GPIOB
 #define SPI_CS_Pin GPIO_PIN_8
 #define SPI_CS_GPIO_Port GPIOA
+#define Sport_UART_Pin GPIO_PIN_9
+#define Sport_UART_GPIO_Port GPIOA
 #define WP_Pin GPIO_PIN_10
 #define WP_GPIO_Port GPIOA
+#define OUT1_Pin GPIO_PIN_13
+#define OUT1_GPIO_Port GPIOA
+#define Sbus_UART_Pin GPIO_PIN_14
+#define Sbus_UART_GPIO_Port GPIOA
 #define Servo_1_Pin GPIO_PIN_15
 #define Servo_1_GPIO_Port GPIOA
 #define Servo_2_Pin GPIO_PIN_3
@@ -100,8 +110,8 @@ void Error_Handler(void);
 #define HC_OUT1_GPIO_Port GPIOB
 #define HC_OUT2_Pin GPIO_PIN_7
 #define HC_OUT2_GPIO_Port GPIOB
-#define OUT4_Pin GPIO_PIN_9
-#define OUT4_GPIO_Port GPIOB
+#define OUT2_Pin GPIO_PIN_9
+#define OUT2_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

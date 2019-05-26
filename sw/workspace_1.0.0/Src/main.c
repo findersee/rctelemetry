@@ -48,6 +48,7 @@ ADC_HandleTypeDef hadc1;
 ADC_HandleTypeDef hadc3;
 ADC_HandleTypeDef hadc4;
 DMA_HandleTypeDef hdma_adc1;
+DMA_HandleTypeDef hdma_adc3;
 
 CRC_HandleTypeDef hcrc;
 
@@ -473,7 +474,7 @@ static void MX_CRC_Init(void)
   /* USER CODE END CRC_Init 0 */
 
   /* USER CODE BEGIN CRC_Init 1 */
-
+	hcrc.Init.CRCLength = CRC_POLYLENGTH_8B;
   /* USER CODE END CRC_Init 1 */
   hcrc.Instance = CRC;
   hcrc.Init.DefaultPolynomialUse = DEFAULT_POLYNOMIAL_ENABLE;
@@ -1031,6 +1032,7 @@ static void MX_DMA_Init(void)
 {
   /* DMA controller clock enable */
   __HAL_RCC_DMA1_CLK_ENABLE();
+  __HAL_RCC_DMA2_CLK_ENABLE();
 
   /* DMA interrupt init */
   /* DMA1_Channel1_IRQn interrupt configuration */
@@ -1039,6 +1041,9 @@ static void MX_DMA_Init(void)
   /* DMA1_Channel3_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
+  /* DMA2_Channel5_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Channel5_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Channel5_IRQn);
 
 }
 
@@ -1058,23 +1063,23 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(ERROR_LED_GPIO_Port, ERROR_LED_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, ERROR_LED_Pin|AMP_DIR_Pin|AMP_CS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, OUT2_Pin|OUT5_Pin|OUT3_Pin|OUT6_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, OUT4_Pin|OUT5_Pin|OUT3_Pin|OUT6_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, SPI_CS_Pin|WP_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : ERROR_LED_Pin */
-  GPIO_InitStruct.Pin = ERROR_LED_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+  /*Configure GPIO pins : ERROR_LED_Pin AMP_DIR_Pin AMP_CS_Pin */
+  GPIO_InitStruct.Pin = ERROR_LED_Pin|AMP_DIR_Pin|AMP_CS_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(ERROR_LED_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : OUT2_Pin OUT5_Pin OUT3_Pin OUT6_Pin */
-  GPIO_InitStruct.Pin = OUT2_Pin|OUT5_Pin|OUT3_Pin|OUT6_Pin;
+  /*Configure GPIO pins : OUT4_Pin OUT5_Pin OUT3_Pin OUT6_Pin */
+  GPIO_InitStruct.Pin = OUT4_Pin|OUT5_Pin|OUT3_Pin|OUT6_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -1091,14 +1096,13 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 uint16_t DAC_BUFFER[30];
-
-QueueHandle_t telemetryQueue;
-
+uint16_t power_ADC_Buffer[32];
+QueueHandle_t telemetryQueue = NULL;
 
 struct telemetryMessage
 {
 	char ID;
-};
+} xTelMessage;
 
 /* USER CODE END 4 */
 
@@ -1115,6 +1119,9 @@ void StartDefaultTask(void const * argument)
   MX_USB_DEVICE_Init();
 
   /* USER CODE BEGIN 5 */
+  HAL_ADC_Start_DMA(&hadc1, (uint32_t*)power_ADC_Buffer, 32);
+  HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1,(uint32_t*)DAC_BUFFER , 30, DAC_ALIGN_12B_R);
+
   /* Infinite loop */
   for(;;)
   {
@@ -1133,11 +1140,35 @@ void StartDefaultTask(void const * argument)
 void StartSendTelemetry(void const * argument)
 {
   /* USER CODE BEGIN StartSendTelemetry */
-	telemetryQueue = xQueueCreate(10,sizeof(telemetryMessage * ));
+
+	struct telemetryMessage *receivedMessage;
+	telemetryQueue = xQueueCreate(10, sizeof(struct telemetryMessage * ));
+
+	if(telemetryQueue == NULL)
+	{
+		Error_Handler();
+	}
+	uint8_t sensorBuffer[8];
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+	xQueueReceive(telemetryQueue,&(receivedMessage),portMAX_DELAY);
+	switch(receivedMessage->ID)
+	{
+		case 0x67:
+			/*Send ESC 1 power data*/
+			break;
+		case 0x48:
+			/*Send ESC 2 power data*/
+			break;
+		default:
+			break;
+	}
+	sensorBuffer[7] = HAL_CRC_Calculate(&hcrc, (uint32_t *) sensorBuffer, sizeof(sensorBuffer));
+
+
+	HAL_UART_Transmit_DMA(&huart1, sensorBuffer, sizeof(sensorBuffer));
+    //osDelay(1);
   }
   /* USER CODE END StartSendTelemetry */
 }
@@ -1152,10 +1183,21 @@ void StartSendTelemetry(void const * argument)
 void StartPower(void const * argument)
 {
   /* USER CODE BEGIN StartPower */
+	uint16_t measurements[4];
+	static uint8_t bufferSize = sizeof(power_ADC_Buffer);
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+	  memset((uint32_t*)measurements,0,sizeof(measurements));
+	 for(uint8_t ch=0; ch < 4; ch++)
+	 {
+		 uint32_t temp=0;
+		 for(uint8_t buf=ch;buf<(bufferSize-ch); buf+=4)
+		 {
+			 temp += power_ADC_Buffer[buf];
+		 }
+		 measurements[ch] = (temp/(bufferSize/4));
+	 }
   }
   /* USER CODE END StartPower */
 }
@@ -1189,7 +1231,7 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
-	HAL_GPIO_WritePin(ERROR_LED_GPIO_Port, ERROR_LED_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(ERROR_LED_GPIO_Port, ERROR_LED_Pin, GPIO_PIN_SET);
 	while(1)
 	{
 		asm("nop");

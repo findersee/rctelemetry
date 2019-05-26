@@ -601,7 +601,7 @@ Wire Wire Line
 	6150 2500 6050 2500
 Wire Wire Line
 	6050 2700 6150 2700
-Text GLabel 6150 2700 2    50   Output ~ 0
+Text GLabel 6150 3600 2    50   Output ~ 0
 OUT2
 Wire Wire Line
 	6150 2300 6050 2300
@@ -619,7 +619,7 @@ Wire Wire Line
 	6150 3600 6050 3600
 Text GLabel 6150 2900 2    50   Output ~ 0
 OUT3
-Text GLabel 6150 3600 2    50   Output ~ 0
+Text GLabel 6150 2700 2    50   Output ~ 0
 OUT4
 Text GLabel 6150 2800 2    50   Output ~ 0
 OUT5
@@ -736,8 +736,6 @@ F 3 "http://www.txccorp.com/download/products/osc/7C_o.pdf" H 3800 2000 50  0001
 	1    0    0    -1  
 $EndComp
 NoConn ~ 4850 2200
-NoConn ~ 6050 4500
-NoConn ~ 6050 4600
 Wire Wire Line
 	4200 6150 4200 6100
 $Comp
@@ -863,21 +861,8 @@ Connection ~ 9400 750
 Wire Wire Line
 	10400 1500 10400 1750
 Connection ~ 10400 1750
-$Comp
-L Device:C_Small C107
-U 1 1 5CE9FBD8
-P 7300 1400
-F 0 "C107" V 7071 1400 50  0000 C CNN
-F 1 "10u" V 7162 1400 50  0000 C CNN
-F 2 "Capacitors_SMD:C_0603_HandSoldering" H 7300 1400 50  0001 C CNN
-F 3 "~" H 7300 1400 50  0001 C CNN
-	1    7300 1400
-	0    1    1    0   
-$EndComp
 Wire Wire Line
-	7450 1400 7400 1400
-Wire Wire Line
-	6050 1400 7200 1400
+	6050 1400 6200 1400
 $Comp
 L Misc:IS25LP032D U102
 U 1 1 5CEB0F5A
@@ -911,36 +896,6 @@ Wire Wire Line
 	6050 2000 8300 2000
 Wire Wire Line
 	8300 2000 8300 1750
-$Comp
-L Connector_Generic:Conn_01x02 J101
-U 1 1 5CF0AD96
-P 8150 950
-F 0 "J101" H 8070 625 50  0000 C CNN
-F 1 "AUDIO" H 8070 716 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.54mm" H 8150 950 50  0001 C CNN
-F 3 "~" H 8150 950 50  0001 C CNN
-	1    8150 950 
-	1    0    0    1   
-$EndComp
-Wire Wire Line
-	7950 850  7450 850 
-Wire Wire Line
-	7450 850  7450 1150
-$Comp
-L power:GND #PWR0126
-U 1 1 5CF15D0B
-P 7800 1250
-F 0 "#PWR0126" H 7800 1000 50  0001 C CNN
-F 1 "GND" H 7805 1077 50  0000 C CNN
-F 2 "" H 7800 1250 50  0001 C CNN
-F 3 "" H 7800 1250 50  0001 C CNN
-	1    7800 1250
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	7950 950  7800 950 
-Wire Wire Line
-	7800 950  7800 1150
 $Comp
 L Mechanical:MountingHole MH101
 U 1 1 5CF43C55
@@ -985,25 +940,14 @@ F 3 "~" H 5650 7500 50  0001 C CNN
 	1    5650 7500
 	1    0    0    -1  
 $EndComp
-$Comp
-L Device:C_Small C108
-U 1 1 5CF60139
-P 7650 1150
-F 0 "C108" V 7421 1150 50  0000 C CNN
-F 1 "10p" V 7512 1150 50  0000 C CNN
-F 2 "Capacitors_SMD:C_0603_HandSoldering" H 7650 1150 50  0001 C CNN
-F 3 "~" H 7650 1150 50  0001 C CNN
-	1    7650 1150
-	0    1    1    0   
-$EndComp
+Text GLabel 6200 1400 2    50   Output ~ 0
+DAC_OUT
+Text GLabel 6150 4500 2    50   Output ~ 0
+AMP_DIR
+Text GLabel 6150 4600 2    50   Output ~ 0
+AMP_CS
 Wire Wire Line
-	7750 1150 7800 1150
-Connection ~ 7800 1150
+	6150 4500 6050 4500
 Wire Wire Line
-	7800 1150 7800 1250
-Wire Wire Line
-	7550 1150 7450 1150
-Connection ~ 7450 1150
-Wire Wire Line
-	7450 1150 7450 1400
+	6050 4600 6150 4600
 $EndSCHEMATC
