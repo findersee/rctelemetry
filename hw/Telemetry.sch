@@ -583,13 +583,13 @@ SPI_MOSI
 Text Label 8550 1200 0    50   ~ 0
 SPI_CS
 Text GLabel 6150 2500 2    50   Output ~ 0
-SERVO_OUT1
+SERVO_1
 Text GLabel 6150 3100 2    50   Output ~ 0
-SERVO_OUT2
+SERVO_2
 Text GLabel 6150 4200 2    50   Output ~ 0
-SERVO_OUT3
+SERVO_3
 Text GLabel 6150 4100 2    50   Output ~ 0
-SERVO_OUT4
+SERVO_4
 Wire Wire Line
 	6150 2500 6050 2500
 Wire Wire Line

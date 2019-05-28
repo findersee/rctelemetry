@@ -157,13 +157,13 @@ Wire Wire Line
 Wire Wire Line
 	2100 6400 2400 6400
 Text GLabel 2400 6400 2    50   Input ~ 0
-SERVO_OUT2
+SERVO_2
 Text GLabel 2400 6900 2    50   Input ~ 0
-SERVO_OUT4
+SERVO_4
 Text GLabel 1250 6900 0    50   Input ~ 0
-SERVO_OUT3
+SERVO_3
 Text GLabel 1250 6400 0    50   Input ~ 0
-SERVO_OUT1
+SERVO_1
 $Comp
 L dk_Transistors-FETs-MOSFETs-Single:IRLML6344TRPBF Q401
 U 1 1 5CEB6A73
