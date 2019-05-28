@@ -62,8 +62,6 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define ERROR_LED_Pin GPIO_PIN_13
 #define ERROR_LED_GPIO_Port GPIOC
-#define AMP_DIR_Pin GPIO_PIN_14
-#define AMP_DIR_GPIO_Port GPIOC
 #define AMP_CS_Pin GPIO_PIN_15
 #define AMP_CS_GPIO_Port GPIOC
 #define ESC1_VOLTAGE_Pin GPIO_PIN_0
@@ -102,14 +100,14 @@ void Error_Handler(void);
 #define Sbus_UART_GPIO_Port GPIOA
 #define Servo_1_Pin GPIO_PIN_15
 #define Servo_1_GPIO_Port GPIOA
-#define Servo_2_Pin GPIO_PIN_3
+#define Servo_2_Pin GPIO_PIN_4
 #define Servo_2_GPIO_Port GPIOB
-#define OUT6_Pin GPIO_PIN_4
-#define OUT6_GPIO_Port GPIOB
 #define HC_OUT1_Pin GPIO_PIN_6
 #define HC_OUT1_GPIO_Port GPIOB
 #define HC_OUT2_Pin GPIO_PIN_7
 #define HC_OUT2_GPIO_Port GPIOB
+#define OUT6_Pin GPIO_PIN_8
+#define OUT6_GPIO_Port GPIOB
 #define OUT2_Pin GPIO_PIN_9
 #define OUT2_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */

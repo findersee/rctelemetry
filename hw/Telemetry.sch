@@ -249,7 +249,7 @@ $Comp
 L Device:R R102
 U 1 1 5CE1FC54
 P 4600 1400
-F 0 "R102" H 4500 1400 50  0000 C CNN
+F 0 "R102" H 4750 1500 50  0000 C CNN
 F 1 "470R" V 4600 1400 50  0000 C CNN
 F 2 "Resistors_SMD:R_0603_HandSoldering" V 4530 1400 50  0001 C CNN
 F 3 "~" H 4600 1400 50  0001 C CNN
@@ -415,7 +415,7 @@ U 1 1 5CEC877C
 P 3800 6350
 F 0 "J105" H 3855 6817 50  0000 C CNN
 F 1 "USB_B_Micro" H 3855 6726 50  0000 C CNN
-F 2 "Connect:USB_Micro-B" H 3950 6300 50  0001 C CNN
+F 2 "PCBDecals:USB_Micro-B" H 3950 6300 50  0001 C CNN
 F 3 "~" H 3950 6300 50  0001 C CNN
 	1    3800 6350
 	1    0    0    -1  
@@ -478,10 +478,6 @@ Wire Wire Line
 	3900 2300 3900 2400
 Wire Wire Line
 	3600 2000 3550 2000
-Wire Wire Line
-	3550 2000 3550 1650
-Wire Wire Line
-	3550 1650 3900 1650
 Connection ~ 3900 1650
 Wire Wire Line
 	3900 1650 3900 1700
@@ -497,10 +493,7 @@ F 3 "~" H 3450 2250 50  0001 C CNN
 	-1   0    0    -1  
 $EndComp
 Wire Wire Line
-	3550 1650 3450 1650
-Wire Wire Line
 	3450 1650 3450 2150
-Connection ~ 3550 1650
 Wire Wire Line
 	3900 2400 3450 2400
 Wire Wire Line
@@ -522,12 +515,12 @@ Wire Wire Line
 $Comp
 L power:GND #PWR0104
 U 1 1 5CE4C56B
-P 10400 1800
-F 0 "#PWR0104" H 10400 1550 50  0001 C CNN
-F 1 "GND" H 10405 1627 50  0000 C CNN
-F 2 "" H 10400 1800 50  0001 C CNN
-F 3 "" H 10400 1800 50  0001 C CNN
-	1    10400 1800
+P 10400 1850
+F 0 "#PWR0104" H 10400 1600 50  0001 C CNN
+F 1 "GND" H 10405 1677 50  0000 C CNN
+F 2 "" H 10400 1850 50  0001 C CNN
+F 3 "" H 10400 1850 50  0001 C CNN
+	1    10400 1850
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -591,7 +584,7 @@ Text Label 8550 1200 0    50   ~ 0
 SPI_CS
 Text GLabel 6150 2500 2    50   Output ~ 0
 SERVO_OUT1
-Text GLabel 6150 3000 2    50   Output ~ 0
+Text GLabel 6150 3100 2    50   Output ~ 0
 SERVO_OUT2
 Text GLabel 6150 4200 2    50   Output ~ 0
 SERVO_OUT3
@@ -623,7 +616,7 @@ Text GLabel 6150 2700 2    50   Output ~ 0
 OUT4
 Text GLabel 6150 2800 2    50   Output ~ 0
 OUT5
-Text GLabel 6150 3100 2    50   Output ~ 0
+Text GLabel 6150 3500 2    50   Output ~ 0
 OUT6
 Wire Wire Line
 	6050 2800 6150 2800
@@ -724,17 +717,6 @@ Wire Wire Line
 	8900 2750 8900 2800
 Wire Wire Line
 	4100 6150 4200 6150
-$Comp
-L Oscillator:TXC-7C X101
-U 1 1 5CE6962F
-P 3900 2000
-F 0 "X101" H 4241 2046 50  0000 L CNN
-F 1 "TXC-7C" H 4241 1955 50  0000 L CNN
-F 2 "PCBDecals:IQXO-791" H 4600 1650 50  0001 C CNN
-F 3 "http://www.txccorp.com/download/products/osc/7C_o.pdf" H 3800 2000 50  0001 C CNN
-	1    3900 2000
-	1    0    0    -1  
-$EndComp
 NoConn ~ 4850 2200
 Wire Wire Line
 	4200 6150 4200 6100
@@ -754,7 +736,7 @@ Wire Wire Line
 Text GLabel 6150 4000 2    50   Input ~ 0
 COOLING_TEMP
 Wire Wire Line
-	7950 1200 7950 1800
+	8250 1200 8250 1800
 Wire Wire Line
 	6050 2400 7850 2400
 Wire Wire Line
@@ -763,31 +745,21 @@ Wire Wire Line
 	8300 3850 9000 3850
 Connection ~ 9000 3850
 Wire Wire Line
-	7950 1200 9450 1200
-Wire Wire Line
-	10350 1750 10400 1750
-Wire Wire Line
-	10400 1750 10400 1800
+	8250 1200 9500 1200
 $Comp
 L power:+3V3 #PWR0101
 U 1 1 5CEF7FBB
-P 9400 750
-F 0 "#PWR0101" H 9400 600 50  0001 C CNN
-F 1 "+3V3" H 9415 923 50  0000 C CNN
-F 2 "" H 9400 750 50  0001 C CNN
-F 3 "" H 9400 750 50  0001 C CNN
-	1    9400 750 
+P 9500 700
+F 0 "#PWR0101" H 9500 550 50  0001 C CNN
+F 1 "+3V3" H 9515 873 50  0000 C CNN
+F 2 "" H 9500 700 50  0001 C CNN
+F 3 "" H 9500 700 50  0001 C CNN
+	1    9500 700 
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	9450 1050 9400 1050
-Wire Wire Line
-	9400 1050 9400 750 
 Text Label 8550 1750 0    50   ~ 0
 WP
-NoConn ~ 9450 1650
-NoConn ~ 6050 3500
-NoConn ~ 6050 3200
+NoConn ~ 9500 1650
 $Comp
 L Device:LED D101
 U 1 1 5CF14422
@@ -856,46 +828,27 @@ $EndComp
 Wire Wire Line
 	10400 1300 10400 750 
 Wire Wire Line
-	10400 750  9400 750 
-Connection ~ 9400 750 
-Wire Wire Line
-	10400 1500 10400 1750
-Connection ~ 10400 1750
-Wire Wire Line
 	6050 1400 6200 1400
-$Comp
-L Misc:IS25LP032D U102
-U 1 1 5CEB0F5A
-P 9900 1400
-F 0 "U102" H 9900 1975 50  0000 C CNN
-F 1 "IS25LP032D" H 9900 1884 50  0000 C CNN
-F 2 "digikey-footprints:SOIC-8_W3.9mm" H 9800 1250 50  0001 C CNN
-F 3 "" H 9800 1250 50  0001 C CNN
-	1    9900 1400
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
-	7950 1800 6050 1800
-Wire Wire Line
-	9450 1300 8050 1300
+	8250 1800 6050 1800
 Wire Wire Line
 	6050 1600 8050 1600
 Wire Wire Line
 	8050 1300 8050 1600
 Wire Wire Line
-	8150 1400 9450 1400
+	8150 1400 9500 1400
 Wire Wire Line
 	6050 1700 8150 1700
 Wire Wire Line
 	8150 1400 8150 1700
 Wire Wire Line
-	6050 1500 9450 1500
+	6050 1500 9500 1500
 Wire Wire Line
-	9450 1750 8300 1750
+	9500 1750 8350 1750
 Wire Wire Line
-	6050 2000 8300 2000
+	6050 2000 8350 2000
 Wire Wire Line
-	8300 2000 8300 1750
+	8350 2000 8350 1750
 $Comp
 L Mechanical:MountingHole MH101
 U 1 1 5CF43C55
@@ -1042,4 +995,50 @@ F 3 "" H 4000 3650 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	4000 3600 4000 3650
+$Comp
+L Misc:SG-310_SCF_8.000000MHZ X101
+U 1 1 5CECEA0C
+P 3900 2000
+F 0 "X101" H 3950 2250 50  0000 L CNN
+F 1 "SG-310_SCF_8.000000MHZ" H 4450 1750 50  0001 C CNN
+F 2 "PCBDecals:SG- 310" H 3900 2000 50  0001 C CNN
+F 3 "https://support.epson.biz/td/api/doc_check.php?dl=brief_SG-310SEF&lang=en" H 3900 2000 50  0001 C CNN
+	1    3900 2000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3450 1650 3900 1650
+Wire Wire Line
+	8050 1300 9500 1300
+Wire Wire Line
+	10400 1500 10400 1750
+$Comp
+L Misc:IS25LP032D U102
+U 1 1 5CF328C7
+P 9950 1400
+F 0 "U102" H 9950 1975 50  0000 C CNN
+F 1 "IS25LP032D" H 9950 1884 50  0000 C CNN
+F 2 "digikey-footprints:SOIC-8_W5.6mm" H 9850 1250 50  0001 C CNN
+F 3 "http://www.issi.com/WW/pdf/25LP-WP032D.pdf" H 9850 1250 50  0001 C CNN
+	1    9950 1400
+	1    0    0    -1  
+$EndComp
+Connection ~ 10400 1750
+Wire Wire Line
+	10400 1750 10400 1850
+Wire Wire Line
+	9500 750  10400 750 
+Wire Wire Line
+	9500 700  9500 750 
+Connection ~ 9500 750 
+Wire Wire Line
+	9500 750  9500 1050
+Wire Wire Line
+	6150 3500 6050 3500
+Wire Wire Line
+	6050 3200 6150 3200
+Text GLabel 6150 3000 2    50   Output ~ 0
+AMP_CLK
+Text GLabel 6150 3200 2    50   Output ~ 0
+AMP_DIN
 $EndSCHEMATC

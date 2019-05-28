@@ -685,7 +685,7 @@ U 1 1 5CEC3C95
 P 7950 3250
 F 0 "U303" H 7950 3450 50  0000 L CNN
 F 1 "MCP6001-OT" H 7950 3050 50  0001 L CNN
-F 2 "Package_TO_SOT_SMD:SOT-23-5" H 7850 3050 50  0001 L CNN
+F 2 "TO_SOT_Packages_SMD:SOT-23-5_HandSoldering" H 7850 3050 50  0001 L CNN
 F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/21733j.pdf" H 7950 3450 50  0001 C CNN
 	1    7950 3250
 	1    0    0    -1  
@@ -696,7 +696,7 @@ U 1 1 5CEC3EEF
 P 7850 5550
 F 0 "U305" H 7850 5750 50  0000 L CNN
 F 1 "MCP6001-OT" H 7850 5350 50  0001 L CNN
-F 2 "Package_TO_SOT_SMD:SOT-23-5" H 7750 5350 50  0001 L CNN
+F 2 "TO_SOT_Packages_SMD:SOT-23-5_HandSoldering" H 7750 5350 50  0001 L CNN
 F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/21733j.pdf" H 7850 5750 50  0001 C CNN
 	1    7850 5550
 	1    0    0    -1  
