@@ -54,7 +54,7 @@ P 4050 5550
 F 0 "L201" V 4240 5550 50  0000 C CNN
 F 1 " SPN30304R7MPTE" V 4150 5450 50  0000 C CNN
 F 2 "Inductors:Inductor_Taiyo-Yuden_MD-3030" H 4050 5550 50  0001 C CNN
-F 3 "~" H 4050 5550 50  0001 C CNN
+F 3 "https://datasheet.lcsc.com/szlcsc/1901081516_Darfon-Elec-SPN30304R7MPTE_C359291.pdf" H 4050 5550 50  0001 C CNN
 F 4 "C359291" V 4050 5550 50  0001 C CNN "LCSC Part-number"
 	1    4050 5550
 	0    -1   -1   0   
@@ -609,19 +609,17 @@ Wire Wire Line
 Wire Wire Line
 	5900 2150 6000 2150
 $Comp
-L pspice:INDUCTOR L202
+L Device:L L202
 U 1 1 5CF4DE61
-P 5450 1850
-F 0 "L202" H 5450 2065 50  0000 C CNN
-F 1 " BCRH1212Y-680M" H 5450 2000 50  0000 C CNN
-F 2 "PCBDecals:12x12_inductor" H 5450 1850 50  0001 C CNN
-F 3 "" H 5450 1850 50  0001 C CNN
-F 4 " C238002" H 5450 1850 50  0001 C CNN "LCSC Part-number"
-	1    5450 1850
-	1    0    0    -1  
+P 5400 1850
+F 0 "L202" V 5650 1900 50  0000 C CNN
+F 1 " BCRH1212Y-680M" V 5550 1900 50  0000 C CNN
+F 2 "PCBDecals:12x12_inductor" H 5400 1850 50  0001 C CNN
+F 3 "https://datasheet.lcsc.com/szlcsc/Bao-Cheng-Elec-BC-BCRH1212Y-680M_C238002.pdf" H 5400 1850 50  0001 C CNN
+F 4 " C238002" H 5400 1850 50  0001 C CNN "LCSC Part-number"
+	1    5400 1850
+	0    -1   -1   0   
 $EndComp
-Wire Wire Line
-	5700 1850 6000 1850
 $Comp
 L Device:D_Schottky D202
 U 1 1 5CF53AD6
@@ -649,8 +647,6 @@ Wire Wire Line
 Wire Wire Line
 	5100 1850 5150 1850
 Connection ~ 5150 1850
-Wire Wire Line
-	5150 1850 5200 1850
 Wire Wire Line
 	5150 2350 5150 2450
 Wire Wire Line
@@ -954,4 +950,8 @@ Wire Wire Line
 Connection ~ 2500 3450
 Wire Wire Line
 	2500 3450 2450 3450
+Wire Wire Line
+	5550 1850 6000 1850
+Wire Wire Line
+	5150 1850 5250 1850
 $EndSCHEMATC
