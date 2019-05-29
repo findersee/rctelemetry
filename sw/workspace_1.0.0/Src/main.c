@@ -72,10 +72,11 @@ UART_HandleTypeDef huart3;
 
 osThreadId defaultTaskHandle;
 osThreadId SendTelemetryHandle;
-osThreadId ParsePowerHandle;
+osThreadId PowerParserHandle;
 /* USER CODE BEGIN PV */
 SemaphoreHandle_t powerMutex;
 QueueHandle_t telemetryQueue;
+QueueHandle_t powerQueue;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -168,7 +169,7 @@ int main(void)
   /* USER CODE END RTOS_MUTEX */
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
-  /* add semaphores, ... */
+
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* USER CODE BEGIN RTOS_TIMERS */
@@ -185,12 +186,12 @@ int main(void)
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of SendTelemetry */
-  osThreadDef(SendTelemetry, StartSendTelemetry, osPriorityIdle, 0, 128);
+  osThreadDef(SendTelemetry, StartSendTelemetry, osPriorityHigh, 0, 128);
   SendTelemetryHandle = osThreadCreate(osThread(SendTelemetry), NULL);
 
-  /* definition and creation of ParsePower */
-  osThreadDef(ParsePower, StartPower, osPriorityIdle, 0, 128);
-  ParsePowerHandle = osThreadCreate(osThread(ParsePower), NULL);
+  /* definition and creation of PowerParser */
+  osThreadDef(PowerParser, StartPower, osPriorityNormal, 0, 128);
+  PowerParserHandle = osThreadCreate(osThread(PowerParser), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -1219,7 +1220,6 @@ typedef struct
 {
 	char ID;
 }telemetryMessage;
-//typedef struct telemetryMessage telemetryMessage;
 typedef struct powerMessage
 {
 	float ESC1_powerValue;
@@ -1229,7 +1229,6 @@ typedef struct powerMessage
 	float ESC2_voltageValue;
 	float ESC2_currentValue;
 }powerMessage;
-//typedef struct powerMessage powerMessage;
 
 /* USER CODE END 4 */
 
@@ -1302,7 +1301,7 @@ void StartSendTelemetry(void const * argument)
 
 /* USER CODE BEGIN Header_StartPower */
 /**
-* @brief Function implementing the ParsePower thread.
+* @brief Function implementing the PowerParser thread.
 * @param argument: Not used
 * @retval None
 */
@@ -1316,7 +1315,7 @@ void StartPower(void const * argument)
 	#define ADC_step (3.3f/4096)
 	powerMessage power_new = {};
 	float temp = 0.0f;
-	const TickType_t Delay = 500 / portTICK_PERIOD_MS;
+	powerQueue = xQueueCreate(1,sizeof(struct powerMessage * ));
   /* Infinite loop */
   for(;;)
   {
@@ -1348,8 +1347,8 @@ void StartPower(void const * argument)
 		 //ESC1 Current scaled
 		 temp = measurements[2]*ADC_step;
 		 temp /= currentScaling;
-		 temp -= 0.5f;
-		 temp /= 0.04f;
+		 temp -= 0.5f; //Subtract offset value;
+		 temp /= 0.04f; //Calculate Amps with formula 40mV/A
 		 power_new.ESC1_currentValue = temp;
 
 		 temp = 0.0f;
@@ -1360,7 +1359,11 @@ void StartPower(void const * argument)
 		 temp /= 0.04f;
 		 power_new.ESC2_currentValue = temp;
 
-		 vTaskDelay(Delay);
+		 power_new.ESC1_powerValue = (power_new.ESC1_currentValue*power_new.ESC1_voltageValue);
+		 power_new.ESC2_powerValue = (power_new.ESC2_currentValue*power_new.ESC2_voltageValue);
+
+		 xQueueOverwrite(powerQueue,&power_new);
+		 osDelay(100);
 
   }
   /* USER CODE END StartPower */
