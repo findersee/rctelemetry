@@ -74,7 +74,8 @@ osThreadId defaultTaskHandle;
 osThreadId SendTelemetryHandle;
 osThreadId ParsePowerHandle;
 /* USER CODE BEGIN PV */
-
+SemaphoreHandle_t powerMutex;
+QueueHandle_t telemetryQueue;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -163,7 +164,7 @@ int main(void)
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
-  /* add mutexes, ... */
+  powerMutex = xSemaphoreCreateMutex();
   /* USER CODE END RTOS_MUTEX */
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
@@ -1200,14 +1201,35 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-uint16_t DAC_BUFFER[30];
-uint16_t power_ADC_Buffer[32];
-QueueHandle_t telemetryQueue = NULL;
 
-struct telemetryMessage
+#define ADC_samples 8
+
+//Power ADC size definitions
+#define powerChannels 4
+#define powerBufferSize (ADC_samples*powerChannels)
+
+
+uint16_t DAC_BUFFER[30];
+uint16_t power_ADC_Buffer[powerBufferSize];
+uint16_t temp_ADC_Buffer[ADC_samples];
+uint16_t batVolt_ADC_Buffer[ADC_samples];
+
+
+typedef struct
 {
 	char ID;
-} xTelMessage;
+}telemetryMessage;
+//typedef struct telemetryMessage telemetryMessage;
+typedef struct powerMessage
+{
+	float ESC1_powerValue;
+	float ESC1_voltageValue;
+	float ESC1_currentValue;
+	float ESC2_powerValue;
+	float ESC2_voltageValue;
+	float ESC2_currentValue;
+}powerMessage;
+//typedef struct powerMessage powerMessage;
 
 /* USER CODE END 4 */
 
@@ -1246,7 +1268,7 @@ void StartSendTelemetry(void const * argument)
 {
   /* USER CODE BEGIN StartSendTelemetry */
 
-	struct telemetryMessage *receivedMessage;
+	telemetryMessage *receivedMessage;
 	telemetryQueue = xQueueCreate(10, sizeof(struct telemetryMessage * ));
 
 	if(telemetryQueue == NULL)
@@ -1288,21 +1310,58 @@ void StartSendTelemetry(void const * argument)
 void StartPower(void const * argument)
 {
   /* USER CODE BEGIN StartPower */
-	uint16_t measurements[4];
-	static uint8_t bufferSize = sizeof(power_ADC_Buffer);
+	uint16_t measurements[powerChannels];
+	#define currentScaling 0.6f
+	#define voltageScaling 0.15f
+	#define ADC_step (3.3f/4096)
+	powerMessage power_new = {};
+	float temp = 0.0f;
+	const TickType_t Delay = 500 / portTICK_PERIOD_MS;
   /* Infinite loop */
   for(;;)
   {
-	  memset((uint32_t*)measurements,0,sizeof(measurements));
-	 for(uint8_t ch=0; ch < 4; ch++)
+	 memset((uint32_t*)measurements,0,sizeof(measurements));
+	 for(uint8_t ch=0; ch < powerChannels; ch++)
 	 {
 		 uint32_t temp=0;
-		 for(uint8_t buf=ch;buf<(bufferSize-ch); buf+=4)
+		 for(uint8_t buf=ch;buf<(powerBufferSize-ch); buf+=powerChannels)
 		 {
 			 temp += power_ADC_Buffer[buf];
 		 }
-		 measurements[ch] = (temp/(bufferSize/4));
+		 measurements[ch] = (temp/ADC_samples);
 	 }
+
+
+		 temp = 0.0f;
+		 //ESC1 Voltage scaled
+		 temp = measurements[0]*ADC_step;
+		 temp /= voltageScaling;
+		 power_new.ESC1_voltageValue = temp;
+
+		 temp = 0.0f;
+		 //ESC2 Voltage scaled
+		 temp = measurements[1]*ADC_step;
+		 temp /= voltageScaling;
+		 power_new.ESC2_voltageValue = temp;
+
+		 temp = 0.0f;
+		 //ESC1 Current scaled
+		 temp = measurements[2]*ADC_step;
+		 temp /= currentScaling;
+		 temp -= 0.5f;
+		 temp /= 0.04f;
+		 power_new.ESC1_currentValue = temp;
+
+		 temp = 0.0f;
+		 //ESC2 Current scaled
+		 temp = measurements[3]*ADC_step;
+		 temp /= currentScaling;
+		 temp -= 0.5f;
+		 temp /= 0.04f;
+		 power_new.ESC2_currentValue = temp;
+
+		 vTaskDelay(Delay);
+
   }
   /* USER CODE END StartPower */
 }
