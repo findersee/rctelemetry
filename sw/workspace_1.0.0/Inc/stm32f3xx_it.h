@@ -47,18 +47,7 @@
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
-void NMI_Handler(void);
-void HardFault_Handler(void);
-void MemManage_Handler(void);
-void BusFault_Handler(void);
-void UsageFault_Handler(void);
-void DebugMon_Handler(void);
-void DMA1_Channel1_IRQHandler(void);
-void DMA1_Channel3_IRQHandler(void);
-void USB_LP_CAN_RX0_IRQHandler(void);
-void TIM1_TRG_COM_TIM17_IRQHandler(void);
-void TIM7_IRQHandler(void);
-void DMA2_Channel5_IRQHandler(void);
+void USART1_IRQHandler(void);
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */

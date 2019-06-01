@@ -30,7 +30,19 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+typedef struct
+{
+	char ID;
+}telemetryMessage;
+typedef struct
+{
+	float ESC1_powerValue;
+	float ESC1_voltageValue;
+	float ESC1_currentValue;
+	float ESC2_powerValue;
+	float ESC2_voltageValue;
+	float ESC2_currentValue;
+}powerMessage;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -73,6 +85,7 @@ UART_HandleTypeDef huart3;
 osThreadId defaultTaskHandle;
 osThreadId SendTelemetryHandle;
 osThreadId PowerParserHandle;
+osMessageQId telemetryRequestQueueHandle;
 /* USER CODE BEGIN PV */
 SemaphoreHandle_t powerMutex;
 QueueHandle_t telemetryQueue;
@@ -175,6 +188,11 @@ int main(void)
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
+
+  /* Create the queue(s) */
+  /* definition and creation of telemetryRequestQueue */
+  osMessageQDef(telemetryRequestQueue, 6, telemetryMessage);
+  telemetryRequestQueueHandle = osMessageCreate(osMessageQ(telemetryRequestQueue), NULL);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
@@ -1216,19 +1234,7 @@ uint16_t temp_ADC_Buffer[ADC_samples];
 uint16_t batVolt_ADC_Buffer[ADC_samples];
 
 
-typedef struct
-{
-	char ID;
-}telemetryMessage;
-typedef struct powerMessage
-{
-	float ESC1_powerValue;
-	float ESC1_voltageValue;
-	float ESC1_currentValue;
-	float ESC2_powerValue;
-	float ESC2_voltageValue;
-	float ESC2_currentValue;
-}powerMessage;
+
 
 /* USER CODE END 4 */
 
@@ -1269,8 +1275,8 @@ void StartSendTelemetry(void const * argument)
 
 	telemetryMessage *receivedMessage;
 	telemetryQueue = xQueueCreate(10, sizeof(struct telemetryMessage * ));
-
-	if(telemetryQueue == NULL)
+	osEvent requestEvent;
+	if(telemetryRequestQueueHandle == NULL)
 	{
 		Error_Handler();
 	}
@@ -1278,12 +1284,18 @@ void StartSendTelemetry(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-	xQueueReceive(telemetryQueue,&(receivedMessage),portMAX_DELAY);
+
+	requestEvent = osMessageGet(telemetryRequestQueueHandle, osWaitForever);//xQueueReceive(telemetryQueue,&(receivedMessage),portMAX_DELAY);
+	receivedMessage = requestEvent.value.p;
 	switch(receivedMessage->ID)
 	{
-		case 0x67:
+		case 0x22:
 			/*Send ESC 1 power data*/
-			break;
+			sensorBuffer[0] = 0x32;
+			sensorBuffer[1] = CURR_FIRSTID;
+			sensorBuffer[2] = CURR_FIRSTID >> 8;
+			sensorBuffer[3] =
+ 			break;
 		case 0x48:
 			/*Send ESC 2 power data*/
 			break;
