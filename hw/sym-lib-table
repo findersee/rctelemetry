@@ -4,4 +4,6 @@
   (lib (name dk_Oscillators)(type Legacy)(uri C:/Users/Finder/OneDrive/Projects/Libraries/digikey-kicad-library/digikey-symbols/dk_Oscillators.lib)(options "")(descr ""))
   (lib (name dk_Memory)(type Legacy)(uri C:/Users/Finder/OneDrive/Projects/Libraries/digikey-kicad-library/digikey-symbols/dk_Memory.lib)(options "")(descr ""))
   (lib (name dk_Data-Acquisition-Digital-Potentiometers)(type Legacy)(uri C:/Users/Finder/OneDrive/Projects/Libraries/digikey-kicad-library/digikey-symbols/dk_Data-Acquisition-Digital-Potentiometers.lib)(options "")(descr ""))
+  (lib (name Telemetry-cache)(type Legacy)(uri ${KIPRJMOD}/Telemetry-cache.lib)(options "")(descr "")(disabled))
+  (lib (name dk_Optoisolators-Logic-Output)(type Legacy)(uri C:/Users/Finder/OneDrive/Projects/Libraries/digikey-kicad-library/digikey-symbols/dk_Optoisolators-Logic-Output.lib)(options "")(descr ""))
 )

@@ -9,10 +9,10 @@
   * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
   *
   ******************************************************************************
   */
@@ -25,24 +25,12 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "uart_driver.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-typedef struct
-{
-	char ID;
-}telemetryMessage;
-typedef struct
-{
-	float ESC1_powerValue;
-	float ESC1_voltageValue;
-	float ESC1_currentValue;
-	float ESC2_powerValue;
-	float ESC2_voltageValue;
-	float ESC2_currentValue;
-}powerMessage;
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -81,15 +69,20 @@ TIM_HandleTypeDef htim16;
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 UART_HandleTypeDef huart3;
+DMA_HandleTypeDef hdma_usart1_rx;
+DMA_HandleTypeDef hdma_usart1_tx;
 
 osThreadId defaultTaskHandle;
 osThreadId SendTelemetryHandle;
 osThreadId PowerParserHandle;
 osMessageQId telemetryRequestQueueHandle;
 /* USER CODE BEGIN PV */
-SemaphoreHandle_t powerMutex;
-QueueHandle_t telemetryQueue;
-QueueHandle_t powerQueue;
+uartDriver SportUart;
+uint8_t SportTXBuffer[50];
+uint8_t SportRXBuffer[50];
+uartDriver Sbus;
+uint8_t SbusTxBuffer[50];
+uint8_t SbusRxBuffer[50];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -174,15 +167,16 @@ int main(void)
   MX_SPI3_Init();
   MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
-
+  SportUart = uartDriverInit(&SportTXBuffer,50,&SportRXBuffer,50,&huart1);
+  SbusUart = uartDriverInit(&SbusTXBuffer,50,&SbusRXBuffer,50,&huart2);
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
-  powerMutex = xSemaphoreCreateMutex();
+  /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
-
+  /* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* USER CODE BEGIN RTOS_TIMERS */
@@ -500,7 +494,7 @@ static void MX_CRC_Init(void)
   /* USER CODE END CRC_Init 0 */
 
   /* USER CODE BEGIN CRC_Init 1 */
-	hcrc.Init.CRCLength = CRC_POLYLENGTH_8B;
+
   /* USER CODE END CRC_Init 1 */
   hcrc.Instance = CRC;
   hcrc.Init.DefaultPolynomialUse = DEFAULT_POLYNOMIAL_ENABLE;
@@ -1166,6 +1160,12 @@ static void MX_DMA_Init(void)
   /* DMA1_Channel3_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
+  /* DMA1_Channel4_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel4_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel4_IRQn);
+  /* DMA1_Channel5_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
   /* DMA2_Channel5_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Channel5_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA2_Channel5_IRQn);
@@ -1191,7 +1191,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, ERROR_LED_Pin|AMP_CS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, OUT4_Pin|OUT5_Pin|OUT3_Pin|OUT6_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, OUT2_Pin|OUT1_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, SPI_CS_Pin|WP_Pin, GPIO_PIN_RESET);
@@ -1203,8 +1203,14 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : OUT4_Pin OUT5_Pin OUT3_Pin OUT6_Pin */
-  GPIO_InitStruct.Pin = OUT4_Pin|OUT5_Pin|OUT3_Pin|OUT6_Pin;
+  /*Configure GPIO pins : IN1_Pin IN2_Pin */
+  GPIO_InitStruct.Pin = IN1_Pin|IN2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : OUT2_Pin OUT1_Pin */
+  GPIO_InitStruct.Pin = OUT2_Pin|OUT1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -1221,21 +1227,6 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
-#define ADC_samples 8
-
-//Power ADC size definitions
-#define powerChannels 4
-#define powerBufferSize (ADC_samples*powerChannels)
-
-
-uint16_t DAC_BUFFER[30];
-uint16_t power_ADC_Buffer[powerBufferSize];
-uint16_t temp_ADC_Buffer[ADC_samples];
-uint16_t batVolt_ADC_Buffer[ADC_samples];
-
-
-
-
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -1251,9 +1242,6 @@ void StartDefaultTask(void const * argument)
   MX_USB_DEVICE_Init();
 
   /* USER CODE BEGIN 5 */
-  HAL_ADC_Start_DMA(&hadc1, (uint32_t*)power_ADC_Buffer, 32);
-  HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1,(uint32_t*)DAC_BUFFER , 30, DAC_ALIGN_12B_R);
-
   /* Infinite loop */
   for(;;)
   {
@@ -1272,41 +1260,10 @@ void StartDefaultTask(void const * argument)
 void StartSendTelemetry(void const * argument)
 {
   /* USER CODE BEGIN StartSendTelemetry */
-
-	telemetryMessage *receivedMessage;
-	telemetryQueue = xQueueCreate(10, sizeof(struct telemetryMessage * ));
-	osEvent requestEvent;
-	if(telemetryRequestQueueHandle == NULL)
-	{
-		Error_Handler();
-	}
-	uint8_t sensorBuffer[8];
   /* Infinite loop */
   for(;;)
   {
-
-	requestEvent = osMessageGet(telemetryRequestQueueHandle, osWaitForever);//xQueueReceive(telemetryQueue,&(receivedMessage),portMAX_DELAY);
-	receivedMessage = requestEvent.value.p;
-	switch(receivedMessage->ID)
-	{
-		case 0x22:
-			/*Send ESC 1 power data*/
-			sensorBuffer[0] = 0x32;
-			sensorBuffer[1] = CURR_FIRSTID;
-			sensorBuffer[2] = CURR_FIRSTID >> 8;
-			sensorBuffer[3] =
- 			break;
-		case 0x48:
-			/*Send ESC 2 power data*/
-			break;
-		default:
-			break;
-	}
-	sensorBuffer[7] = HAL_CRC_Calculate(&hcrc, (uint32_t *) sensorBuffer, sizeof(sensorBuffer));
-
-
-	HAL_UART_Transmit_DMA(&huart1, sensorBuffer, sizeof(sensorBuffer));
-    //osDelay(1);
+    osDelay(1);
   }
   /* USER CODE END StartSendTelemetry */
 }
@@ -1321,62 +1278,10 @@ void StartSendTelemetry(void const * argument)
 void StartPower(void const * argument)
 {
   /* USER CODE BEGIN StartPower */
-	uint16_t measurements[powerChannels];
-	#define currentScaling 0.6f
-	#define voltageScaling 0.15f
-	#define ADC_step (3.3f/4096)
-	powerMessage power_new = {};
-	float temp = 0.0f;
-	powerQueue = xQueueCreate(1,sizeof(struct powerMessage * ));
   /* Infinite loop */
   for(;;)
   {
-	 memset((uint32_t*)measurements,0,sizeof(measurements));
-	 for(uint8_t ch=0; ch < powerChannels; ch++)
-	 {
-		 uint32_t temp=0;
-		 for(uint8_t buf=ch;buf<(powerBufferSize-ch); buf+=powerChannels)
-		 {
-			 temp += power_ADC_Buffer[buf];
-		 }
-		 measurements[ch] = (temp/ADC_samples);
-	 }
-
-
-		 temp = 0.0f;
-		 //ESC1 Voltage scaled
-		 temp = measurements[0]*ADC_step;
-		 temp /= voltageScaling;
-		 power_new.ESC1_voltageValue = temp;
-
-		 temp = 0.0f;
-		 //ESC2 Voltage scaled
-		 temp = measurements[1]*ADC_step;
-		 temp /= voltageScaling;
-		 power_new.ESC2_voltageValue = temp;
-
-		 temp = 0.0f;
-		 //ESC1 Current scaled
-		 temp = measurements[2]*ADC_step;
-		 temp /= currentScaling;
-		 temp -= 0.5f; //Subtract offset value;
-		 temp /= 0.04f; //Calculate Amps with formula 40mV/A
-		 power_new.ESC1_currentValue = temp;
-
-		 temp = 0.0f;
-		 //ESC2 Current scaled
-		 temp = measurements[3]*ADC_step;
-		 temp /= currentScaling;
-		 temp -= 0.5f;
-		 temp /= 0.04f;
-		 power_new.ESC2_currentValue = temp;
-
-		 power_new.ESC1_powerValue = (power_new.ESC1_currentValue*power_new.ESC1_voltageValue);
-		 power_new.ESC2_powerValue = (power_new.ESC2_currentValue*power_new.ESC2_voltageValue);
-
-		 xQueueOverwrite(powerQueue,&power_new);
-		 osDelay(100);
-
+    osDelay(1);
   }
   /* USER CODE END StartPower */
 }
@@ -1410,11 +1315,7 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
-	HAL_GPIO_WritePin(ERROR_LED_GPIO_Port, ERROR_LED_Pin, GPIO_PIN_SET);
-	while(1)
-	{
-		asm("nop");
-	}
+
   /* USER CODE END Error_Handler_Debug */
 }
 

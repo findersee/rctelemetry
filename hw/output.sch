@@ -50,7 +50,7 @@ F 3 "" H 2700 2250 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text GLabel 1050 1800 0    50   Input ~ 0
-HC_OUT1
+HC_PWM1
 $Comp
 L power:+BATT #PWR0412
 U 1 1 5CEA77C5
@@ -92,7 +92,7 @@ Connection ~ 2700 4050
 Wire Wire Line
 	2700 4050 2700 3850
 Text GLabel 1050 3650 0    50   Input ~ 0
-HC_OUT2
+HC_PWM2
 Wire Wire Line
 	2700 2750 2700 2950
 Wire Wire Line
@@ -258,106 +258,22 @@ F 3 "~" H 5000 1800 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 Text GLabel 4850 1800 0    50   Input ~ 0
-OUT1
+PWM1
 Wire Wire Line
 	4900 1800 4850 1800
 $Comp
-L dk_Transistors-FETs-MOSFETs-Single:IRLML6344TRPBF Q405
-U 1 1 5CEC27E9
-P 7600 3650
-F 0 "Q405" H 7707 3703 60  0000 L CNN
-F 1 "IRLML6344TRPBF" H 7707 3597 60  0000 L CNN
-F 2 "digikey-footprints:SOT-23-3" H 7800 3850 60  0001 L CNN
-F 3 "https://www.infineon.com/dgdl/irlml6344pbf.pdf?fileId=5546d462533600a4015356689c44262c" H 7800 3950 60  0001 L CNN
-F 4 "IRLML6344TRPBFCT-ND" H 7800 4050 60  0001 L CNN "Digi-Key_PN"
-F 5 "IRLML6344TRPBF" H 7800 4150 60  0001 L CNN "MPN"
-F 6 "Discrete Semiconductor Products" H 7800 4250 60  0001 L CNN "Category"
-F 7 "Transistors - FETs, MOSFETs - Single" H 7800 4350 60  0001 L CNN "Family"
-F 8 "https://www.infineon.com/dgdl/irlml6344pbf.pdf?fileId=5546d462533600a4015356689c44262c" H 7800 4450 60  0001 L CNN "DK_Datasheet_Link"
-F 9 "/product-detail/en/infineon-technologies/IRLML6344TRPBF/IRLML6344TRPBFCT-ND/2538168" H 7800 4550 60  0001 L CNN "DK_Detail_Page"
-F 10 "MOSFET N-CH 30V 5A SOT23" H 7800 4650 60  0001 L CNN "Description"
-F 11 "Infineon Technologies" H 7800 4750 60  0001 L CNN "Manufacturer"
-F 12 "Active" H 7800 4850 60  0001 L CNN "Status"
-	1    7600 3650
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:VCC #PWR0409
-U 1 1 5CEC27F0
-P 7600 2900
-F 0 "#PWR0409" H 7600 2750 50  0001 C CNN
-F 1 "VCC" H 7617 3073 50  0000 C CNN
-F 2 "" H 7600 2900 50  0001 C CNN
-F 3 "" H 7600 2900 50  0001 C CNN
-	1    7600 2900
-	1    0    0    -1  
-$EndComp
-$Comp
 L Connector_Generic:Conn_01x02 J405
 U 1 1 5CEC27F6
-P 7800 3150
-F 0 "J405" H 7880 3142 50  0000 L CNN
-F 1 "Conn_01x02" H 7880 3051 50  0000 L CNN
-F 2 "Pin_Headers:Pin_Header_Angled_1x02_Pitch2.54mm" H 7800 3150 50  0001 C CNN
-F 3 "~" H 7800 3150 50  0001 C CNN
-	1    7800 3150
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	7600 3250 7600 3450
-Wire Wire Line
-	7600 2900 7600 3150
-$Comp
-L power:GND #PWR0413
-U 1 1 5CEC27FF
-P 7600 4100
-F 0 "#PWR0413" H 7600 3850 50  0001 C CNN
-F 1 "GND" H 7605 3927 50  0000 C CNN
-F 2 "" H 7600 4100 50  0001 C CNN
-F 3 "" H 7600 4100 50  0001 C CNN
-	1    7600 4100
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:R_Small R413
-U 1 1 5CEC2805
-P 7250 3950
-F 0 "R413" H 7191 3904 50  0000 R CNN
-F 1 "10k" H 7191 3995 50  0000 R CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 7250 3950 50  0001 C CNN
-F 3 "~" H 7250 3950 50  0001 C CNN
-	1    7250 3950
-	1    0    0    1   
-$EndComp
-Wire Wire Line
-	7600 4100 7600 4050
-Wire Wire Line
-	7600 4050 7250 4050
-Wire Wire Line
-	7250 3850 7250 3750
-Wire Wire Line
-	7250 3750 7300 3750
-Wire Wire Line
-	7600 4050 7600 3850
-Connection ~ 7600 4050
-Wire Wire Line
-	7250 3750 7200 3750
-Connection ~ 7250 3750
-$Comp
-L Device:R_Small R409
-U 1 1 5CEC2814
-P 7100 3750
-F 0 "R409" V 6904 3750 50  0000 C CNN
-F 1 "10" V 6995 3750 50  0000 C CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 7100 3750 50  0001 C CNN
-F 3 "~" H 7100 3750 50  0001 C CNN
-	1    7100 3750
-	0    1    1    0   
+P 9150 1700
+F 0 "J405" H 9230 1692 50  0000 L CNN
+F 1 "Conn_01x02" H 9230 1601 50  0000 L CNN
+F 2 "Pin_Headers:Pin_Header_Angled_1x02_Pitch2.54mm" H 9150 1700 50  0001 C CNN
+F 3 "~" H 9150 1700 50  0001 C CNN
+	1    9150 1700
+	-1   0    0    1   
 $EndComp
 Text GLabel 4850 3650 0    50   Input ~ 0
-OUT2
-Wire Wire Line
-	7000 3750 6950 3750
+PWM2
 $Comp
 L dk_Transistors-FETs-MOSFETs-Single:IRLML6344TRPBF Q402
 U 1 1 5CEC3A82
@@ -452,7 +368,7 @@ F 3 "~" H 7100 1800 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 Text GLabel 6950 1800 0    50   Input ~ 0
-OUT3
+OUT1
 Wire Wire Line
 	7000 1800 6950 1800
 $Comp
@@ -548,8 +464,8 @@ F 3 "~" H 5000 3650 50  0001 C CNN
 	1    5000 3650
 	0    1    1    0   
 $EndComp
-Text GLabel 6950 3750 0    50   Input ~ 0
-OUT4
+Text GLabel 10700 1700 2    50   Output ~ 0
+IN1
 Wire Wire Line
 	4900 3650 4850 3650
 $Comp
@@ -564,199 +480,102 @@ F 3 "~" H 1800 6600 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L dk_Transistors-FETs-MOSFETs-Single:IRLML6344TRPBF Q403
-U 1 1 5CEFB1E1
-P 9650 1700
-F 0 "Q403" H 9757 1753 60  0000 L CNN
-F 1 "IRLML6344TRPBF" H 9757 1647 60  0000 L CNN
-F 2 "digikey-footprints:SOT-23-3" H 9850 1900 60  0001 L CNN
-F 3 "https://www.infineon.com/dgdl/irlml6344pbf.pdf?fileId=5546d462533600a4015356689c44262c" H 9850 2000 60  0001 L CNN
-F 4 "IRLML6344TRPBFCT-ND" H 9850 2100 60  0001 L CNN "Digi-Key_PN"
-F 5 "IRLML6344TRPBF" H 9850 2200 60  0001 L CNN "MPN"
-F 6 "Discrete Semiconductor Products" H 9850 2300 60  0001 L CNN "Category"
-F 7 "Transistors - FETs, MOSFETs - Single" H 9850 2400 60  0001 L CNN "Family"
-F 8 "https://www.infineon.com/dgdl/irlml6344pbf.pdf?fileId=5546d462533600a4015356689c44262c" H 9850 2500 60  0001 L CNN "DK_Datasheet_Link"
-F 9 "/product-detail/en/infineon-technologies/IRLML6344TRPBF/IRLML6344TRPBFCT-ND/2538168" H 9850 2600 60  0001 L CNN "DK_Detail_Page"
-F 10 "MOSFET N-CH 30V 5A SOT23" H 9850 2700 60  0001 L CNN "Description"
-F 11 "Infineon Technologies" H 9850 2800 60  0001 L CNN "Manufacturer"
-F 12 "Active" H 9850 2900 60  0001 L CNN "Status"
-	1    9650 1700
-	1    0    0    -1  
-$EndComp
-$Comp
 L power:VCC #PWR0404
 U 1 1 5CEFB1E7
-P 9650 950
-F 0 "#PWR0404" H 9650 800 50  0001 C CNN
-F 1 "VCC" H 9667 1123 50  0000 C CNN
-F 2 "" H 9650 950 50  0001 C CNN
-F 3 "" H 9650 950 50  0001 C CNN
-	1    9650 950 
+P 7600 2800
+F 0 "#PWR0404" H 7600 2650 50  0001 C CNN
+F 1 "VCC" H 7617 2973 50  0000 C CNN
+F 2 "" H 7600 2800 50  0001 C CNN
+F 3 "" H 7600 2800 50  0001 C CNN
+	1    7600 2800
 	1    0    0    -1  
 $EndComp
 $Comp
 L Connector_Generic:Conn_01x02 J403
 U 1 1 5CEFB1ED
-P 9850 1200
-F 0 "J403" H 9930 1192 50  0000 L CNN
-F 1 "Conn_01x02" H 9930 1101 50  0000 L CNN
-F 2 "Pin_Headers:Pin_Header_Angled_1x02_Pitch2.54mm" H 9850 1200 50  0001 C CNN
-F 3 "~" H 9850 1200 50  0001 C CNN
-	1    9850 1200
+P 7800 3050
+F 0 "J403" H 7880 3042 50  0000 L CNN
+F 1 "Conn_01x02" H 7880 2951 50  0000 L CNN
+F 2 "Pin_Headers:Pin_Header_Angled_1x02_Pitch2.54mm" H 7800 3050 50  0001 C CNN
+F 3 "~" H 7800 3050 50  0001 C CNN
+	1    7800 3050
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	9650 1300 9650 1500
+	7600 3150 7600 3350
 Wire Wire Line
-	9650 950  9650 1200
+	7600 2800 7600 3050
 $Comp
 L power:GND #PWR0407
 U 1 1 5CEFB1F5
-P 9650 2150
-F 0 "#PWR0407" H 9650 1900 50  0001 C CNN
-F 1 "GND" H 9655 1977 50  0000 C CNN
-F 2 "" H 9650 2150 50  0001 C CNN
-F 3 "" H 9650 2150 50  0001 C CNN
-	1    9650 2150
+P 7600 4000
+F 0 "#PWR0407" H 7600 3750 50  0001 C CNN
+F 1 "GND" H 7605 3827 50  0000 C CNN
+F 2 "" H 7600 4000 50  0001 C CNN
+F 3 "" H 7600 4000 50  0001 C CNN
+	1    7600 4000
 	1    0    0    -1  
 $EndComp
 $Comp
 L Device:R_Small R407
 U 1 1 5CEFB1FB
-P 9300 2000
-F 0 "R407" H 9241 1954 50  0000 R CNN
-F 1 "10k" H 9241 2045 50  0000 R CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 9300 2000 50  0001 C CNN
-F 3 "~" H 9300 2000 50  0001 C CNN
-	1    9300 2000
+P 7250 3850
+F 0 "R407" H 7191 3804 50  0000 R CNN
+F 1 "10k" H 7191 3895 50  0000 R CNN
+F 2 "Resistors_SMD:R_0603_HandSoldering" H 7250 3850 50  0001 C CNN
+F 3 "~" H 7250 3850 50  0001 C CNN
+	1    7250 3850
 	1    0    0    1   
 $EndComp
 Wire Wire Line
-	9650 2150 9650 2100
+	7600 4000 7600 3950
 Wire Wire Line
-	9650 2100 9300 2100
+	7600 3950 7250 3950
 Wire Wire Line
-	9300 1900 9300 1800
+	7250 3750 7250 3650
 Wire Wire Line
-	9300 1800 9350 1800
+	7250 3650 7300 3650
 Wire Wire Line
-	9650 2100 9650 1900
-Connection ~ 9650 2100
+	7600 3950 7600 3750
+Connection ~ 7600 3950
 Wire Wire Line
-	9300 1800 9250 1800
-Connection ~ 9300 1800
+	7250 3650 7200 3650
+Connection ~ 7250 3650
 $Comp
 L Device:R_Small R404
 U 1 1 5CEFB209
-P 9150 1800
-F 0 "R404" V 8954 1800 50  0000 C CNN
-F 1 "10" V 9045 1800 50  0000 C CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 9150 1800 50  0001 C CNN
-F 3 "~" H 9150 1800 50  0001 C CNN
-	1    9150 1800
+P 7100 3650
+F 0 "R404" V 6904 3650 50  0000 C CNN
+F 1 "10" V 6995 3650 50  0000 C CNN
+F 2 "Resistors_SMD:R_0603_HandSoldering" H 7100 3650 50  0001 C CNN
+F 3 "~" H 7100 3650 50  0001 C CNN
+	1    7100 3650
 	0    1    1    0   
 $EndComp
-Text GLabel 9000 1800 0    50   Input ~ 0
-OUT5
 Wire Wire Line
-	9050 1800 9000 1800
-$Comp
-L dk_Transistors-FETs-MOSFETs-Single:IRLML6344TRPBF Q407
-U 1 1 5CEFB21A
-P 9650 3600
-F 0 "Q407" H 9757 3653 60  0000 L CNN
-F 1 "IRLML6344TRPBF" H 9757 3547 60  0000 L CNN
-F 2 "digikey-footprints:SOT-23-3" H 9850 3800 60  0001 L CNN
-F 3 "https://www.infineon.com/dgdl/irlml6344pbf.pdf?fileId=5546d462533600a4015356689c44262c" H 9850 3900 60  0001 L CNN
-F 4 "IRLML6344TRPBFCT-ND" H 9850 4000 60  0001 L CNN "Digi-Key_PN"
-F 5 "IRLML6344TRPBF" H 9850 4100 60  0001 L CNN "MPN"
-F 6 "Discrete Semiconductor Products" H 9850 4200 60  0001 L CNN "Category"
-F 7 "Transistors - FETs, MOSFETs - Single" H 9850 4300 60  0001 L CNN "Family"
-F 8 "https://www.infineon.com/dgdl/irlml6344pbf.pdf?fileId=5546d462533600a4015356689c44262c" H 9850 4400 60  0001 L CNN "DK_Datasheet_Link"
-F 9 "/product-detail/en/infineon-technologies/IRLML6344TRPBF/IRLML6344TRPBFCT-ND/2538168" H 9850 4500 60  0001 L CNN "DK_Detail_Page"
-F 10 "MOSFET N-CH 30V 5A SOT23" H 9850 4600 60  0001 L CNN "Description"
-F 11 "Infineon Technologies" H 9850 4700 60  0001 L CNN "Manufacturer"
-F 12 "Active" H 9850 4800 60  0001 L CNN "Status"
-	1    9650 3600
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:VCC #PWR0411
-U 1 1 5CEFB220
-P 9650 2850
-F 0 "#PWR0411" H 9650 2700 50  0001 C CNN
-F 1 "VCC" H 9667 3023 50  0000 C CNN
-F 2 "" H 9650 2850 50  0001 C CNN
-F 3 "" H 9650 2850 50  0001 C CNN
-	1    9650 2850
-	1    0    0    -1  
-$EndComp
+	7000 3650 6950 3650
 $Comp
 L Connector_Generic:Conn_01x02 J407
 U 1 1 5CEFB226
-P 9850 3100
-F 0 "J407" H 9930 3092 50  0000 L CNN
-F 1 "Conn_01x02" H 9930 3001 50  0000 L CNN
-F 2 "Pin_Headers:Pin_Header_Angled_1x02_Pitch2.54mm" H 9850 3100 50  0001 C CNN
-F 3 "~" H 9850 3100 50  0001 C CNN
-	1    9850 3100
-	1    0    0    -1  
+P 9150 3400
+F 0 "J407" H 9230 3392 50  0000 L CNN
+F 1 "Conn_01x02" H 9230 3301 50  0000 L CNN
+F 2 "Pin_Headers:Pin_Header_Angled_1x02_Pitch2.54mm" H 9150 3400 50  0001 C CNN
+F 3 "~" H 9150 3400 50  0001 C CNN
+	1    9150 3400
+	-1   0    0    1   
 $EndComp
-Wire Wire Line
-	9650 3200 9650 3400
-Wire Wire Line
-	9650 2850 9650 3100
 $Comp
 L power:GND #PWR0415
 U 1 1 5CEFB22E
-P 9650 4050
-F 0 "#PWR0415" H 9650 3800 50  0001 C CNN
-F 1 "GND" H 9655 3877 50  0000 C CNN
-F 2 "" H 9650 4050 50  0001 C CNN
-F 3 "" H 9650 4050 50  0001 C CNN
-	1    9650 4050
+P 10100 3850
+F 0 "#PWR0415" H 10100 3600 50  0001 C CNN
+F 1 "GND" H 10105 3677 50  0000 C CNN
+F 2 "" H 10100 3850 50  0001 C CNN
+F 3 "" H 10100 3850 50  0001 C CNN
+	1    10100 3850
 	1    0    0    -1  
 $EndComp
-$Comp
-L Device:R_Small R415
-U 1 1 5CEFB234
-P 9300 3900
-F 0 "R415" H 9241 3854 50  0000 R CNN
-F 1 "10k" H 9241 3945 50  0000 R CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 9300 3900 50  0001 C CNN
-F 3 "~" H 9300 3900 50  0001 C CNN
-	1    9300 3900
-	1    0    0    1   
-$EndComp
-Wire Wire Line
-	9650 4050 9650 4000
-Wire Wire Line
-	9650 4000 9300 4000
-Wire Wire Line
-	9300 3800 9300 3700
-Wire Wire Line
-	9300 3700 9350 3700
-Wire Wire Line
-	9650 4000 9650 3800
-Connection ~ 9650 4000
-Wire Wire Line
-	9300 3700 9250 3700
-Connection ~ 9300 3700
-$Comp
-L Device:R_Small R411
-U 1 1 5CEFB242
-P 9150 3700
-F 0 "R411" V 8954 3700 50  0000 C CNN
-F 1 "10" V 9045 3700 50  0000 C CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 9150 3700 50  0001 C CNN
-F 3 "~" H 9150 3700 50  0001 C CNN
-	1    9150 3700
-	0    1    1    0   
-$EndComp
-Text GLabel 9000 3700 0    50   Input ~ 0
-OUT6
-Wire Wire Line
-	9050 3700 9000 3700
 Wire Wire Line
 	2150 6100 1550 6100
 Connection ~ 1550 6100
@@ -1159,11 +978,11 @@ Wire Notes Line
 Wire Notes Line
 	600  650  3650 650 
 Wire Notes Line
-	10650 650  10650 4500
+	8600 650  8600 4500
 Wire Notes Line
-	4350 650  10650 650 
+	4350 650  11000 650 
 Wire Notes Line
-	4350 4500 10650 4500
+	4350 4500 11000 4500
 Text Notes 650  750  0    50   ~ 0
 HIGH CURRENT PWM OUTPUTS
 Text Notes 4400 750  0    50   ~ 0
@@ -1247,4 +1066,221 @@ F 3 "" H 3700 5750 50  0001 C CNN
 	1    3700 5750
 	1    0    0    -1  
 $EndComp
+$Comp
+L dk_Optoisolators-Logic-Output:TLP2361_TPL_E U405
+U 1 1 5D10DD0E
+P 10100 1700
+F 0 "U405" H 10250 1900 60  0000 L CNN
+F 1 "TLP2361_TPL_E" H 10250 1500 60  0000 L CNN
+F 2 "digikey-footprints:SOIC-6-5_W4.55mm" H 10300 1900 60  0001 L CNN
+F 3 "https://toshiba.semicon-storage.com/info/docget.jsp?did=14229&prodName=TLP2361" H 10300 2000 60  0001 L CNN
+F 4 "TLP2361(TPLECT-ND" H 10300 2100 60  0001 L CNN "Digi-Key_PN"
+F 5 "TLP2361(TPL,E" H 10300 2200 60  0001 L CNN "MPN"
+F 6 "Isolators" H 10300 2300 60  0001 L CNN "Category"
+F 7 "Optoisolators - Logic Output" H 10300 2400 60  0001 L CNN "Family"
+F 8 "https://toshiba.semicon-storage.com/info/docget.jsp?did=14229&prodName=TLP2361" H 10300 2500 60  0001 L CNN "DK_Datasheet_Link"
+F 9 "/product-detail/en/toshiba-semiconductor-and-storage/TLP2361(TPL,E/TLP2361(TPLECT-ND/5189799" H 10300 2600 60  0001 L CNN "DK_Detail_Page"
+F 10 "OPTOISO 3.75KV PSH PULL SO6-5" H 10300 2700 60  0001 L CNN "Description"
+F 11 "Toshiba Semiconductor and Storage" H 10300 2800 60  0001 L CNN "Manufacturer"
+F 12 "Active" H 10300 2900 60  0001 L CNN "Status"
+	1    10100 1700
+	1    0    0    -1  
+$EndComp
+Text GLabel 10700 3400 2    50   Output ~ 0
+IN2
+Text GLabel 6950 3650 0    50   Input ~ 0
+OUT2
+$Comp
+L dk_Transistors-FETs-MOSFETs-Single:IRLML6344TRPBF Q403
+U 1 1 5CEFB1E1
+P 7600 3550
+F 0 "Q403" H 7707 3603 60  0000 L CNN
+F 1 "IRLML6344TRPBF" H 7707 3497 60  0000 L CNN
+F 2 "digikey-footprints:SOT-23-3" H 7800 3750 60  0001 L CNN
+F 3 "https://www.infineon.com/dgdl/irlml6344pbf.pdf?fileId=5546d462533600a4015356689c44262c" H 7800 3850 60  0001 L CNN
+F 4 "IRLML6344TRPBFCT-ND" H 7800 3950 60  0001 L CNN "Digi-Key_PN"
+F 5 "IRLML6344TRPBF" H 7800 4050 60  0001 L CNN "MPN"
+F 6 "Discrete Semiconductor Products" H 7800 4150 60  0001 L CNN "Category"
+F 7 "Transistors - FETs, MOSFETs - Single" H 7800 4250 60  0001 L CNN "Family"
+F 8 "https://www.infineon.com/dgdl/irlml6344pbf.pdf?fileId=5546d462533600a4015356689c44262c" H 7800 4350 60  0001 L CNN "DK_Datasheet_Link"
+F 9 "/product-detail/en/infineon-technologies/IRLML6344TRPBF/IRLML6344TRPBFCT-ND/2538168" H 7800 4450 60  0001 L CNN "DK_Detail_Page"
+F 10 "MOSFET N-CH 30V 5A SOT23" H 7800 4550 60  0001 L CNN "Description"
+F 11 "Infineon Technologies" H 7800 4650 60  0001 L CNN "Manufacturer"
+F 12 "Active" H 7800 4750 60  0001 L CNN "Status"
+	1    7600 3550
+	1    0    0    -1  
+$EndComp
+$Comp
+L dk_Optoisolators-Logic-Output:TLP2361_TPL_E U406
+U 1 1 5D12E921
+P 10100 3400
+F 0 "U406" H 10250 3600 60  0000 L CNN
+F 1 "TLP2361_TPL_E" H 10250 3200 60  0000 L CNN
+F 2 "digikey-footprints:SOIC-6-5_W4.55mm" H 10300 3600 60  0001 L CNN
+F 3 "https://toshiba.semicon-storage.com/info/docget.jsp?did=14229&prodName=TLP2361" H 10300 3700 60  0001 L CNN
+F 4 "TLP2361(TPLECT-ND" H 10300 3800 60  0001 L CNN "Digi-Key_PN"
+F 5 "TLP2361(TPL,E" H 10300 3900 60  0001 L CNN "MPN"
+F 6 "Isolators" H 10300 4000 60  0001 L CNN "Category"
+F 7 "Optoisolators - Logic Output" H 10300 4100 60  0001 L CNN "Family"
+F 8 "https://toshiba.semicon-storage.com/info/docget.jsp?did=14229&prodName=TLP2361" H 10300 4200 60  0001 L CNN "DK_Datasheet_Link"
+F 9 "/product-detail/en/toshiba-semiconductor-and-storage/TLP2361(TPL,E/TLP2361(TPLECT-ND/5189799" H 10300 4300 60  0001 L CNN "DK_Detail_Page"
+F 10 "OPTOISO 3.75KV PSH PULL SO6-5" H 10300 4400 60  0001 L CNN "Description"
+F 11 "Toshiba Semiconductor and Storage" H 10300 4500 60  0001 L CNN "Manufacturer"
+F 12 "Active" H 10300 4600 60  0001 L CNN "Status"
+	1    10100 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R_Small R411
+U 1 1 5D1521BC
+P 9550 3300
+F 0 "R411" V 9354 3300 50  0000 C CNN
+F 1 "100" V 9445 3300 50  0000 C CNN
+F 2 "Resistors_SMD:R_0603_HandSoldering" H 9550 3300 50  0001 C CNN
+F 3 "~" H 9550 3300 50  0001 C CNN
+	1    9550 3300
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R_Small R409
+U 1 1 5D1526A8
+P 9550 1600
+F 0 "R409" V 9354 1600 50  0000 C CNN
+F 1 "100" V 9445 1600 50  0000 C CNN
+F 2 "Resistors_SMD:R_0603_HandSoldering" H 9550 1600 50  0001 C CNN
+F 3 "~" H 9550 1600 50  0001 C CNN
+	1    9550 1600
+	0    1    1    0   
+$EndComp
+$Comp
+L power:+3V3 #PWR0131
+U 1 1 5D15D547
+P 10100 1000
+F 0 "#PWR0131" H 10100 850 50  0001 C CNN
+F 1 "+3V3" H 10115 1173 50  0000 C CNN
+F 2 "" H 10100 1000 50  0001 C CNN
+F 3 "" H 10100 1000 50  0001 C CNN
+	1    10100 1000
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3V3 #PWR0132
+U 1 1 5D15D62B
+P 10100 2600
+F 0 "#PWR0132" H 10100 2450 50  0001 C CNN
+F 1 "+3V3" H 10115 2773 50  0000 C CNN
+F 2 "" H 10100 2600 50  0001 C CNN
+F 3 "" H 10100 2600 50  0001 C CNN
+	1    10100 2600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	10100 2600 10100 2800
+Wire Wire Line
+	9800 3300 9650 3300
+Wire Wire Line
+	9450 3300 9350 3300
+Wire Wire Line
+	9800 1600 9650 1600
+Wire Wire Line
+	9450 1600 9350 1600
+Wire Wire Line
+	10100 1400 10100 1200
+$Comp
+L power:GND #PWR0133
+U 1 1 5D17CE18
+P 10100 2100
+F 0 "#PWR0133" H 10100 1850 50  0001 C CNN
+F 1 "GND" H 10105 1927 50  0000 C CNN
+F 2 "" H 10100 2100 50  0001 C CNN
+F 3 "" H 10100 2100 50  0001 C CNN
+	1    10100 2100
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C_Small C407
+U 1 1 5D198B7B
+P 10250 1200
+F 0 "C407" V 10021 1200 50  0000 C CNN
+F 1 "100n" V 10112 1200 50  0000 C CNN
+F 2 "Capacitors_SMD:C_0603_HandSoldering" H 10250 1200 50  0001 C CNN
+F 3 "~" H 10250 1200 50  0001 C CNN
+	1    10250 1200
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:C_Small C408
+U 1 1 5D1990C7
+P 10250 2800
+F 0 "C408" V 10021 2800 50  0000 C CNN
+F 1 "100n" V 10112 2800 50  0000 C CNN
+F 2 "Capacitors_SMD:C_0603_HandSoldering" H 10250 2800 50  0001 C CNN
+F 3 "~" H 10250 2800 50  0001 C CNN
+	1    10250 2800
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR0134
+U 1 1 5D1992E3
+P 10400 1250
+F 0 "#PWR0134" H 10400 1000 50  0001 C CNN
+F 1 "GND" H 10405 1077 50  0000 C CNN
+F 2 "" H 10400 1250 50  0001 C CNN
+F 3 "" H 10400 1250 50  0001 C CNN
+	1    10400 1250
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0135
+U 1 1 5D199422
+P 10450 2850
+F 0 "#PWR0135" H 10450 2600 50  0001 C CNN
+F 1 "GND" H 10455 2677 50  0000 C CNN
+F 2 "" H 10450 2850 50  0001 C CNN
+F 3 "" H 10450 2850 50  0001 C CNN
+	1    10450 2850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	10450 2850 10450 2800
+Wire Wire Line
+	10450 2800 10350 2800
+Wire Wire Line
+	10150 2800 10100 2800
+Connection ~ 10100 2800
+Wire Wire Line
+	10100 2800 10100 3100
+Wire Wire Line
+	10400 1250 10400 1200
+Wire Wire Line
+	10400 1200 10350 1200
+Wire Wire Line
+	10150 1200 10100 1200
+Connection ~ 10100 1200
+Wire Wire Line
+	10100 1200 10100 1000
+Wire Wire Line
+	10700 1700 10400 1700
+Wire Wire Line
+	10700 3400 10400 3400
+Wire Wire Line
+	9400 3400 9350 3400
+Wire Wire Line
+	9350 1700 9400 1700
+Wire Notes Line
+	11000 4500 11000 650 
+Text Notes 8650 750  0    50   ~ 0
+OPTO INPUTS
+Wire Wire Line
+	9400 3500 9800 3500
+Wire Wire Line
+	9400 3400 9400 3500
+Wire Wire Line
+	10100 3700 10100 3850
+Wire Wire Line
+	9400 1700 9400 1800
+Wire Wire Line
+	9400 1800 9800 1800
+Wire Wire Line
+	10100 2000 10100 2100
 $EndSCHEMATC

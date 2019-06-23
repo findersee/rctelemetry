@@ -74,12 +74,12 @@ void Error_Handler(void);
 #define ESC2_CURRENT_GPIO_Port GPIOA
 #define DAC_OUT_Pin GPIO_PIN_4
 #define DAC_OUT_GPIO_Port GPIOA
-#define OUT4_Pin GPIO_PIN_0
-#define OUT4_GPIO_Port GPIOB
-#define OUT5_Pin GPIO_PIN_1
-#define OUT5_GPIO_Port GPIOB
-#define OUT3_Pin GPIO_PIN_2
-#define OUT3_GPIO_Port GPIOB
+#define IN1_Pin GPIO_PIN_0
+#define IN1_GPIO_Port GPIOB
+#define OUT2_Pin GPIO_PIN_1
+#define OUT2_GPIO_Port GPIOB
+#define OUT1_Pin GPIO_PIN_2
+#define OUT1_GPIO_Port GPIOB
 #define BAT_VOLTAGE_Pin GPIO_PIN_12
 #define BAT_VOLTAGE_GPIO_Port GPIOB
 #define COOLING_TEMP_Pin GPIO_PIN_13
@@ -94,8 +94,8 @@ void Error_Handler(void);
 #define Sport_UART_GPIO_Port GPIOA
 #define WP_Pin GPIO_PIN_10
 #define WP_GPIO_Port GPIOA
-#define OUT1_Pin GPIO_PIN_13
-#define OUT1_GPIO_Port GPIOA
+#define PWM1_Pin GPIO_PIN_13
+#define PWM1_GPIO_Port GPIOA
 #define Sbus_UART_Pin GPIO_PIN_14
 #define Sbus_UART_GPIO_Port GPIOA
 #define Servo_1_Pin GPIO_PIN_15
@@ -106,10 +106,10 @@ void Error_Handler(void);
 #define HC_OUT1_GPIO_Port GPIOB
 #define HC_OUT2_Pin GPIO_PIN_7
 #define HC_OUT2_GPIO_Port GPIOB
-#define OUT6_Pin GPIO_PIN_8
-#define OUT6_GPIO_Port GPIOB
-#define OUT2_Pin GPIO_PIN_9
-#define OUT2_GPIO_Port GPIOB
+#define IN2_Pin GPIO_PIN_8
+#define IN2_GPIO_Port GPIOB
+#define PWM2_Pin GPIO_PIN_9
+#define PWM2_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 //Taken from OpenTx source codes
 #define ALT_FIRST_ID              0x0100
