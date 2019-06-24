@@ -25,12 +25,24 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "uart_driver.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+typedef struct
+{
+	char ID;
+}telemetryMessage;
+typedef struct
+{
+	float ESC1_powerValue;
+	float ESC1_voltageValue;
+	float ESC1_currentValue;
+	float ESC2_powerValue;
+	float ESC2_voltageValue;
+	float ESC2_currentValue;
+}powerMessage;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -80,9 +92,15 @@ osMessageQId telemetryRequestQueueHandle;
 uartDriver SportUart;
 uint8_t SportTXBuffer[50];
 uint8_t SportRXBuffer[50];
-uartDriver Sbus;
-uint8_t SbusTxBuffer[50];
-uint8_t SbusRxBuffer[50];
+
+uartDriver SbusUart;
+uint8_t SbusTXBuffer[50];
+uint8_t SbusRXBuffer[50];
+
+SemaphoreHandle_t powerMutex;
+QueueHandle_t telemetryQueue;
+QueueHandle_t powerQueue;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -167,12 +185,13 @@ int main(void)
   MX_SPI3_Init();
   MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
-  SportUart = uartDriverInit(&SportTXBuffer,50,&SportRXBuffer,50,&huart1);
-  SbusUart = uartDriverInit(&SbusTXBuffer,50,&SbusRXBuffer,50,&huart2);
+  SportUart = uartDriverInit((uint8_t *)&SportTXBuffer,50,(uint8_t *)&SportRXBuffer,50,&huart1);
+  SbusUart = uartDriverInit((uint8_t *)&SbusTXBuffer,50,(uint8_t *)&SbusRXBuffer,50,&huart2);
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
+  powerMutex = xSemaphoreCreateMutex();
   /* USER CODE END RTOS_MUTEX */
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
@@ -1226,7 +1245,17 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+#define ADC_samples 8
 
+//Power ADC size definitions
+#define powerChannels 4
+#define powerBufferSize (ADC_samples*powerChannels)
+
+
+uint16_t DAC_BUFFER[30];
+uint16_t power_ADC_Buffer[powerBufferSize];
+uint16_t temp_ADC_Buffer[ADC_samples];
+uint16_t batVolt_ADC_Buffer[ADC_samples];
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -1260,10 +1289,41 @@ void StartDefaultTask(void const * argument)
 void StartSendTelemetry(void const * argument)
 {
   /* USER CODE BEGIN StartSendTelemetry */
+
+	telemetryMessage *receivedMessage;
+	telemetryQueue = xQueueCreate(10, sizeof(struct telemetryMessage * ));
+	osEvent requestEvent;
+	if(telemetryRequestQueueHandle == NULL)
+	{
+		Error_Handler();
+	}
+	uint8_t sensorBuffer[8];
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+
+	requestEvent = osMessageGet(telemetryRequestQueueHandle, osWaitForever);//xQueueReceive(telemetryQueue,&(receivedMessage),portMAX_DELAY);
+	receivedMessage = requestEvent.value.p;
+	switch(receivedMessage->ID)
+	{
+		case 0x22:
+			/*Send ESC 1 power data*/
+			sensorBuffer[0] = 0x32;
+			sensorBuffer[1] = (uint8_t)CURR_FIRST_ID;
+			sensorBuffer[2] = CURR_FIRST_ID >> 8;
+			sensorBuffer[3] = 0;
+			break;
+		case 0x48:
+			/*Send ESC 2 power data*/
+			break;
+		default:
+			break;
+	}
+	sensorBuffer[7] = HAL_CRC_Calculate(&hcrc, (uint32_t *) sensorBuffer, sizeof(sensorBuffer));
+
+
+	HAL_UART_Transmit_DMA(&huart1, sensorBuffer, sizeof(sensorBuffer));
+	//osDelay(1);
   }
   /* USER CODE END StartSendTelemetry */
 }
@@ -1278,13 +1338,66 @@ void StartSendTelemetry(void const * argument)
 void StartPower(void const * argument)
 {
   /* USER CODE BEGIN StartPower */
+	uint16_t measurements[powerChannels];
+	#define currentScaling 0.6f
+	#define voltageScaling 0.15f
+	#define ADC_step (3.3f/4096)
+	powerMessage power_new = {};
+	float temp = 0.0f;
+	powerQueue = xQueueCreate(1,sizeof(struct powerMessage * ));
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+	 memset((uint32_t*)measurements,0,sizeof(measurements));
+	 for(uint8_t ch=0; ch < powerChannels; ch++)
+	 {
+		 uint32_t temp=0;
+		 for(uint8_t buf=ch;buf<(powerBufferSize-ch); buf+=powerChannels)
+		 {
+			 temp += power_ADC_Buffer[buf];
+		 }
+		 measurements[ch] = (temp/ADC_samples);
+	 }
+
+
+		 temp = 0.0f;
+		 //ESC1 Voltage scaled
+		 temp = measurements[0]*ADC_step;
+		 temp /= voltageScaling;
+		 power_new.ESC1_voltageValue = temp;
+
+		 temp = 0.0f;
+		 //ESC2 Voltage scaled
+		 temp = measurements[1]*ADC_step;
+		 temp /= voltageScaling;
+		 power_new.ESC2_voltageValue = temp;
+
+		 temp = 0.0f;
+		 //ESC1 Current scaled
+		 temp = measurements[2]*ADC_step;
+		 temp /= currentScaling;
+		 temp -= 0.5f; //Subtract offset value;
+		 temp /= 0.04f; //Calculate Amps with formula 40mV/A
+		 power_new.ESC1_currentValue = temp;
+
+		 temp = 0.0f;
+		 //ESC2 Current scaled
+		 temp = measurements[3]*ADC_step;
+		 temp /= currentScaling;
+		 temp -= 0.5f;
+		 temp /= 0.04f;
+		 power_new.ESC2_currentValue = temp;
+
+		 power_new.ESC1_powerValue = (power_new.ESC1_currentValue*power_new.ESC1_voltageValue);
+		 power_new.ESC2_powerValue = (power_new.ESC2_currentValue*power_new.ESC2_voltageValue);
+
+		 xQueueOverwrite(powerQueue,&power_new);
+		 osDelay(100);
+
   }
   /* USER CODE END StartPower */
 }
+
 
 /**
   * @brief  Period elapsed callback in non blocking mode

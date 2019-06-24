@@ -9,6 +9,7 @@
 #define INC_UART_DRIVER_H_
 
 #include "main.h"
+#include <stdint.h>
 
 #ifdef __cplusplus
  extern "C" {
@@ -21,18 +22,22 @@ typedef struct
 	uint8_t *RxBuffer;
 	unsigned RxBufferSize;
 	UART_HandleTypeDef *huart;
-	uint8_t rxBufHead;
-	uint8_t rxBufTail;
-
-
+	unsigned rxBufHead;
+	unsigned rxBufTail;
+	unsigned txBufHead;
+	unsigned txBufTail;
 
 }uartDriver;
 
+struct TxDataStruct
+{
+	const void * data;
+	unsigned size;
+};
 
-uartDriver uartDriverInit(uint8_t *Txbuffer,uint8_t TxBufferSize,uint8_t *RxBuffer,uint8_t RxBufferSize,UART_HandleTypeDef *huart_);
-void uartDriverLoadData(const void *data_,unsigned bytes,uartDriver *driver);
-uint8_t uartDriverSpace(uartDriver *driver);
-void uartDriverReadData(void *buffer,uint8_t bytes,uartDriver *driver);
-
+uartDriver uartDriverInit(uint8_t * Txbuffer,unsigned TxBufferSize,uint8_t * RxBuffer,unsigned RxBufferSize,UART_HandleTypeDef *huart_);
+uint8_t uartDriverLoadData(const void *data_,unsigned bytes,uartDriver *_driver);
+uint8_t uartDriverSpace(uartDriver *_driver);
+void uartDriverReadData(void *_buffer,unsigned _bytes,uartDriver *_driver);
 
 #endif /* INC_UART_DRIVER_H_ */
