@@ -38,7 +38,7 @@ void uartDriverReadData(void *_buffer,unsigned _bytes,uartDriver *_driver){
 	unsigned tail = _driver->rxBufTail;
 
 	memcpy(_buffer,_driver->RxBuffer,_bytes);
-	_driver->rxBufTail = (tail+50)%(_driver->RxBufferSize);
+	_driver->rxBufHead = (tail+50)%(_driver->RxBufferSize);
 }
 
 unsigned uartDriverDataReady(uartDriver *driver_){
@@ -62,11 +62,13 @@ uint8_t uartDriverLoadData(const void *data,unsigned bytes,uartDriver *_driver){
 		return 0;
 
 	for(unsigned i=0;i<bytes;i++){
-	_driver->TxBuffer[head] = data+i;
+	_driver->TxBuffer[head] = *((uint8_t *)data+i);
 	head = (head + 1) % _driver->TxBufferSize;
 	}
 
+	_driver->txBufHead = head;
 	if ((_driver->huart->hdmatx->Instance->CCR & DMA_CCR_EN) == 0){
-	HAL_DMA_Start_IT(_driver->huart->hdmatx,_driver->TxBuffer, _driver->huart->Instance->TDR, bytes);
+	HAL_DMA_Start_IT(_driver->huart->hdmatx,(uint32_t)(_driver->TxBuffer), (uint32_t)(_driver->huart->Instance->TDR), (uint32_t)bytes);
 	}
+	return 1;
 }

@@ -185,8 +185,8 @@ int main(void)
   MX_SPI3_Init();
   MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
-  SportUart = uartDriverInit((uint8_t *)&SportTXBuffer,50,(uint8_t *)&SportRXBuffer,50,&huart1);
-  SbusUart = uartDriverInit((uint8_t *)&SbusTXBuffer,50,(uint8_t *)&SbusRXBuffer,50,&huart2);
+  SportUart = uartDriverInit(SportTXBuffer,50,SportRXBuffer,50,&huart1);
+  SbusUart = uartDriverInit(SbusTXBuffer,50,SbusRXBuffer,50,&huart2);
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -1397,7 +1397,6 @@ void StartPower(void const * argument)
   }
   /* USER CODE END StartPower */
 }
-
 
 /**
   * @brief  Period elapsed callback in non blocking mode
