@@ -1,6 +1,4 @@
 Debug
-.project
-.settings/
 *.bak
 *.tmp
 *.kicad_pcb-bak
