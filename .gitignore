@@ -1,4 +1,6 @@
 Debug/
+.settings/
+.mxproject
 *.bak
 *.tmp
 *.kicad_pcb-bak
