@@ -1,7 +1,7 @@
 [PreviousGenFiles]
-HeaderPath=D:/Files/GIT/rctelemetry/sw/workspace_1.0.0/Inc
+HeaderPath=D:/Files/GIT/rctelemetry/sw/Inc
 HeaderFiles=stm32f3xx_it.h;stm32f3xx_hal_conf.h;main.h;FreeRTOSConfig.h;usb_device.h;usbd_conf.h;usbd_desc.h;usbd_cdc_if.h;ffconf.h;user_diskio.h;fatfs.h;
-SourcePath=D:/Files/GIT/rctelemetry/sw/workspace_1.0.0/Src
+SourcePath=D:/Files/GIT/rctelemetry/sw/Src
 SourceFiles=stm32f3xx_it.c;stm32f3xx_hal_msp.c;main.c;freertos.c;usb_device.c;usbd_conf.c;usbd_desc.c;usbd_cdc_if.c;stm32f3xx_hal_timebase_tim.c;user_diskio.c;fatfs.c;
 
 [PreviousLibFiles]

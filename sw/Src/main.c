@@ -129,7 +129,7 @@ void StartSendTelemetry(void const * argument);
 void StartPower(void const * argument);
 
 /* USER CODE BEGIN PFP */
-
+extern CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -1271,6 +1271,9 @@ void StartDefaultTask(void const * argument)
   MX_USB_DEVICE_Init();
 
   /* USER CODE BEGIN 5 */
+
+  uint8_t startMsg[] = "bootrom\n";
+  CDC_Transmit_FS(startMsg, sizeof(startMsg));
   /* Infinite loop */
   for(;;)
   {
@@ -1290,6 +1293,9 @@ void StartSendTelemetry(void const * argument)
 {
   /* USER CODE BEGIN StartSendTelemetry */
 
+
+	  uint8_t Msg[] = "Telemetry\n";
+	  CDC_Transmit_FS(Msg, sizeof(Msg));
 	telemetryMessage *receivedMessage;
 	telemetryQueue = xQueueCreate(10, sizeof(struct telemetryMessage * ));
 	osEvent requestEvent;
@@ -1316,8 +1322,8 @@ void StartSendTelemetry(void const * argument)
 		case 0x48:
 			/*Send ESC 2 power data*/
 			sensorBuffer[0] = 0x32;
-			sensorBuffer[1] = (uint8_t)CURR_FIRST_ID+1;
-			sensorBuffer[2] = CURR_FIRST_ID+1>>8;
+			sensorBuffer[1] = (uint8_t)(CURR_FIRST_ID+1);
+			sensorBuffer[2] = (uint8_t)(CURR_FIRST_ID+1)>>8;
 			sensorBuffer[3] = 0;
 			sensorBuffer[4] = 0;
 			sensorBuffer[5] = 0;
@@ -1328,8 +1334,8 @@ void StartSendTelemetry(void const * argument)
 			break;
 	}
 	sensorBuffer[7] = HAL_CRC_Calculate(&hcrc, (uint32_t *) sensorBuffer, sizeof(sensorBuffer));
-
-	uartDriverLoadData(sensorBuffer, sizeof(sensorBuffer), &SportUart);
+	CDC_Transmit_FS(sensorBuffer, sizeof(sensorBuffer));
+	//uartDriverLoadData(sensorBuffer, sizeof(sensorBuffer), &SportUart);
 
 	//osDelay(1);
   }
@@ -1346,6 +1352,8 @@ void StartSendTelemetry(void const * argument)
 void StartPower(void const * argument)
 {
   /* USER CODE BEGIN StartPower */
+	  uint8_t Msg[] = "Power\n";
+	  CDC_Transmit_FS(Msg, sizeof(Msg));
 	uint16_t measurements[powerChannels];
 	#define currentScaling 0.6f
 	#define voltageScaling 0.15f
