@@ -1315,14 +1315,22 @@ void StartSendTelemetry(void const * argument)
 			break;
 		case 0x48:
 			/*Send ESC 2 power data*/
+			sensorBuffer[0] = 0x32;
+			sensorBuffer[1] = (uint8_t)CURR_FIRST_ID+1;
+			sensorBuffer[2] = CURR_FIRST_ID+1>>8;
+			sensorBuffer[3] = 0;
+			sensorBuffer[4] = 0;
+			sensorBuffer[5] = 0;
+			sensorBuffer[6] = 0;
 			break;
 		default:
+
 			break;
 	}
 	sensorBuffer[7] = HAL_CRC_Calculate(&hcrc, (uint32_t *) sensorBuffer, sizeof(sensorBuffer));
 
+	uartDriverLoadData(sensorBuffer, sizeof(sensorBuffer), &SportUart);
 
-	HAL_UART_Transmit_DMA(&huart1, sensorBuffer, sizeof(sensorBuffer));
 	//osDelay(1);
   }
   /* USER CODE END StartSendTelemetry */
