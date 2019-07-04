@@ -129,7 +129,7 @@ void StartSendTelemetry(void const * argument);
 void StartPower(void const * argument);
 
 /* USER CODE BEGIN PFP */
-extern CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
+extern uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
