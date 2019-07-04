@@ -1,7 +1,7 @@
 Configuration	RCtelemery
 STM32CubeMX 	5.2.1
-Date	06/23/2019
-MCU	STM32F303CBTx
+Date	07/04/2019
+MCU	STM32F303CCTx
 
 
 
@@ -160,7 +160,7 @@ SOFTWARE PROJECT
 
 Project Settings : 
 Project Name : RCtelemery
-Project Folder : D:\Files\GIT\rctelemetry\sw\workspace_1.0.0
+Project Folder : C:\Users\akiku\git\rctelemetry\sw
 Toolchain / IDE : STM32CubeIDE
 Firmware Package Name and Version : STM32Cube FW_F3 V1.10.0
 
