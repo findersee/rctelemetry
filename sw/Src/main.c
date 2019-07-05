@@ -21,11 +21,10 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
-#include "usb_device.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -127,11 +126,17 @@ void StartSendTelemetry(void const * argument);
 void StartPower(void const * argument);
 
 /* USER CODE BEGIN PFP */
-extern uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
+//extern uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void HardFault_handler(void){
+	HAL_GPIO_WritePin(ERROR_LED_GPIO_Port, ERROR_LED_Pin, GPIO_PIN_RESET);
+	while(1){
+	asm("nop");
+	}
+}
 
 /* USER CODE END 0 */
 
@@ -182,8 +187,8 @@ int main(void)
   MX_SPI3_Init();
   MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
-/*  SportUart = uartDriverInit(SportTXBuffer,50,SportRXBuffer,50,&huart1);
-/*  SbusUart = uartDriverInit(SbusTXBuffer,50,SbusRXBuffer,50,&huart2);
+//  SportUart = uartDriverInit(SportTXBuffer,50,SportRXBuffer,50,&huart1);
+//  SbusUart = uartDriverInit(SbusTXBuffer,50,SbusRXBuffer,50,&huart2);
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -277,14 +282,13 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USB|RCC_PERIPHCLK_USART1
-                              |RCC_PERIPHCLK_USART3|RCC_PERIPHCLK_TIM1
-                              |RCC_PERIPHCLK_ADC12|RCC_PERIPHCLK_ADC34;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1|RCC_PERIPHCLK_USART3
+                              |RCC_PERIPHCLK_TIM1|RCC_PERIPHCLK_ADC12
+                              |RCC_PERIPHCLK_ADC34;
   PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
   PeriphClkInit.Usart3ClockSelection = RCC_USART3CLKSOURCE_PCLK1;
-  PeriphClkInit.Adc12ClockSelection = RCC_ADC12PLLCLK_DIV1;
-  PeriphClkInit.Adc34ClockSelection = RCC_ADC34PLLCLK_DIV1;
-  PeriphClkInit.USBClockSelection = RCC_USBCLKSOURCE_PLL;
+  PeriphClkInit.Adc12ClockSelection = RCC_ADC12PLLCLK_DIV32;
+  PeriphClkInit.Adc34ClockSelection = RCC_ADC34PLLCLK_DIV32;
   PeriphClkInit.Tim1ClockSelection = RCC_TIM1CLK_HCLK;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
@@ -342,7 +346,7 @@ static void MX_ADC1_Init(void)
   sConfig.Channel = ADC_CHANNEL_4;
   sConfig.Rank = ADC_REGULAR_RANK_1;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
-  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_7CYCLES_5;
   sConfig.OffsetNumber = ADC_OFFSET_NONE;
   sConfig.Offset = 0;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
@@ -1221,17 +1225,18 @@ uint16_t batVolt_ADC_Buffer[ADC_samples];
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void const * argument)
 {
-  /* init code for USB_DEVICE */
-  MX_USB_DEVICE_Init();
 
   /* USER CODE BEGIN 5 */
-
-  uint8_t startMsg[] = "bootrom\n";
-  CDC_Transmit_FS(startMsg, sizeof(startMsg));
+  HAL_GPIO_WritePin(ERROR_LED_GPIO_Port, ERROR_LED_Pin, GPIO_PIN_SET);
+  //uint8_t startMsg[] = "bootrom\n";
+  HAL_NVIC_DisableIRQ(DMA1_Channel1_IRQn); //Disable interrupt because the Cube won't let us
+  HAL_ADC_Start_DMA(&hadc1, (uint32_t *)power_ADC_Buffer , powerBufferSize);
+  //CDC_Transmit_FS(startMsg, sizeof(startMsg));
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+	HAL_GPIO_TogglePin(ERROR_LED_GPIO_Port, ERROR_LED_Pin);
+    osDelay(100);
   }
   /* USER CODE END 5 */ 
 }
@@ -1248,8 +1253,8 @@ void StartSendTelemetry(void const * argument)
   /* USER CODE BEGIN StartSendTelemetry */
 
 
-	  uint8_t Msg[] = "Telemetry\n";
-	  CDC_Transmit_FS(Msg, sizeof(Msg));
+	  //uint8_t Msg[] = "Telemetry\n";
+	  //CDC_Transmit_FS(Msg, sizeof(Msg));
 	telemetryMessage *receivedMessage;
 	telemetryQueue = xQueueCreate(10, sizeof(struct telemetryMessage * ));
 	osEvent requestEvent;
@@ -1288,7 +1293,7 @@ void StartSendTelemetry(void const * argument)
 			break;
 	}
 	sensorBuffer[7] = HAL_CRC_Calculate(&hcrc, (uint32_t *) sensorBuffer, sizeof(sensorBuffer));
-	CDC_Transmit_FS(sensorBuffer, sizeof(sensorBuffer));
+	//CDC_Transmit_FS(sensorBuffer, sizeof(sensorBuffer));
 	//uartDriverLoadData(sensorBuffer, sizeof(sensorBuffer), &SportUart);
 
 	//osDelay(1);
@@ -1306,8 +1311,8 @@ void StartSendTelemetry(void const * argument)
 void StartPower(void const * argument)
 {
   /* USER CODE BEGIN StartPower */
-	  uint8_t Msg[] = "Power\n";
-	  CDC_Transmit_FS(Msg, sizeof(Msg));
+	  //uint8_t Msg[] = "Power\n";
+	  //CDC_Transmit_FS(Msg, sizeof(Msg));
 	uint16_t measurements[powerChannels];
 	#define currentScaling 0.6f
 	#define voltageScaling 0.15f
@@ -1318,7 +1323,14 @@ void StartPower(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-	 memset((uint32_t*)measurements,0,sizeof(measurements));
+	  //uint16_t test = sizeof(measurements);
+	 memset((uint16_t*)measurements,0,sizeof(measurements));
+	 /*
+	 for(uint8_t s=0; s < powerChannels; s++)
+	 {
+		 measurements[s] = 0;
+	 }
+	  */
 	 for(uint8_t ch=0; ch < powerChannels; ch++)
 	 {
 		 uint32_t temp=0;
@@ -1362,7 +1374,7 @@ void StartPower(void const * argument)
 		 power_new.ESC2_powerValue = (power_new.ESC2_currentValue*power_new.ESC2_voltageValue);
 
 		 xQueueOverwrite(powerQueue,&power_new);
-		 osDelay(100);
+		 osDelay(1000);
 
   }
   /* USER CODE END StartPower */
@@ -1397,7 +1409,10 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
-
+	HAL_GPIO_WritePin(ERROR_LED_GPIO_Port, ERROR_LED_Pin, GPIO_PIN_RESET);
+	while(1){
+	asm("nop");
+	}
   /* USER CODE END Error_Handler_Debug */
 }
 
