@@ -4,3 +4,4 @@ Debug/
 *.bak
 *.tmp
 *.kicad_pcb-bak
+/sw/mx.scratch
