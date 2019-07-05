@@ -94,10 +94,6 @@ void Error_Handler(void);
 #define Sport_UART_GPIO_Port GPIOA
 #define WP_Pin GPIO_PIN_10
 #define WP_GPIO_Port GPIOA
-#define PWM1_Pin GPIO_PIN_13
-#define PWM1_GPIO_Port GPIOA
-#define Sbus_UART_Pin GPIO_PIN_14
-#define Sbus_UART_GPIO_Port GPIOA
 #define Servo_1_Pin GPIO_PIN_15
 #define Servo_1_GPIO_Port GPIOA
 #define Servo_2_Pin GPIO_PIN_4

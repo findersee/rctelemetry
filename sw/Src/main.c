@@ -79,7 +79,6 @@ TIM_HandleTypeDef htim15;
 TIM_HandleTypeDef htim16;
 
 UART_HandleTypeDef huart1;
-UART_HandleTypeDef huart2;
 UART_HandleTypeDef huart3;
 DMA_HandleTypeDef hdma_usart1_rx;
 DMA_HandleTypeDef hdma_usart1_tx;
@@ -111,7 +110,6 @@ static void MX_ADC1_Init(void);
 static void MX_CRC_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_USART1_UART_Init(void);
-static void MX_USART2_UART_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_TIM4_Init(void);
@@ -171,7 +169,6 @@ int main(void)
   MX_CRC_Init();
   MX_TIM2_Init();
   MX_USART1_UART_Init();
-  MX_USART2_UART_Init();
   MX_SPI1_Init();
   MX_TIM3_Init();
   MX_TIM4_Init();
@@ -185,8 +182,8 @@ int main(void)
   MX_SPI3_Init();
   MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
-  SportUart = uartDriverInit(SportTXBuffer,50,SportRXBuffer,50,&huart1);
-  SbusUart = uartDriverInit(SbusTXBuffer,50,SbusRXBuffer,50,&huart2);
+/*  SportUart = uartDriverInit(SportTXBuffer,50,SportRXBuffer,50,&huart1);
+/*  SbusUart = uartDriverInit(SbusTXBuffer,50,SbusRXBuffer,50,&huart2);
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -281,11 +278,9 @@ void SystemClock_Config(void)
     Error_Handler();
   }
   PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USB|RCC_PERIPHCLK_USART1
-                              |RCC_PERIPHCLK_USART2|RCC_PERIPHCLK_USART3
-                              |RCC_PERIPHCLK_TIM1|RCC_PERIPHCLK_ADC12
-                              |RCC_PERIPHCLK_ADC34;
+                              |RCC_PERIPHCLK_USART3|RCC_PERIPHCLK_TIM1
+                              |RCC_PERIPHCLK_ADC12|RCC_PERIPHCLK_ADC34;
   PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
-  PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
   PeriphClkInit.Usart3ClockSelection = RCC_USART3CLKSOURCE_PCLK1;
   PeriphClkInit.Adc12ClockSelection = RCC_ADC12PLLCLK_DIV1;
   PeriphClkInit.Adc34ClockSelection = RCC_ADC34PLLCLK_DIV1;
@@ -856,10 +851,6 @@ static void MX_TIM4_Init(void)
   {
     Error_Handler();
   }
-  if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
-  {
-    Error_Handler();
-  }
   if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
   {
     Error_Handler();
@@ -1088,43 +1079,6 @@ static void MX_USART1_UART_Init(void)
   /* USER CODE BEGIN USART1_Init 2 */
 
   /* USER CODE END USART1_Init 2 */
-
-}
-
-/**
-  * @brief USART2 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_USART2_UART_Init(void)
-{
-
-  /* USER CODE BEGIN USART2_Init 0 */
-
-  /* USER CODE END USART2_Init 0 */
-
-  /* USER CODE BEGIN USART2_Init 1 */
-
-  /* USER CODE END USART2_Init 1 */
-  huart2.Instance = USART2;
-  huart2.Init.BaudRate = 100000;
-  huart2.Init.WordLength = UART_WORDLENGTH_8B;
-  huart2.Init.StopBits = UART_STOPBITS_2;
-  huart2.Init.Parity = UART_PARITY_EVEN;
-  huart2.Init.Mode = UART_MODE_RX;
-  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
-  huart2.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart2.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_RXINVERT_INIT|UART_ADVFEATURE_DATAINVERT_INIT;
-  huart2.AdvancedInit.RxPinLevelInvert = UART_ADVFEATURE_RXINV_ENABLE;
-  huart2.AdvancedInit.DataInvert = UART_ADVFEATURE_DATAINV_ENABLE;
-  if (HAL_HalfDuplex_Init(&huart2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN USART2_Init 2 */
-
-  /* USER CODE END USART2_Init 2 */
 
 }
 
