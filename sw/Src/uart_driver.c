@@ -7,7 +7,9 @@
 
 #include "uart_driver.h"
 #include "stm32f3xx_hal.h"
+#include "stm32f3xx_hal_dma.h"
 #include <string.h>
+#include <stdlib.h>
 
 uartDriver uartDriverInit(uint8_t * TxBuffer,unsigned TxBufferSize,uint8_t * RxBuffer,unsigned RxBufferSize,UART_HandleTypeDef *_huart){
 		uartDriver driver;
@@ -21,14 +23,22 @@ uartDriver uartDriverInit(uint8_t * TxBuffer,unsigned TxBufferSize,uint8_t * RxB
 		driver.RxBufferSize = RxBufferSize;
 		driver.TxBufferSize = TxBufferSize;
 
-		HAL_StatusTypeDef temp;
 
 		if(_huart->Instance == USART1){
-			temp = HAL_DMA_Start(_huart->hdmarx, _huart->Instance->RDR, (uint32_t)RxBuffer, RxBufferSize);
-			temp = 0;
+
+			//__HAL_LOCK(_huart);
+
+			HAL_DMA_Start(_huart->hdmarx, (uint32_t)&_huart->Instance->RDR, (uint32_t)RxBuffer, RxBufferSize);
+
+			//__HAL_UNLOCK(_huart);
+			_huart->Instance->CR2 = 0x7E000000;
+			SET_BIT(_huart->Instance->CR3, USART_CR3_DMAR);
+			SET_BIT(_huart->Instance->CR1, USART_CR1_RXNEIE);
+			return driver;
 		}
 		else if(_huart->Instance == USART3){
 			HAL_DMA_Start(_huart->hdmarx, _huart->Instance->RDR, (uint32_t)RxBuffer, RxBufferSize);
+			return driver;
 		}
 		else
 			Error_Handler();
@@ -39,8 +49,13 @@ void uartDriverReadData(void *_buffer,unsigned _bytes,uartDriver *_driver){
 
 	unsigned tail = _driver->rxBufTail;
 
-	memcpy(_buffer,_driver->RxBuffer,_bytes);
-	_driver->rxBufHead = (tail+_bytes)%(_driver->RxBufferSize);
+
+	for(unsigned i=0;i<_bytes;i++){
+		((uint8_t*)_buffer)[i] = _driver->RxBuffer[tail];
+		tail = (tail+1) % _driver->RxBufferSize;
+	}
+
+	_driver->rxBufTail = tail;
 }
 
 unsigned uartDriverDataReady(uartDriver *driver_){
@@ -78,6 +93,6 @@ uint8_t uartDriverLoadData(const void *data,unsigned bytes,uartDriver *_driver){
 unsigned uartDriverSpace(uartDriver *_driver){
 
 	unsigned head = _driver->RxBufferSize - __HAL_DMA_GET_COUNTER(_driver->huart->hdmarx);
-	return (head - _driver->rxBufTail + _driver->RxBufferSize) & _driver->RxBufferSize;
+	return (head - _driver->rxBufTail + _driver->RxBufferSize) % _driver->RxBufferSize;
 
 }

@@ -25,6 +25,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <string.h>
+#include <stdlib.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -80,7 +81,6 @@ TIM_HandleTypeDef htim16;
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart3;
 DMA_HandleTypeDef hdma_usart1_rx;
-DMA_HandleTypeDef hdma_usart1_tx;
 
 osThreadId defaultTaskHandle;
 osThreadId SendTelemetryHandle;
@@ -141,6 +141,14 @@ void HardFault_handler(void){
 	}
 }
 
+void MemManage_Handler(void){
+	HAL_GPIO_WritePin(ERROR_LED_GPIO_Port, ERROR_LED_Pin, GPIO_PIN_RESET);
+	while(1){
+	asm("nop");
+	}
+}
+
+
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 
 	if(huart->Instance == USART1){
@@ -150,6 +158,12 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	else if(huart->Instance == USART3){
 
 	}
+}
+
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
+
+
+	asm("nop");
 }
 
 
@@ -202,13 +216,12 @@ int main(void)
   MX_SPI3_Init();
   MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
-  //SportUart = uartDriverInit(SportTXBuffer,sizeof(SportTXBuffer),SportRXBuffer,sizeof(SportRXBuffer),&huart1);
+  SportUart = uartDriverInit(SportTXBuffer,sizeof(SportTXBuffer),SportRXBuffer,sizeof(SportRXBuffer),&huart1);
 //  SbusUart = uartDriverInit(SbusTXBuffer,50,SbusRXBuffer,50,&huart2);
+  //HAL_UART_Receive_IT(&huart1, SportRXBuffer, 4);
+  //HAL_UART_Receive_DMA(&huart1, SportRXBuffer, 2);
+
   /* USER CODE END 2 */
-
-
-  HAL_UART_Receive_DMA(&huart1, SportRXBuffer, 4);
-
 
   /* Create the mutex(es) */
   /* definition and creation of SportMessage */
@@ -251,7 +264,7 @@ int main(void)
   PowerParserHandle = osThreadCreate(osThread(PowerParser), NULL);
 
   /* definition and creation of SportReceive */
-  osThreadDef(SportReceive, StartTaskSportReceive, osPriorityRealtime, 0, 64);
+  osThreadDef(SportReceive, StartTaskSportReceive, osPriorityRealtime, 0, 128);
   SportReceiveHandle = osThreadCreate(osThread(SportReceive), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -1095,15 +1108,11 @@ static void MX_USART1_UART_Init(void)
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
-  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.Mode = UART_MODE_RX;
   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
   huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_TXINVERT_INIT|UART_ADVFEATURE_RXINVERT_INIT
-                              |UART_ADVFEATURE_DATAINVERT_INIT;
-  huart1.AdvancedInit.TxPinLevelInvert = UART_ADVFEATURE_TXINV_ENABLE;
-  huart1.AdvancedInit.RxPinLevelInvert = UART_ADVFEATURE_RXINV_ENABLE;
-  huart1.AdvancedInit.DataInvert = UART_ADVFEATURE_DATAINV_ENABLE;
+  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
   if (HAL_HalfDuplex_Init(&huart1) != HAL_OK)
   {
     Error_Handler();
@@ -1165,9 +1174,6 @@ static void MX_DMA_Init(void)
   /* DMA1_Channel3_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
-  /* DMA1_Channel4_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel4_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Channel4_IRQn);
   /* DMA1_Channel5_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
@@ -1242,6 +1248,12 @@ uint16_t DAC_BUFFER[30];
 uint16_t power_ADC_Buffer[powerBufferSize];
 uint16_t temp_ADC_Buffer[ADC_samples];
 uint16_t batVolt_ADC_Buffer[ADC_samples];
+
+osPoolId teleRxpool;
+osPoolDef(teleRxpool,6,telemetryMessage);
+
+
+
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -1283,47 +1295,63 @@ void StartSendTelemetry(void const * argument)
 
 	  //uint8_t Msg[] = "Telemetry\n";
 	  //CDC_Transmit_FS(Msg, sizeof(Msg));
-	telemetryMessage *receivedMessage;
-	telemetryQueue = xQueueCreate(10, sizeof(struct telemetryMessage * ));
-	osEvent requestEvent;
+	/*telemetryMessage *receivedMessage;
+	//telemetryQueue = xQueueCreate(10, sizeof(struct telemetryMessage * ));
+	//osEvent requestEvent;
 	if(telemetryRequestQueueHandle == NULL)
 	{
 		Error_Handler();
 	}
+	*/
 	uint8_t sensorBuffer[8];
+	uint8_t mBuffer[4];
+	unsigned bytes = 0;
   /* Infinite loop */
   for(;;)
   {
 
-	requestEvent = osMessageGet(telemetryRequestQueueHandle, osWaitForever);//xQueueReceive(telemetryQueue,&(receivedMessage),portMAX_DELAY);
-	receivedMessage = requestEvent.value.p;
-	switch(receivedMessage->ID)
-	{
-		case 0x22:
-			/*Send ESC 1 power data*/
-			sensorBuffer[0] = 0x32;
-			sensorBuffer[1] = (uint8_t)CURR_FIRST_ID;
-			sensorBuffer[2] = CURR_FIRST_ID >> 8;
-			sensorBuffer[3] = 0;
-			break;
-		case 0x48:
-			/*Send ESC 2 power data*/
-			sensorBuffer[0] = 0x32;
-			sensorBuffer[1] = (uint8_t)(CURR_FIRST_ID+1);
-			sensorBuffer[2] = (uint8_t)(CURR_FIRST_ID+1)>>8;
-			sensorBuffer[3] = 0;
-			sensorBuffer[4] = 0;
-			sensorBuffer[5] = 0;
-			sensorBuffer[6] = 0;
-			break;
-		default:
+	osSignalWait(0x0001, osWaitForever);
+	unsigned ID = 0;
+	bytes = uartDriverSpace(&SportUart);
+	if(bytes > 1){
+		uartDriverReadData(&mBuffer, bytes, &SportUart);
+		uint8_t cnt = 0;
 
-			break;
+		for(;cnt < (bytes-1); cnt ++){
+			ID = 0;
+			if((mBuffer[cnt] == 0x7E) && (cnt < bytes)){
+				cnt ++;
+				ID = mBuffer[cnt];
+
+				switch(ID)
+				{
+					case 0x22:
+						/*Send ESC 1 power data*/
+						sensorBuffer[0] = 0x32;
+						sensorBuffer[1] = (uint8_t)CURR_FIRST_ID;
+						sensorBuffer[2] = CURR_FIRST_ID >> 8;
+						sensorBuffer[3] = 0;
+						break;
+					case 0x48:
+						/*Send ESC 2 power data*/
+						sensorBuffer[0] = 0x32;
+						sensorBuffer[1] = (uint8_t)(CURR_FIRST_ID+1);
+						sensorBuffer[2] = (uint8_t)(CURR_FIRST_ID+1)>>8;
+						sensorBuffer[3] = 0;
+						sensorBuffer[4] = 0;
+						sensorBuffer[5] = 0;
+						sensorBuffer[6] = 0;
+						break;
+					default:
+
+						break;
+				}
+				sensorBuffer[7] = HAL_CRC_Calculate(&hcrc, (uint32_t *) sensorBuffer, (sizeof(sensorBuffer))-1);
+				//CDC_Transmit_FS(sensorBuffer, sizeof(sensorBuffer));
+				//uartDriverLoadData(sensorBuffer, sizeof(sensorBuffer), &SportUart);
+			}
+		}
 	}
-	sensorBuffer[7] = HAL_CRC_Calculate(&hcrc, (uint32_t *) sensorBuffer, sizeof(sensorBuffer));
-	//CDC_Transmit_FS(sensorBuffer, sizeof(sensorBuffer));
-	//uartDriverLoadData(sensorBuffer, sizeof(sensorBuffer), &SportUart);
-
 	//osDelay(1);
   }
   /* USER CODE END StartSendTelemetry */
@@ -1419,29 +1447,30 @@ void StartTaskSportReceive(void const * argument)
 {
   /* USER CODE BEGIN StartTaskSportReceive */
   unsigned bytes = 0;
-  uint8_t mBuffer[4];
+  //uint8_t mBuffer[4];
 	/* Infinite loop */
-  telemetryMessage *mesPtr = malloc(sizeof *mesPtr);
+  //telemetryMessage *mesPtr;
+  //mesPtr = osPoolAlloc(teleRxpool);
   //mesPtr->ID = 0;
   for(;;)
   {
 
-
+/*
 	osSignalWait(0x0001, osWaitForever);
 	bytes = uartDriverSpace(&SportUart);
 	uartDriverReadData(&mBuffer, bytes, &SportUart);
 	uint8_t cnt = 0;
 
-	for(cnt = 0;cnt < ((sizeof mBuffer)+1); cnt ++){
+	for(cnt = 0;cnt < bytes; cnt ++){
 		if(mBuffer[cnt] == 0x7E){
 			mesPtr->ID = mBuffer[(cnt+1)];
 			osMessagePut(telemetryRequestQueueHandle, (uint32_t)mesPtr, osWaitForever);
 		}
 	}
 
+*/
 
-
-    //osDelay(1);
+    osDelay(1);
   }
   /* USER CODE END StartTaskSportReceive */
 }
