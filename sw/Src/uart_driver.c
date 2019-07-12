@@ -20,17 +20,19 @@ uartDriver uartDriverInit(uint8_t * TxBuffer,unsigned TxBufferSize,uint8_t * RxB
 		driver.TxBuffer = TxBuffer;
 		driver.RxBufferSize = RxBufferSize;
 		driver.TxBufferSize = TxBufferSize;
-		HAL_DMA_Start(_huart->hdmarx, _huart->Instance->RDR, (uint32_t)RxBuffer, RxBufferSize);
-		return driver;
+
+		HAL_StatusTypeDef temp;
 
 		if(_huart->Instance == USART1){
-
+			temp = HAL_DMA_Start(_huart->hdmarx, _huart->Instance->RDR, (uint32_t)RxBuffer, RxBufferSize);
+			temp = 0;
 		}
-		else if(_huart->Instance == USART2){
-
+		else if(_huart->Instance == USART3){
+			HAL_DMA_Start(_huart->hdmarx, _huart->Instance->RDR, (uint32_t)RxBuffer, RxBufferSize);
 		}
 		else
 			Error_Handler();
+		return driver;
 }
 
 void uartDriverReadData(void *_buffer,unsigned _bytes,uartDriver *_driver){
@@ -38,7 +40,7 @@ void uartDriverReadData(void *_buffer,unsigned _bytes,uartDriver *_driver){
 	unsigned tail = _driver->rxBufTail;
 
 	memcpy(_buffer,_driver->RxBuffer,_bytes);
-	_driver->rxBufHead = (tail+50)%(_driver->RxBufferSize);
+	_driver->rxBufHead = (tail+_bytes)%(_driver->RxBufferSize);
 }
 
 unsigned uartDriverDataReady(uartDriver *driver_){
@@ -71,4 +73,11 @@ uint8_t uartDriverLoadData(const void *data,unsigned bytes,uartDriver *_driver){
 	HAL_DMA_Start_IT(_driver->huart->hdmatx,(uint32_t)(_driver->TxBuffer), (uint32_t)(_driver->huart->Instance->TDR), (uint32_t)bytes);
 	}
 	return 1;
+}
+
+unsigned uartDriverSpace(uartDriver *_driver){
+
+	unsigned head = _driver->RxBufferSize - __HAL_DMA_GET_COUNTER(_driver->huart->hdmarx);
+	return (head - _driver->rxBufTail + _driver->RxBufferSize) & _driver->RxBufferSize;
+
 }

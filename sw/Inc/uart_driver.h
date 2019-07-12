@@ -37,7 +37,8 @@ struct TxDataStruct
 
 uartDriver uartDriverInit(uint8_t * Txbuffer,unsigned TxBufferSize,uint8_t * RxBuffer,unsigned RxBufferSize,UART_HandleTypeDef *huart_);
 uint8_t uartDriverLoadData(const void *data_,unsigned bytes,uartDriver *_driver);
-uint8_t uartDriverSpace(uartDriver *_driver);
+unsigned uartDriverSpace(uartDriver *_driver);
 void uartDriverReadData(void *_buffer,unsigned _bytes,uartDriver *_driver);
+
 
 #endif /* INC_UART_DRIVER_H_ */

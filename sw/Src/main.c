@@ -85,11 +85,13 @@ DMA_HandleTypeDef hdma_usart1_tx;
 osThreadId defaultTaskHandle;
 osThreadId SendTelemetryHandle;
 osThreadId PowerParserHandle;
+osThreadId SportReceiveHandle;
 osMessageQId telemetryRequestQueueHandle;
+osMutexId SportMessageHandle;
 /* USER CODE BEGIN PV */
 uartDriver SportUart;
-uint8_t SportTXBuffer[50];
-uint8_t SportRXBuffer[50];
+uint8_t SportTXBuffer[20];
+uint8_t SportRXBuffer[4];
 
 uartDriver SbusUart;
 uint8_t SbusTXBuffer[50];
@@ -124,6 +126,7 @@ static void MX_TIM16_Init(void);
 void StartDefaultTask(void const * argument);
 void StartSendTelemetry(void const * argument);
 void StartPower(void const * argument);
+void StartTaskSportReceive(void const * argument);
 
 /* USER CODE BEGIN PFP */
 //extern uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
@@ -137,6 +140,18 @@ void HardFault_handler(void){
 	asm("nop");
 	}
 }
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+
+	if(huart->Instance == USART1){
+		osSignalSet(SportReceiveHandle, 0x0001);
+	}
+
+	else if(huart->Instance == USART3){
+
+	}
+}
+
 
 /* USER CODE END 0 */
 
@@ -187,9 +202,18 @@ int main(void)
   MX_SPI3_Init();
   MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
-//  SportUart = uartDriverInit(SportTXBuffer,50,SportRXBuffer,50,&huart1);
+  //SportUart = uartDriverInit(SportTXBuffer,sizeof(SportTXBuffer),SportRXBuffer,sizeof(SportRXBuffer),&huart1);
 //  SbusUart = uartDriverInit(SbusTXBuffer,50,SbusRXBuffer,50,&huart2);
   /* USER CODE END 2 */
+
+
+  HAL_UART_Receive_DMA(&huart1, SportRXBuffer, 4);
+
+
+  /* Create the mutex(es) */
+  /* definition and creation of SportMessage */
+  osMutexDef(SportMessage);
+  SportMessageHandle = osMutexCreate(osMutex(SportMessage));
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
@@ -215,7 +239,7 @@ int main(void)
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 64);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of SendTelemetry */
@@ -225,6 +249,10 @@ int main(void)
   /* definition and creation of PowerParser */
   osThreadDef(PowerParser, StartPower, osPriorityNormal, 0, 128);
   PowerParserHandle = osThreadCreate(osThread(PowerParser), NULL);
+
+  /* definition and creation of SportReceive */
+  osThreadDef(SportReceive, StartTaskSportReceive, osPriorityRealtime, 0, 64);
+  SportReceiveHandle = osThreadCreate(osThread(SportReceive), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -1065,8 +1093,8 @@ static void MX_USART1_UART_Init(void)
   huart1.Instance = USART1;
   huart1.Init.BaudRate = 57600;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
-  huart1.Init.StopBits = UART_STOPBITS_2;
-  huart1.Init.Parity = UART_PARITY_EVEN;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
   huart1.Init.Mode = UART_MODE_TX_RX;
   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
@@ -1378,6 +1406,44 @@ void StartPower(void const * argument)
 
   }
   /* USER CODE END StartPower */
+}
+
+/* USER CODE BEGIN Header_StartTaskSportReceive */
+/**
+* @brief Function implementing the SportReceive thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTaskSportReceive */
+void StartTaskSportReceive(void const * argument)
+{
+  /* USER CODE BEGIN StartTaskSportReceive */
+  unsigned bytes = 0;
+  uint8_t mBuffer[4];
+	/* Infinite loop */
+  telemetryMessage *mesPtr = malloc(sizeof *mesPtr);
+  //mesPtr->ID = 0;
+  for(;;)
+  {
+
+
+	osSignalWait(0x0001, osWaitForever);
+	bytes = uartDriverSpace(&SportUart);
+	uartDriverReadData(&mBuffer, bytes, &SportUart);
+	uint8_t cnt = 0;
+
+	for(cnt = 0;cnt < ((sizeof mBuffer)+1); cnt ++){
+		if(mBuffer[cnt] == 0x7E){
+			mesPtr->ID = mBuffer[(cnt+1)];
+			osMessagePut(telemetryRequestQueueHandle, (uint32_t)mesPtr, osWaitForever);
+		}
+	}
+
+
+
+    //osDelay(1);
+  }
+  /* USER CODE END StartTaskSportReceive */
 }
 
 /**
