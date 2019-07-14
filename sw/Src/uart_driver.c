@@ -6,10 +6,73 @@
  */
 
 #include "uart_driver.h"
-#include "stm32f3xx_hal.h"
-#include "stm32f3xx_hal_dma.h"
-#include <string.h>
-#include <stdlib.h>
+
+static void UART_DMAReceiveCplt(DMA_HandleTypeDef *hdma)
+{
+	UART_HandleTypeDef* huart = (UART_HandleTypeDef*)(hdma->Parent);
+
+	HAL_UART_RxCpltCallback(huart);
+}
+
+static void UART_DMATransmitCplt(DMA_HandleTypeDef *hdma)
+{
+	UART_HandleTypeDef* huart = (UART_HandleTypeDef*)(hdma->Parent);
+
+	HAL_UART_TxCpltCallback(huart);
+}
+
+
+static void StartTXDMA(DMA_HandleTypeDef *hdma, uint32_t SrcAddress, uint32_t DstAddress, uint32_t DataLength)
+{
+	HAL_StatusTypeDef status = HAL_OK;
+
+  /* Check the parameters */
+  assert_param(IS_DMA_BUFFER_SIZE(DataLength));
+
+  /* Process locked */
+  __HAL_LOCK(hdma);
+
+  if(HAL_DMA_STATE_READY == hdma->State)
+  {
+  	/* Change DMA peripheral state */
+  	hdma->State = HAL_DMA_STATE_BUSY;
+
+  	hdma->ErrorCode = HAL_DMA_ERROR_NONE;
+
+  	/* Disable the peripheral */
+  	hdma->Instance->CCR &= ~DMA_CCR_EN;
+
+  	hdma->XferCpltCallback = UART_DMATransmitCplt;
+
+  	/* Configure the source, destination address and the data length */
+
+  	hdma->DmaBaseAddress->IFCR  = (DMA_FLAG_GL1 << hdma->ChannelIndex);
+
+  	hdma->Instance->CNDTR = DataLength;
+
+  	hdma->Instance->CPAR = DstAddress;
+
+  	hdma->Instance->CMAR = SrcAddress;
+
+  	/* Enable the transfer complete interrupt */
+  	/* Half transfer interrupt is optional: enable it only if associated callback is available */
+	hdma->Instance->CCR |= (DMA_IT_TC);
+
+  	/* Enable the Peripheral */
+  	hdma->Instance->CCR |= DMA_CCR_EN;
+  }
+  else
+  {
+  	/* Process Unlocked */
+    __HAL_UNLOCK(hdma);
+
+    /* Remain BUSY */
+  }
+
+}
+
+
+
 
 uartDriver uartDriverInit(uint8_t * TxBuffer,unsigned TxBufferSize,uint8_t * RxBuffer,unsigned RxBufferSize,UART_HandleTypeDef *_huart){
 		uartDriver driver;
@@ -27,13 +90,13 @@ uartDriver uartDriverInit(uint8_t * TxBuffer,unsigned TxBufferSize,uint8_t * RxB
 		if(_huart->Instance == USART1){
 
 			//__HAL_LOCK(_huart);
-
-			HAL_DMA_Start(_huart->hdmarx, (uint32_t)&_huart->Instance->RDR, (uint32_t)RxBuffer, RxBufferSize);
+			_huart->hdmarx->XferCpltCallback = UART_DMAReceiveCplt;
+			_huart->hdmarx->XferHalfCpltCallback = UART_DMAReceiveCplt;
+			HAL_DMA_Start_IT(_huart->hdmarx, (uint32_t)&_huart->Instance->RDR, (uint32_t)driver.RxBuffer, driver.RxBufferSize);
 
 			//__HAL_UNLOCK(_huart);
-			_huart->Instance->CR2 = 0x7E000000;
 			SET_BIT(_huart->Instance->CR3, USART_CR3_DMAR);
-			SET_BIT(_huart->Instance->CR1, USART_CR1_RXNEIE);
+			//SET_BIT(_huart->Instance->CR1, USART_CR1_RXNEIE);
 			return driver;
 		}
 		else if(_huart->Instance == USART3){
@@ -84,8 +147,10 @@ uint8_t uartDriverLoadData(const void *data,unsigned bytes,uartDriver *_driver){
 	}
 
 	_driver->txBufHead = head;
+	//Start DMA transfer
 	if ((_driver->huart->hdmatx->Instance->CCR & DMA_CCR_EN) == 0){
-	HAL_DMA_Start_IT(_driver->huart->hdmatx,(uint32_t)(_driver->TxBuffer), (uint32_t)(_driver->huart->Instance->TDR), (uint32_t)bytes);
+		StartTXDMA(_driver->huart->hdmatx,(uint32_t)(_driver->TxBuffer), (uint32_t)&(_driver->huart->Instance->TDR), (uint32_t)bytes);
+		SET_BIT(_driver->huart->Instance->CR3, USART_CR3_DMAT);
 	}
 	return 1;
 }
@@ -96,3 +161,21 @@ unsigned uartDriverSpace(uartDriver *_driver){
 	return (head - _driver->rxBufTail + _driver->RxBufferSize) % _driver->RxBufferSize;
 
 }
+/*
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
+
+	if(huart->Instance == USART1){
+
+		SportUart.txBufTail = (SportUart.txBufTail + __HAL_DMA_GET_COUNTER(huart->hdmatx)) % SportUart.TxBufferSize;
+
+		if(SportUart.txBufHead != SportUart.rxBufTail){
+
+		}
+		asm("nop");
+	}
+
+	else if(huart->Instance == USART3){
+
+	}
+}
+*/

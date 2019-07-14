@@ -61,6 +61,7 @@ ADC_HandleTypeDef hadc3;
 ADC_HandleTypeDef hadc4;
 DMA_HandleTypeDef hdma_adc1;
 DMA_HandleTypeDef hdma_adc3;
+DMA_HandleTypeDef hdma_adc4;
 
 CRC_HandleTypeDef hcrc;
 
@@ -81,11 +82,13 @@ TIM_HandleTypeDef htim16;
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart3;
 DMA_HandleTypeDef hdma_usart1_rx;
+DMA_HandleTypeDef hdma_usart1_tx;
+DMA_HandleTypeDef hdma_usart3_tx;
 
 osThreadId defaultTaskHandle;
 osThreadId SendTelemetryHandle;
 osThreadId PowerParserHandle;
-osThreadId SportReceiveHandle;
+osThreadId BattVoltageHandle;
 osMessageQId telemetryRequestQueueHandle;
 osMutexId SportMessageHandle;
 /* USER CODE BEGIN PV */
@@ -100,6 +103,8 @@ uint8_t SbusRXBuffer[50];
 SemaphoreHandle_t powerMutex;
 QueueHandle_t telemetryQueue;
 QueueHandle_t powerQueue;
+
+QueueHandle_t battQueue;
 
 /* USER CODE END PV */
 
@@ -126,7 +131,7 @@ static void MX_TIM16_Init(void);
 void StartDefaultTask(void const * argument);
 void StartSendTelemetry(void const * argument);
 void StartPower(void const * argument);
-void StartTaskSportReceive(void const * argument);
+void StartTask04(void const * argument);
 
 /* USER CODE BEGIN PFP */
 //extern uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
@@ -134,31 +139,20 @@ void StartTaskSportReceive(void const * argument);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void HardFault_handler(void){
+void HardFault_Handler(void){
 	HAL_GPIO_WritePin(ERROR_LED_GPIO_Port, ERROR_LED_Pin, GPIO_PIN_RESET);
 	while(1){
 	asm("nop");
 	}
 }
 
-void MemManage_Handler(void){
+void BusFault_Handler(void){
 	HAL_GPIO_WritePin(ERROR_LED_GPIO_Port, ERROR_LED_Pin, GPIO_PIN_RESET);
 	while(1){
-	asm("nop");
+	HAL_GPIO_WritePin(ERROR_LED_GPIO_Port, ERROR_LED_Pin, GPIO_PIN_RESET);
 	}
 }
 
-
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
-
-	if(huart->Instance == USART1){
-		osSignalSet(SportReceiveHandle, 0x0001);
-	}
-
-	else if(huart->Instance == USART3){
-
-	}
-}
 
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
 
@@ -166,6 +160,13 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
 	asm("nop");
 }
 
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
+	asm("nop");
+}
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+	asm("nop");
+	osSignalSet(SendTelemetryHandle, 0x0001);
+}
 
 /* USER CODE END 0 */
 
@@ -252,20 +253,20 @@ int main(void)
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 64);
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of SendTelemetry */
-  osThreadDef(SendTelemetry, StartSendTelemetry, osPriorityHigh, 0, 128);
+  osThreadDef(SendTelemetry, StartSendTelemetry, osPriorityHigh, 0, 256);
   SendTelemetryHandle = osThreadCreate(osThread(SendTelemetry), NULL);
 
   /* definition and creation of PowerParser */
-  osThreadDef(PowerParser, StartPower, osPriorityNormal, 0, 128);
+  osThreadDef(PowerParser, StartPower, osPriorityNormal, 0, 256);
   PowerParserHandle = osThreadCreate(osThread(PowerParser), NULL);
 
-  /* definition and creation of SportReceive */
-  osThreadDef(SportReceive, StartTaskSportReceive, osPriorityRealtime, 0, 128);
-  SportReceiveHandle = osThreadCreate(osThread(SportReceive), NULL);
+  /* definition and creation of BattVoltage */
+  osThreadDef(BattVoltage, StartTask04, osPriorityIdle, 0, 128);
+  BattVoltageHandle = osThreadCreate(osThread(BattVoltage), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -508,7 +509,7 @@ static void MX_ADC4_Init(void)
   hadc4.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
   hadc4.Init.Resolution = ADC_RESOLUTION_12B;
   hadc4.Init.ScanConvMode = ADC_SCAN_DISABLE;
-  hadc4.Init.ContinuousConvMode = DISABLE;
+  hadc4.Init.ContinuousConvMode = ENABLE;
   hadc4.Init.DiscontinuousConvMode = DISABLE;
   hadc4.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
   hadc4.Init.ExternalTrigConv = ADC_SOFTWARE_START;
@@ -1108,7 +1109,7 @@ static void MX_USART1_UART_Init(void)
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
-  huart1.Init.Mode = UART_MODE_RX;
+  huart1.Init.Mode = UART_MODE_TX_RX;
   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
   huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
@@ -1171,12 +1172,21 @@ static void MX_DMA_Init(void)
   /* DMA1_Channel1_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+  /* DMA1_Channel2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
   /* DMA1_Channel3_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
+  /* DMA1_Channel4_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel4_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel4_IRQn);
   /* DMA1_Channel5_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
+  /* DMA2_Channel2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Channel2_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Channel2_IRQn);
   /* DMA2_Channel5_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Channel5_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA2_Channel5_IRQn);
@@ -1243,6 +1253,11 @@ static void MX_GPIO_Init(void)
 #define powerChannels 4
 #define powerBufferSize (ADC_samples*powerChannels)
 
+//ADC Scaling definitions
+#define currentScaling 0.6f
+#define voltageScaling 0.15f
+#define ADC_step (3.3f/4096)
+
 
 uint16_t DAC_BUFFER[30];
 uint16_t power_ADC_Buffer[powerBufferSize];
@@ -1269,14 +1284,21 @@ void StartDefaultTask(void const * argument)
   /* USER CODE BEGIN 5 */
   HAL_GPIO_WritePin(ERROR_LED_GPIO_Port, ERROR_LED_Pin, GPIO_PIN_SET);
   //uint8_t startMsg[] = "bootrom\n";
-  HAL_NVIC_DisableIRQ(DMA1_Channel1_IRQn); //Disable interrupt because the Cube won't let us
+  HAL_NVIC_DisableIRQ(DMA1_Channel1_IRQn); //Disable interrupt because the Cube won't let us and we don't need it
   HAL_ADC_Start_DMA(&hadc1, (uint32_t *)power_ADC_Buffer , powerBufferSize);
+  HAL_NVIC_DisableIRQ(DMA2_Channel2_IRQn); //Disable interrupt because the Cube won't let us and we don't need it
+  HAL_ADC_Start_DMA(&hadc4, (uint32_t *)batVolt_ADC_Buffer, ADC_samples);
+
   //CDC_Transmit_FS(startMsg, sizeof(startMsg));
   /* Infinite loop */
+  uint8_t Msg[] = "Power";
   for(;;)
   {
 	HAL_GPIO_TogglePin(ERROR_LED_GPIO_Port, ERROR_LED_Pin);
-    osDelay(100);
+    osDelay(50);
+    //uartDriverLoadData(Msg, 3, &SportUart);
+    //HAL_UART_Transmit_DMA(&huart1, Msg, 3);
+    //osDelay(1900);
   }
   /* USER CODE END 5 */ 
 }
@@ -1292,17 +1314,12 @@ void StartSendTelemetry(void const * argument)
 {
   /* USER CODE BEGIN StartSendTelemetry */
 
+	powerMessage *powerPtr;
+	powerMessage powerDataScaled = {.ESC1_currentValue = 0, .ESC1_powerValue = 0, .ESC1_voltageValue=0, \
+			.ESC2_currentValue = 0, .ESC2_powerValue = 0,.ESC2_voltageValue= 0};
+	uint16_t *battPtr;
+	uint16_t BattVoltage = 0;
 
-	  //uint8_t Msg[] = "Telemetry\n";
-	  //CDC_Transmit_FS(Msg, sizeof(Msg));
-	/*telemetryMessage *receivedMessage;
-	//telemetryQueue = xQueueCreate(10, sizeof(struct telemetryMessage * ));
-	//osEvent requestEvent;
-	if(telemetryRequestQueueHandle == NULL)
-	{
-		Error_Handler();
-	}
-	*/
 	uint8_t sensorBuffer[8];
 	uint8_t mBuffer[4];
 	unsigned bytes = 0;
@@ -1310,45 +1327,78 @@ void StartSendTelemetry(void const * argument)
   for(;;)
   {
 
-	osSignalWait(0x0001, osWaitForever);
-	unsigned ID = 0;
-	bytes = uartDriverSpace(&SportUart);
-	if(bytes > 1){
-		uartDriverReadData(&mBuffer, bytes, &SportUart);
-		uint8_t cnt = 0;
+	if(powerQueue != 0){
+		if(xQueueReceive(powerQueue, &(powerPtr), (TickType_t)10) == pdTRUE){
+			powerDataScaled.ESC1_currentValue = (powerPtr->ESC1_currentValue)*100;
+			powerDataScaled.ESC1_powerValue = (powerPtr->ESC1_powerValue)*10;
+			powerDataScaled.ESC1_voltageValue = (powerPtr->ESC1_voltageValue)*10;
 
-		for(;cnt < (bytes-1); cnt ++){
-			ID = 0;
-			if((mBuffer[cnt] == 0x7E) && (cnt < bytes)){
-				cnt ++;
-				ID = mBuffer[cnt];
+			powerDataScaled.ESC2_currentValue = (powerPtr->ESC2_currentValue)*100;
+			powerDataScaled.ESC2_powerValue = (powerPtr->ESC2_powerValue)*10;
+			powerDataScaled.ESC2_voltageValue = (powerPtr->ESC2_voltageValue)*10;
+		}
+	}
 
-				switch(ID)
-				{
-					case 0x22:
-						/*Send ESC 1 power data*/
-						sensorBuffer[0] = 0x32;
-						sensorBuffer[1] = (uint8_t)CURR_FIRST_ID;
-						sensorBuffer[2] = CURR_FIRST_ID >> 8;
-						sensorBuffer[3] = 0;
-						break;
-					case 0x48:
-						/*Send ESC 2 power data*/
-						sensorBuffer[0] = 0x32;
-						sensorBuffer[1] = (uint8_t)(CURR_FIRST_ID+1);
-						sensorBuffer[2] = (uint8_t)(CURR_FIRST_ID+1)>>8;
-						sensorBuffer[3] = 0;
-						sensorBuffer[4] = 0;
-						sensorBuffer[5] = 0;
-						sensorBuffer[6] = 0;
-						break;
-					default:
+	if(battQueue != 0){
+		if(xQueueReceive(battQueue, &(battPtr),(TickType_t)10) == pdTRUE){
+			BattVoltage = *battPtr;
+		}
+	}
 
-						break;
+	osEvent signalEvent = osSignalWait(0x0001, 10);
+	if(signalEvent.status == osEventSignal)
+	{
+
+		asm("nop");
+
+
+		unsigned ID = 0;
+		bytes = uartDriverSpace(&SportUart);
+
+		if(bytes > 1){
+			uartDriverReadData(&mBuffer, bytes, &SportUart);
+			uint8_t cnt = 0;
+
+			for(;cnt < bytes-1; cnt ++){
+				ID = 0;
+				if((mBuffer[cnt] == 0x7E) && (cnt < bytes-1)){
+					cnt ++;
+					ID = mBuffer[cnt];
+					uint32_t dataTmp = 0;
+					switch(ID)
+					{
+						case 0x67: //Sensor ID 8
+							//Send ESC 1 power data
+							dataTmp = (uint32_t)powerDataScaled.ESC1_powerValue;
+							sensorBuffer[0] = 0x32;
+							sensorBuffer[1] = (uint8_t)(CURR_FIRST_ID >> 8);
+							sensorBuffer[2] = (uint8_t)(CURR_FIRST_ID);
+							break;
+						case 0x48: //Sensor ID 9
+							//Send ESC 2 power data
+							dataTmp = (uint32_t)powerDataScaled.ESC2_powerValue;
+							sensorBuffer[0] = 0x32;
+							sensorBuffer[1] = (uint8_t)((CURR_FIRST_ID+1) >> 8);
+							sensorBuffer[2] = (uint8_t)(CURR_FIRST_ID+1);
+							break;
+						case 0xE9: //Sensor ID 10
+							dataTmp = BattVoltage;
+							sensorBuffer[0] = 0x32;
+							sensorBuffer[1] = (uint8_t)(BATT_ID);
+							sensorBuffer[2] = (uint8_t)(BATT_ID)>>8;
+							break;
+
+						default:
+							break;
+					}
+					sensorBuffer[3] = (uint8_t)dataTmp;
+					sensorBuffer[4] = (uint8_t)dataTmp>>8;
+					sensorBuffer[5] = (uint8_t)dataTmp>>16;
+					sensorBuffer[6] = (uint8_t)dataTmp>>24;
+					sensorBuffer[7] = HAL_CRC_Calculate(&hcrc, (uint32_t *) sensorBuffer, (sizeof(sensorBuffer))-1);
+					//CDC_Transmit_FS(sensorBuffer, sizeof(sensorBuffer));
+					uartDriverLoadData(sensorBuffer, sizeof(sensorBuffer), &SportUart);
 				}
-				sensorBuffer[7] = HAL_CRC_Calculate(&hcrc, (uint32_t *) sensorBuffer, (sizeof(sensorBuffer))-1);
-				//CDC_Transmit_FS(sensorBuffer, sizeof(sensorBuffer));
-				//uartDriverLoadData(sensorBuffer, sizeof(sensorBuffer), &SportUart);
 			}
 		}
 	}
@@ -1373,7 +1423,10 @@ void StartPower(void const * argument)
 	#define currentScaling 0.6f
 	#define voltageScaling 0.15f
 	#define ADC_step (3.3f/4096)
-	powerMessage power_new = {};
+	powerMessage power_new = {.ESC1_currentValue = 0, .ESC1_powerValue = 0, .ESC1_voltageValue=0, \
+			.ESC2_currentValue = 0, .ESC2_powerValue = 0,.ESC2_voltageValue= 0};
+	powerMessage *msgPtr;
+
 	float temp = 0.0f;
 	powerQueue = xQueueCreate(1,sizeof(struct powerMessage * ));
   /* Infinite loop */
@@ -1389,12 +1442,12 @@ void StartPower(void const * argument)
 	  */
 	 for(uint8_t ch=0; ch < powerChannels; ch++)
 	 {
-		 uint32_t temp=0;
+		 uint32_t loopTemp=0;
 		 for(uint8_t buf=ch;buf<(powerBufferSize-ch); buf+=powerChannels)
 		 {
-			 temp += power_ADC_Buffer[buf];
+			 loopTemp += power_ADC_Buffer[buf];
 		 }
-		 measurements[ch] = (temp/ADC_samples);
+		 measurements[ch] = (loopTemp/ADC_samples);
 	 }
 
 
@@ -1428,51 +1481,42 @@ void StartPower(void const * argument)
 
 		 power_new.ESC1_powerValue = (power_new.ESC1_currentValue*power_new.ESC1_voltageValue);
 		 power_new.ESC2_powerValue = (power_new.ESC2_currentValue*power_new.ESC2_voltageValue);
-
-		 xQueueOverwrite(powerQueue,&power_new);
+		 msgPtr = & power_new;
+		 xQueueOverwrite(powerQueue,( void * ) &msgPtr);
 		 osDelay(1000);
 
   }
   /* USER CODE END StartPower */
 }
 
-/* USER CODE BEGIN Header_StartTaskSportReceive */
+/* USER CODE BEGIN Header_StartTask04 */
 /**
-* @brief Function implementing the SportReceive thread.
+* @brief Function implementing the BattVoltage thread.
 * @param argument: Not used
 * @retval None
 */
-/* USER CODE END Header_StartTaskSportReceive */
-void StartTaskSportReceive(void const * argument)
+/* USER CODE END Header_StartTask04 */
+void StartTask04(void const * argument)
 {
-  /* USER CODE BEGIN StartTaskSportReceive */
-  unsigned bytes = 0;
-  //uint8_t mBuffer[4];
+  /* USER CODE BEGIN StartTask04 */
+	uint16_t measurement = 0;
+	//float temp = 0.0f;
+	uint16_t *msgPtr;
+	battQueue = xQueueCreate(1,sizeof(uint16_t));
 	/* Infinite loop */
-  //telemetryMessage *mesPtr;
-  //mesPtr = osPoolAlloc(teleRxpool);
-  //mesPtr->ID = 0;
   for(;;)
   {
-
-/*
-	osSignalWait(0x0001, osWaitForever);
-	bytes = uartDriverSpace(&SportUart);
-	uartDriverReadData(&mBuffer, bytes, &SportUart);
-	uint8_t cnt = 0;
-
-	for(cnt = 0;cnt < bytes; cnt ++){
-		if(mBuffer[cnt] == 0x7E){
-			mesPtr->ID = mBuffer[(cnt+1)];
-			osMessagePut(telemetryRequestQueueHandle, (uint32_t)mesPtr, osWaitForever);
-		}
+	  uint32_t loopTemp = 0;
+	for(unsigned i=0;i<ADC_samples;i++){
+		loopTemp += batVolt_ADC_Buffer[i];
 	}
-
-*/
-
-    osDelay(1);
+	measurement = (loopTemp/ADC_samples);
+	measurement = ((measurement*10)*ADC_step);
+	msgPtr = &measurement;
+	xQueueOverwrite(battQueue,( void * ) &msgPtr);
+    osDelay(1000);
   }
-  /* USER CODE END StartTaskSportReceive */
+  /* USER CODE END StartTask04 */
 }
 
 /**
