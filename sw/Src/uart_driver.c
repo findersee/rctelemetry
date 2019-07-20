@@ -7,6 +7,9 @@
 
 #include "uart_driver.h"
 
+uartDriver *driverList[3];
+extern uartDriver SportUart;
+static void StartTXDMA(DMA_HandleTypeDef *hdma, uint32_t SrcAddress, uint32_t DstAddress, uint32_t DataLength);
 static void UART_DMAReceiveCplt(DMA_HandleTypeDef *hdma)
 {
 	UART_HandleTypeDef* huart = (UART_HandleTypeDef*)(hdma->Parent);
@@ -18,13 +21,40 @@ static void UART_DMATransmitCplt(DMA_HandleTypeDef *hdma)
 {
 	UART_HandleTypeDef* huart = (UART_HandleTypeDef*)(hdma->Parent);
 
+	uartDriver *_driver = 0;
+
+
+	if(huart->Instance == USART1){
+		_driver = &SportUart;
+		__HAL_DMA_DISABLE(hdma);
+		//__HAL_DMA_CLEAR_FLAG(hdma)
+
+		_driver->txBufTail = (_driver->txBufTail + 8) % _driver->TxBufferSize;
+
+
+		if(_driver->txBufHead !=_driver->txBufTail)
+		{
+			__HAL_UART_CLEAR_FLAG(huart,UART_FLAG_TC);
+
+			StartTXDMA(hdma,(uint32_t)(_driver->TxBuffer), (uint32_t)&(_driver->huart->Instance->TDR), (uint32_t)8);
+			SET_BIT(_driver->huart->Instance->CR3, USART_CR3_DMAT);
+		}
+
+	}
+	else if(huart->Instance == USART2){
+
+	}
+	else if(huart->Instance == USART3){
+
+	}
+
+
 	HAL_UART_TxCpltCallback(huart);
 }
 
 
 static void StartTXDMA(DMA_HandleTypeDef *hdma, uint32_t SrcAddress, uint32_t DstAddress, uint32_t DataLength)
 {
-	HAL_StatusTypeDef status = HAL_OK;
 
   /* Check the parameters */
   assert_param(IS_DMA_BUFFER_SIZE(DataLength));
@@ -60,6 +90,7 @@ static void StartTXDMA(DMA_HandleTypeDef *hdma, uint32_t SrcAddress, uint32_t Ds
 
   	/* Enable the Peripheral */
   	hdma->Instance->CCR |= DMA_CCR_EN;
+  	__HAL_UNLOCK(hdma);
   }
   else
   {
@@ -89,6 +120,7 @@ uartDriver uartDriverInit(uint8_t * TxBuffer,unsigned TxBufferSize,uint8_t * RxB
 
 		if(_huart->Instance == USART1){
 
+			driverList[0] = &driver;
 			//__HAL_LOCK(_huart);
 			_huart->hdmarx->XferCpltCallback = UART_DMAReceiveCplt;
 			_huart->hdmarx->XferHalfCpltCallback = UART_DMAReceiveCplt;
@@ -100,7 +132,16 @@ uartDriver uartDriverInit(uint8_t * TxBuffer,unsigned TxBufferSize,uint8_t * RxB
 			return driver;
 		}
 		else if(_huart->Instance == USART3){
-			HAL_DMA_Start(_huart->hdmarx, _huart->Instance->RDR, (uint32_t)RxBuffer, RxBufferSize);
+
+			driverList[2] = &driver;
+			//__HAL_LOCK(_huart);
+			_huart->hdmarx->XferCpltCallback = UART_DMAReceiveCplt;
+			_huart->hdmarx->XferHalfCpltCallback = UART_DMAReceiveCplt;
+			HAL_DMA_Start_IT(_huart->hdmarx, (uint32_t)&_huart->Instance->RDR, (uint32_t)driver.RxBuffer, driver.RxBufferSize);
+
+			//__HAL_UNLOCK(_huart);
+			SET_BIT(_huart->Instance->CR3, USART_CR3_DMAR);
+			//SET_BIT(_huart->Instance->CR1, USART_CR1_RXNEIE);
 			return driver;
 		}
 		else
