@@ -88,16 +88,17 @@ osThreadId defaultTaskHandle;
 osThreadId SendTelemetryHandle;
 osThreadId PowerParserHandle;
 osThreadId BattVoltageHandle;
+osThreadId SbusDecoderHandle;
 osMessageQId telemetryRequestQueueHandle;
 osMutexId SportMessageHandle;
 /* USER CODE BEGIN PV */
 uartDriver SportUart;
-uint8_t SportTXBuffer[20];
+UartTxData SportTXBuffer[3];
 uint8_t SportRXBuffer[4];
 
 uartDriver SbusUart;
-uint8_t SbusTXBuffer[50];
-uint8_t SbusRXBuffer[50];
+//UartTxData SbusTXBuffer[3];
+uint8_t SbusRXBuffer[25];
 
 SemaphoreHandle_t powerMutex;
 QueueHandle_t telemetryQueue;
@@ -131,6 +132,7 @@ void StartDefaultTask(void const * argument);
 void StartSendTelemetry(void const * argument);
 void StartPower(void const * argument);
 void StartTask04(void const * argument);
+void StartSbusDecoder(void const * argument);
 
 /* USER CODE BEGIN PFP */
 //extern uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
@@ -164,7 +166,13 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
 }
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	asm("nop");
-	osSignalSet(SendTelemetryHandle, 0x0001);
+
+	if(huart->Instance == USART1){
+		osSignalSet(SendTelemetryHandle, 0x0001);
+	}
+	if(huart->Instance == USART3){
+		osSignalSet(SbusDecoderHandle, 0x0001);
+	}
 }
 
 /* USER CODE END 0 */
@@ -216,8 +224,8 @@ int main(void)
   MX_SPI3_Init();
   MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
-  SportUart = uartDriverInit(SportTXBuffer,sizeof(SportTXBuffer),SportRXBuffer,sizeof(SportRXBuffer),&huart1);
-//  SbusUart = uartDriverInit(SbusTXBuffer,50,SbusRXBuffer,50,&huart2);
+  SportUart = uartDriverInit(SportTXBuffer,3,SportRXBuffer,sizeof(SportRXBuffer),&huart1,RXTX);
+  //SbusUart = uartDriverInit(NULL,0,SbusRXBuffer,50,&huart3,RX);
   //HAL_UART_Receive_IT(&huart1, SportRXBuffer, 4);
   //HAL_UART_Receive_DMA(&huart1, SportRXBuffer, 2);
 
@@ -252,11 +260,11 @@ int main(void)
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityIdle, 0, 128);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of SendTelemetry */
-  osThreadDef(SendTelemetry, StartSendTelemetry, osPriorityHigh, 0, 256);
+  osThreadDef(SendTelemetry, StartSendTelemetry, osPriorityRealtime, 0, 256);
   SendTelemetryHandle = osThreadCreate(osThread(SendTelemetry), NULL);
 
   /* definition and creation of PowerParser */
@@ -264,10 +272,15 @@ int main(void)
   PowerParserHandle = osThreadCreate(osThread(PowerParser), NULL);
 
   /* definition and creation of BattVoltage */
-  osThreadDef(BattVoltage, StartTask04, osPriorityIdle, 0, 128);
+  osThreadDef(BattVoltage, StartTask04, osPriorityNormal, 0, 128);
   BattVoltageHandle = osThreadCreate(osThread(BattVoltage), NULL);
 
+  /* definition and creation of SbusDecoder */
+  osThreadDef(SbusDecoder, StartSbusDecoder, osPriorityHigh, 0, 192);
+  SbusDecoderHandle = osThreadCreate(osThread(SbusDecoder), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
+  osThreadTerminate(SbusDecoderHandle);
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
 
@@ -359,7 +372,7 @@ static void MX_ADC1_Init(void)
   */
   hadc1.Instance = ADC1;
   hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
-  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc1.Init.Resolution = ADC_RESOLUTION_10B;
   hadc1.Init.ScanConvMode = ADC_SCAN_ENABLE;
   hadc1.Init.ContinuousConvMode = ENABLE;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
@@ -384,7 +397,7 @@ static void MX_ADC1_Init(void)
   }
   /** Configure Regular Channel 
   */
-  sConfig.Channel = ADC_CHANNEL_4;
+  sConfig.Channel = ADC_CHANNEL_1;
   sConfig.Rank = ADC_REGULAR_RANK_1;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
   sConfig.SamplingTime = ADC_SAMPLETIME_7CYCLES_5;
@@ -396,7 +409,7 @@ static void MX_ADC1_Init(void)
   }
   /** Configure Regular Channel 
   */
-  sConfig.Channel = ADC_CHANNEL_1;
+  sConfig.Channel = ADC_CHANNEL_2;
   sConfig.Rank = ADC_REGULAR_RANK_2;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
@@ -404,6 +417,7 @@ static void MX_ADC1_Init(void)
   }
   /** Configure Regular Channel 
   */
+  sConfig.Channel = ADC_CHANNEL_3;
   sConfig.Rank = ADC_REGULAR_RANK_3;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
@@ -411,6 +425,7 @@ static void MX_ADC1_Init(void)
   }
   /** Configure Regular Channel 
   */
+  sConfig.Channel = ADC_CHANNEL_4;
   sConfig.Rank = ADC_REGULAR_RANK_4;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
@@ -1112,9 +1127,7 @@ static void MX_USART1_UART_Init(void)
   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
   huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_TXINVERT_INIT|UART_ADVFEATURE_RXINVERT_INIT;
-  huart1.AdvancedInit.TxPinLevelInvert = UART_ADVFEATURE_TXINV_ENABLE;
-  huart1.AdvancedInit.RxPinLevelInvert = UART_ADVFEATURE_RXINV_ENABLE;
+  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
   if (HAL_HalfDuplex_Init(&huart1) != HAL_OK)
   {
     Error_Handler();
@@ -1296,7 +1309,7 @@ void StartDefaultTask(void const * argument)
 
   //CDC_Transmit_FS(startMsg, sizeof(startMsg));
   /* Infinite loop */
-  uint8_t Msg[] = "Power";
+  //uint8_t Msg[] = "Power";
   for(;;)
   {
 	HAL_GPIO_TogglePin(ERROR_LED_GPIO_Port, ERROR_LED_Pin);
@@ -1356,32 +1369,29 @@ void StartSendTelemetry(void const * argument)
 
 		asm("nop");
 
-
 		unsigned ID = 0;
-		bytes = uartDriverSpace(&SportUart);
+		unsigned bytes = uartDriverSpace(&SportUart);
 
-		if(bytes > 1){
+		if(bytes > 0){
 			uartDriverReadData(&mBuffer, bytes, &SportUart);
-			uint8_t cnt = 0;
-
-			for(;cnt < bytes-1; cnt ++){
+			for(unsigned cnt=0;cnt<bytes;cnt++){
 				ID = 0;
-				if((mBuffer[cnt] == 0x7E) && (cnt < bytes-1)){
-					cnt ++;
+				if((mBuffer[cnt] == 0x7E) &&( cnt < (bytes+1))){
+					cnt++;
 					ID = mBuffer[cnt];
 					uint32_t dataTmp = 0;
 					switch(ID)
 					{
 						case 0x67: //Sensor ID 8
 							//Send ESC 1 power data
-							dataTmp = (uint32_t)powerDataScaled.ESC1_powerValue;
+							dataTmp = (uint32_t)powerDataScaled.ESC1_voltageValue;
 							sensorBuffer[0] = 0x32;
 							sensorBuffer[1] = (uint8_t)(CURR_FIRST_ID >> 8);
 							sensorBuffer[2] = (uint8_t)(CURR_FIRST_ID);
 							break;
 						case 0x48: //Sensor ID 9
 							//Send ESC 2 power data
-							dataTmp = (uint32_t)powerDataScaled.ESC2_powerValue;
+							dataTmp = (uint32_t)powerDataScaled.ESC2_voltageValue;
 							sensorBuffer[0] = 0x32;
 							sensorBuffer[1] = (uint8_t)((CURR_FIRST_ID+1) >> 8);
 							sensorBuffer[2] = (uint8_t)(CURR_FIRST_ID+1);
@@ -1403,7 +1413,14 @@ void StartSendTelemetry(void const * argument)
 					sensorBuffer[7] = HAL_CRC_Calculate(&hcrc, (uint32_t *) sensorBuffer, (sizeof(sensorBuffer))-1);
 					//CDC_Transmit_FS(sensorBuffer, sizeof(sensorBuffer));
 					uartDriverLoadData(sensorBuffer, sizeof(sensorBuffer), &SportUart);
+					//while(!uartDriverLoadData(sensorBuffer, sizeof(sensorBuffer), &SportUart))
+						//osDelay(1);
+					//uartDriverClearRxBuffer(&SportUart);
+
 				}
+				else
+					//uartDriverDMASync(&SportUart);
+					asm("nop");
 			}
 		}
 	}
@@ -1427,7 +1444,7 @@ void StartPower(void const * argument)
 	uint16_t measurements[powerChannels];
 	#define currentScaling 0.6f
 	#define voltageScaling 0.15f
-	#define ADC_step (3.3f/4096)
+	#define ADC_step (3.3f/1024)
 	powerMessage power_new = {.ESC1_currentValue = 0, .ESC1_powerValue = 0, .ESC1_voltageValue=0, \
 			.ESC2_currentValue = 0, .ESC2_powerValue = 0,.ESC2_voltageValue= 0};
 	powerMessage *msgPtr;
@@ -1472,16 +1489,24 @@ void StartPower(void const * argument)
 		 //ESC1 Current scaled
 		 temp = measurements[2]*ADC_step;
 		 temp /= currentScaling;
-		 temp -= 0.5f; //Subtract offset value;
-		 temp /= 0.04f; //Calculate Amps with formula 40mV/A
+		 if(temp > 0.5){
+			 temp -= 0.5f; //Subtract offset value;
+		 	 temp /= 0.04f; //Calculate Amps with formula 40mV/A
+		 }
+		 else
+			 temp = 0;
 		 power_new.ESC1_currentValue = temp;
 
 		 temp = 0.0f;
 		 //ESC2 Current scaled
 		 temp = measurements[3]*ADC_step;
 		 temp /= currentScaling;
-		 temp -= 0.5f;
-		 temp /= 0.04f;
+		 if(temp > 0.5){
+			 temp -= 0.5f; //Subtract offset value;
+		 	 temp /= 0.04f; //Calculate Amps with formula 40mV/A
+		 }
+		 else
+			 temp = 0;
 		 power_new.ESC2_currentValue = temp;
 
 		 power_new.ESC1_powerValue = (power_new.ESC1_currentValue*power_new.ESC1_voltageValue);
@@ -1522,6 +1547,63 @@ void StartTask04(void const * argument)
     osDelay(1000);
   }
   /* USER CODE END StartTask04 */
+}
+
+/* USER CODE BEGIN Header_StartSbusDecoder */
+/**
+* @brief Function implementing the SbusDecoder thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartSbusDecoder */
+void StartSbusDecoder(void const * argument)
+{
+  /* USER CODE BEGIN StartSbusDecoder */
+	uint8_t SbusBuf[25];
+	uint16_t Channels[16];
+
+
+  /* Infinite loop */
+  for(;;)
+  {
+	  osEvent signalEvent = osSignalWait(0x0001, osWaitForever);
+	  if(signalEvent.status == osEventSignal){
+		  unsigned bytes = uartDriverSpace(&SbusUart);
+		  if(bytes > 1){
+			  uartDriverReadData(SbusBuf, bytes, &SbusUart);
+			  uint16_t tmp = 0;
+			  if((SbusBuf[0] == 0x0F) && (SbusBuf[24] == 0x00)){
+				  Channels[0] = (uint16_t)SbusBuf[1] + ((SbusBuf[2] & 0x07)<<8);
+				  //tmp = (SbusBuf[2] & 0x07)<<8;
+				  //Channels[0] += tmp;
+
+
+
+				  Channels[1] = ((SbusBuf[2] & 0x78) >> 3)+((SbusBuf[3] & 0x3F)<<8);
+				  //tmp = ((SbusBuf[2] & 0x3F)<<8);
+				  //Channels[0] += tmp;
+
+				  Channels[1] = ((SbusBuf[2] & 0x78) >> 3)+((SbusBuf[3] & 0x3F)<<8);
+
+				  //Channels[]
+
+				  //Channels[0] = SbusBuf[1]+SbusBuf[2]>>
+				  asm("nop");
+
+
+
+			  }
+			  else{
+				  uartDriverDMASync(&SbusUart);
+			  }
+
+		  }
+	  }
+
+
+	  //osDelay(1);
+  }
+  /* USER CODE END StartSbusDecoder */
 }
 
 /**
