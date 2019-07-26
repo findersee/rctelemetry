@@ -43,6 +43,10 @@ typedef struct
 	float ESC2_voltageValue;
 	float ESC2_currentValue;
 }powerMessage;
+typedef struct
+{
+	uint16_t value;
+}BatteryMessage;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -136,6 +140,8 @@ void StartSbusDecoder(void const * argument);
 
 /* USER CODE BEGIN PFP */
 //extern uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
+uint8_t CRCCalc( uint8_t * packet);
+void SET_PWM_VALUE(uint16_t value,uint32_t channel, TIM_HandleTypeDef *htim);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -521,7 +527,7 @@ static void MX_ADC4_Init(void)
   */
   hadc4.Instance = ADC4;
   hadc4.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
-  hadc4.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc4.Init.Resolution = ADC_RESOLUTION_10B;
   hadc4.Init.ScanConvMode = ADC_SCAN_DISABLE;
   hadc4.Init.ContinuousConvMode = ENABLE;
   hadc4.Init.DiscontinuousConvMode = DISABLE;
@@ -1268,7 +1274,7 @@ static void MX_GPIO_Init(void)
 //ADC Scaling definitions
 #define currentScaling 0.6f
 #define voltageScaling 0.15f
-#define ADC_step (3.3f/4096)
+#define ADC_step (3.3f/1024)
 
 
 uint16_t DAC_BUFFER[30];
@@ -1278,6 +1284,30 @@ uint16_t batVolt_ADC_Buffer[ADC_samples];
 
 osPoolId teleRxpool;
 osPoolDef(teleRxpool,6,telemetryMessage);
+
+uint8_t CRCCalc (uint8_t *packet) {
+    short crc = 0;
+    for (int i=0; i<7; i++) {
+        crc += packet[i]; //0-1FF
+        crc += crc >> 8;  //0-100
+        crc &= 0x00ff;
+        crc += crc >> 8;  //0-0FF
+        crc &= 0x00ff;
+    }
+    return ~crc;
+}
+
+void SET_PWM_VALUE(uint16_t value,uint32_t channel, TIM_HandleTypeDef *htim)
+{
+    TIM_OC_InitTypeDef sConfigOC;
+
+    sConfigOC.OCMode = TIM_OCMODE_PWM1;
+    sConfigOC.Pulse = value;
+    sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+    sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+    HAL_TIM_PWM_ConfigChannel(htim, &sConfigOC, channel);
+    HAL_TIM_PWM_Start(htim, channel);
+}
 
 
 
@@ -1335,8 +1365,8 @@ void StartSendTelemetry(void const * argument)
 	powerMessage *powerPtr;
 	powerMessage powerDataScaled = {.ESC1_currentValue = 0, .ESC1_powerValue = 0, .ESC1_voltageValue=0, \
 			.ESC2_currentValue = 0, .ESC2_powerValue = 0,.ESC2_voltageValue= 0};
-	uint16_t *battPtr;
-	uint16_t BattVoltage = 0;
+	BatteryMessage *battPtr;
+	BatteryMessage BattVoltage = {.value = 0};
 
 	uint8_t sensorBuffer[8];
 	uint8_t mBuffer[4];
@@ -1346,7 +1376,7 @@ void StartSendTelemetry(void const * argument)
   {
 
 	if(powerQueue != 0){
-		if(xQueueReceive(powerQueue, &(powerPtr), (TickType_t)10) == pdTRUE){
+		if(xQueueReceive(powerQueue, &(powerPtr), 0) == pdTRUE){
 			powerDataScaled.ESC1_currentValue = (powerPtr->ESC1_currentValue)*100;
 			powerDataScaled.ESC1_powerValue = (powerPtr->ESC1_powerValue)*10;
 			powerDataScaled.ESC1_voltageValue = (powerPtr->ESC1_voltageValue)*10;
@@ -1358,15 +1388,15 @@ void StartSendTelemetry(void const * argument)
 	}
 
 	if(battQueue != 0){
-		if(xQueueReceive(battQueue, &(battPtr),(TickType_t)10) == pdTRUE){
-			BattVoltage = *battPtr;
+		if(xQueueReceive(battQueue, &(battPtr), 0) == pdTRUE){
+			BattVoltage.value = battPtr->value;
 		}
 	}
 
 	osEvent signalEvent = osSignalWait(0x0001, 10);
 	if(signalEvent.status == osEventSignal)
 	{
-
+		memset(&sensorBuffer,0,8);
 		asm("nop");
 
 		unsigned ID = 0;
@@ -1385,22 +1415,22 @@ void StartSendTelemetry(void const * argument)
 						case 0x67: //Sensor ID 8
 							//Send ESC 1 power data
 							dataTmp = (uint32_t)powerDataScaled.ESC1_voltageValue;
-							sensorBuffer[0] = 0x32;
-							sensorBuffer[1] = (uint8_t)(CURR_FIRST_ID >> 8);
-							sensorBuffer[2] = (uint8_t)(CURR_FIRST_ID);
+							sensorBuffer[0] = 0x10;
+							sensorBuffer[1] = (uint8_t)(ESC_POWER_FIRST_ID >> 8);
+							sensorBuffer[2] = (uint8_t)(ESC_POWER_FIRST_ID);
 							break;
 						case 0x48: //Sensor ID 9
 							//Send ESC 2 power data
 							dataTmp = (uint32_t)powerDataScaled.ESC2_voltageValue;
-							sensorBuffer[0] = 0x32;
-							sensorBuffer[1] = (uint8_t)((CURR_FIRST_ID+1) >> 8);
-							sensorBuffer[2] = (uint8_t)(CURR_FIRST_ID+1);
+							sensorBuffer[0] = 0x10;
+							sensorBuffer[1] = (uint8_t)((ESC_POWER_FIRST_ID+1) >> 8);
+							sensorBuffer[2] = (uint8_t)(ESC_POWER_FIRST_ID+1);
 							break;
 						case 0xE9: //Sensor ID 10
-							dataTmp = BattVoltage;
-							sensorBuffer[0] = 0x32;
+							dataTmp = (uint32_t)BattVoltage.value;
+							sensorBuffer[0] = 0x10;
 							sensorBuffer[1] = (uint8_t)(BATT_ID);
-							sensorBuffer[2] = (uint8_t)(BATT_ID)>>8;
+							sensorBuffer[2] = (uint8_t)((BATT_ID)>>8);
 							break;
 
 						default:
@@ -1410,7 +1440,8 @@ void StartSendTelemetry(void const * argument)
 					sensorBuffer[4] = (uint8_t)dataTmp>>8;
 					sensorBuffer[5] = (uint8_t)dataTmp>>16;
 					sensorBuffer[6] = (uint8_t)dataTmp>>24;
-					sensorBuffer[7] = HAL_CRC_Calculate(&hcrc, (uint32_t *) sensorBuffer, (sizeof(sensorBuffer))-1);
+					//sensorBuffer[7] = HAL_CRC_Calculate(&hcrc, (uint32_t *) sensorBuffer, (sizeof(sensorBuffer))-1);
+					sensorBuffer[7] = CRCCalc((uint8_t *)sensorBuffer);
 					//CDC_Transmit_FS(sensorBuffer, sizeof(sensorBuffer));
 					uartDriverLoadData(sensorBuffer, sizeof(sensorBuffer), &SportUart);
 					//while(!uartDriverLoadData(sensorBuffer, sizeof(sensorBuffer), &SportUart))
@@ -1444,7 +1475,7 @@ void StartPower(void const * argument)
 	uint16_t measurements[powerChannels];
 	#define currentScaling 0.6f
 	#define voltageScaling 0.15f
-	#define ADC_step (3.3f/1024)
+	//#define ADC_step (3.3f/1024)
 	powerMessage power_new = {.ESC1_currentValue = 0, .ESC1_powerValue = 0, .ESC1_voltageValue=0, \
 			.ESC2_currentValue = 0, .ESC2_powerValue = 0,.ESC2_voltageValue= 0};
 	powerMessage *msgPtr;
@@ -1529,23 +1560,25 @@ void StartPower(void const * argument)
 void StartTask04(void const * argument)
 {
   /* USER CODE BEGIN StartTask04 */
-	uint16_t measurement = 0;
-	//float temp = 0.0f;
-	uint16_t *msgPtr;
+	BatteryMessage Bat = {.value = 0};
+	float temp = 0.0f;
+	BatteryMessage *msgPtr;
 	battQueue = xQueueCreate(1,sizeof(uint16_t));
 	/* Infinite loop */
-  for(;;)
-  {
+	for(;;)
+	{
 	  uint32_t loopTemp = 0;
 	for(unsigned i=0;i<ADC_samples;i++){
 		loopTemp += batVolt_ADC_Buffer[i];
 	}
-	measurement = (loopTemp/ADC_samples);
-	measurement = ((measurement*10)*ADC_step);
-	msgPtr = &measurement;
+	temp = (loopTemp/ADC_samples);
+	temp = (temp*ADC_step);
+	temp /= 0.15f ;
+	Bat.value = 10*temp;
+	msgPtr = & Bat;
 	xQueueOverwrite(battQueue,( void * ) &msgPtr);
-    osDelay(1000);
-  }
+	osDelay(1000);
+	}
   /* USER CODE END StartTask04 */
 }
 
@@ -1560,7 +1593,7 @@ void StartSbusDecoder(void const * argument)
 {
   /* USER CODE BEGIN StartSbusDecoder */
 	uint8_t SbusBuf[25];
-	uint16_t Channels[16];
+	uint16_t Channels[20];
 
 
   /* Infinite loop */
@@ -1573,17 +1606,41 @@ void StartSbusDecoder(void const * argument)
 			  uartDriverReadData(SbusBuf, bytes, &SbusUart);
 			  uint16_t tmp = 0;
 			  if((SbusBuf[0] == 0x0F) && (SbusBuf[24] == 0x00)){
-				  Channels[0] = (uint16_t)SbusBuf[1] + ((SbusBuf[2] & 0x07)<<8);
-				  //tmp = (SbusBuf[2] & 0x07)<<8;
-				  //Channels[0] += tmp;
+
+				  //CH1 value
+				  Channels[0] = ((SbusBuf[1]|SbusBuf[2]<<8) & 0x7FF);
+				  //CH2 value
+				  Channels[1] = ((SbusBuf[2]>>3|SbusBuf[3]<<5) & 0x7FF);
+				  //CH3 value
+				  Channels[2] = ((SbusBuf[3]>>6|SbusBuf[4]<<2|SbusBuf[5]<<10) & 0x7FF);
+				  //CH4 value
+				  Channels[3] = ((SbusBuf[5]>>1|SbusBuf[6]<<7) & 0x7FF);
+				  //CH5 value
+				  Channels[4] = ((SbusBuf[6]>>4|SbusBuf[7]<<4) & 0x7FF);
+				  //CH6 value
+				  Channels[5] = ((SbusBuf[7]>>7|SbusBuf[8]<<1|SbusBuf[9]<<9) & 0x7FF);
+				  //CH7 value
+				  Channels[6] = ((SbusBuf[9]>>2|SbusBuf[10]<<6) & 0x7FF);
+				  //CH8 value
+				  Channels[7] = ((SbusBuf[10]>>5|SbusBuf[11]<<3) & 0x7FF);
+				  //CH9 value
+				  Channels[8]  = ((SbusBuf[12]|SbusBuf[13]<< 8) & 0x07FF);
+				  //CH10 value
+				  Channels[9]  = ((SbusBuf[13]>>3|SbusBuf[14]<<5) & 0x07FF);
+				  //CH11 value
+				  Channels[10] = ((SbusBuf[14]>>6|SbusBuf[15]<<2|sbusData[16]<<10) & 0x07FF);
+				  //CH12 value
+				  Channels[11] = ((SbusBuf[16]>>1|SbusBuf[17]<<7) & 0x07FF);
+				  //CH13 value
+				  Channels[12] = ((SbusBuf[17]>>4|SbusBuf[18]<<4) & 0x07FF);
+				  //CH14 value
+				  Channels[13] = ((SbusBuf[18]>>7|SbusBuf[19]<<1|sbusData[20]<<9) & 0x07FF);
+				  //CH15 value
+				  Channels[14] = ((SbusBuf[20]>>2|SbusBuf[21]<<6) & 0x07FF);
+				  //CH16 value
+				  Channels[15] = ((SbusBuf[21]>>5|SbusBuf[22]<<3) & 0x07FF);
 
 
-
-				  Channels[1] = ((SbusBuf[2] & 0x78) >> 3)+((SbusBuf[3] & 0x3F)<<8);
-				  //tmp = ((SbusBuf[2] & 0x3F)<<8);
-				  //Channels[0] += tmp;
-
-				  Channels[1] = ((SbusBuf[2] & 0x78) >> 3)+((SbusBuf[3] & 0x3F)<<8);
 
 				  //Channels[]
 
@@ -1593,12 +1650,18 @@ void StartSbusDecoder(void const * argument)
 
 
 			  }
+			  /*
 			  else{
 				  uartDriverDMASync(&SbusUart);
 			  }
+				*/
 
 		  }
 	  }
+
+	  SET_PWM_VALUE(Channels[6], 1, &htim4);
+	  SET_PWM_VALUE(Channels[6], 2, &htim4);
+
 
 
 	  //osDelay(1);
