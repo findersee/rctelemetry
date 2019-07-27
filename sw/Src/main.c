@@ -87,6 +87,7 @@ UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart3;
 DMA_HandleTypeDef hdma_usart1_rx;
 DMA_HandleTypeDef hdma_usart1_tx;
+DMA_HandleTypeDef hdma_usart3_rx;
 
 osThreadId defaultTaskHandle;
 osThreadId SendTelemetryHandle;
@@ -135,13 +136,13 @@ static void MX_TIM16_Init(void);
 void StartDefaultTask(void const * argument);
 void StartSendTelemetry(void const * argument);
 void StartPower(void const * argument);
-void StartTask04(void const * argument);
+void StartBattVoltage(void const * argument);
 void StartSbusDecoder(void const * argument);
 
 /* USER CODE BEGIN PFP */
 //extern uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
 uint8_t CRCCalc( uint8_t * packet);
-void SET_PWM_VALUE(uint16_t value,uint32_t channel, TIM_HandleTypeDef *htim);
+HAL_StatusTypeDef SET_PWM_VALUE(uint16_t value,uint32_t channel, TIM_HandleTypeDef *htim);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -231,7 +232,7 @@ int main(void)
   MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
   SportUart = uartDriverInit(SportTXBuffer,3,SportRXBuffer,sizeof(SportRXBuffer),&huart1,RXTX);
-  //SbusUart = uartDriverInit(NULL,0,SbusRXBuffer,50,&huart3,RX);
+  SbusUart = uartDriverInit(NULL,0,SbusRXBuffer,25,&huart3,RX);
   //HAL_UART_Receive_IT(&huart1, SportRXBuffer, 4);
   //HAL_UART_Receive_DMA(&huart1, SportRXBuffer, 2);
 
@@ -278,15 +279,15 @@ int main(void)
   PowerParserHandle = osThreadCreate(osThread(PowerParser), NULL);
 
   /* definition and creation of BattVoltage */
-  osThreadDef(BattVoltage, StartTask04, osPriorityNormal, 0, 128);
+  osThreadDef(BattVoltage, StartBattVoltage, osPriorityNormal, 0, 128);
   BattVoltageHandle = osThreadCreate(osThread(BattVoltage), NULL);
 
   /* definition and creation of SbusDecoder */
-  osThreadDef(SbusDecoder, StartSbusDecoder, osPriorityHigh, 0, 192);
+  osThreadDef(SbusDecoder, StartSbusDecoder, osPriorityNormal, 0, 192);
   SbusDecoderHandle = osThreadCreate(osThread(SbusDecoder), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
-  osThreadTerminate(SbusDecoderHandle);
+  //osThreadTerminate(SbusDecoderHandle);
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
 
@@ -881,9 +882,9 @@ static void MX_TIM4_Init(void)
 
   /* USER CODE END TIM4_Init 1 */
   htim4.Instance = TIM4;
-  htim4.Init.Prescaler = 48000;
+  htim4.Init.Prescaler = 3-1;
   htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim4.Init.Period = 0;
+  htim4.Init.Period = 1600-1;
   htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
@@ -1168,7 +1169,8 @@ static void MX_USART3_UART_Init(void)
   huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart3.Init.OverSampling = UART_OVERSAMPLING_16;
   huart3.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart3.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_RXINVERT_INIT;
+  huart3.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_TXINVERT_INIT|UART_ADVFEATURE_RXINVERT_INIT;
+  huart3.AdvancedInit.TxPinLevelInvert = UART_ADVFEATURE_TXINV_ENABLE;
   huart3.AdvancedInit.RxPinLevelInvert = UART_ADVFEATURE_RXINV_ENABLE;
   if (HAL_HalfDuplex_Init(&huart3) != HAL_OK)
   {
@@ -1205,6 +1207,9 @@ static void MX_DMA_Init(void)
   /* DMA2_Channel2_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Channel2_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA2_Channel2_IRQn);
+  /* DMA2_Channel3_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Channel3_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Channel3_IRQn);
   /* DMA2_Channel5_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Channel5_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA2_Channel5_IRQn);
@@ -1297,8 +1302,10 @@ uint8_t CRCCalc (uint8_t *packet) {
     return ~crc;
 }
 
-void SET_PWM_VALUE(uint16_t value,uint32_t channel, TIM_HandleTypeDef *htim)
+HAL_StatusTypeDef SET_PWM_VALUE(uint16_t value,uint32_t channel, TIM_HandleTypeDef *htim)
 {
+	if(htim == NULL)
+		return HAL_ERROR;
     TIM_OC_InitTypeDef sConfigOC;
 
     sConfigOC.OCMode = TIM_OCMODE_PWM1;
@@ -1307,6 +1314,8 @@ void SET_PWM_VALUE(uint16_t value,uint32_t channel, TIM_HandleTypeDef *htim)
     sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
     HAL_TIM_PWM_ConfigChannel(htim, &sConfigOC, channel);
     HAL_TIM_PWM_Start(htim, channel);
+
+    return HAL_OK;
 }
 
 
@@ -1331,11 +1340,10 @@ void StartDefaultTask(void const * argument)
   HAL_NVIC_DisableIRQ(DMA2_Channel2_IRQn); //Disable interrupt because the Cube won't let us and we don't need it
   HAL_ADC_Start_DMA(&hadc4, (uint32_t *)batVolt_ADC_Buffer, ADC_samples); // Start battery voltage measurement ADC
 
-  if(HAL_TIM_PWM_Start(&htim4, 1) != HAL_OK)
+  if(SET_PWM_VALUE(0, 1, &htim4) != HAL_OK)
 	  Error_Handler();
-  if(HAL_TIM_PWM_Start(&htim4, 2) != HAL_OK)
+  if(SET_PWM_VALUE(0, 2, &htim4) != HAL_OK)
 	  Error_Handler();
-
 
   //CDC_Transmit_FS(startMsg, sizeof(startMsg));
   /* Infinite loop */
@@ -1370,7 +1378,11 @@ void StartSendTelemetry(void const * argument)
 
 	uint8_t sensorBuffer[8];
 	uint8_t mBuffer[4];
-	unsigned bytes = 0;
+	const uint8_t packetType = 0x32;
+	const uint8_t powerData = 0x01;
+	const uint8_t battData = 0x02;
+
+	uint8_t NewData = 0;
   /* Infinite loop */
   for(;;)
   {
@@ -1384,12 +1396,14 @@ void StartSendTelemetry(void const * argument)
 			powerDataScaled.ESC2_currentValue = (powerPtr->ESC2_currentValue)*100;
 			powerDataScaled.ESC2_powerValue = (powerPtr->ESC2_powerValue)*10;
 			powerDataScaled.ESC2_voltageValue = (powerPtr->ESC2_voltageValue)*10;
+			NewData |= powerData;
 		}
 	}
 
 	if(battQueue != 0){
 		if(xQueueReceive(battQueue, &(battPtr), 0) == pdTRUE){
 			BattVoltage.value = battPtr->value;
+			NewData |= battData;
 		}
 	}
 
@@ -1414,34 +1428,45 @@ void StartSendTelemetry(void const * argument)
 					{
 						case 0x67: //Sensor ID 8
 							//Send ESC 1 power data
+							if(NewData == 1){
+							sensorBuffer[0] = packetType;
 							dataTmp = (uint32_t)powerDataScaled.ESC1_voltageValue;
-							sensorBuffer[0] = 0x10;
-							sensorBuffer[1] = (uint8_t)(ESC_POWER_FIRST_ID >> 8);
-							sensorBuffer[2] = (uint8_t)(ESC_POWER_FIRST_ID);
+							sensorBuffer[1] = (uint8_t)(ESC_POWER_FIRST_ID);
+							sensorBuffer[2] = (uint8_t)(ESC_POWER_FIRST_ID >> 8);
+							NewData &= ~powerData;
+							}
 							break;
 						case 0x48: //Sensor ID 9
 							//Send ESC 2 power data
+							if(NewData == 1){
+							sensorBuffer[0] = packetType;
 							dataTmp = (uint32_t)powerDataScaled.ESC2_voltageValue;
-							sensorBuffer[0] = 0x10;
-							sensorBuffer[1] = (uint8_t)((ESC_POWER_FIRST_ID+1) >> 8);
-							sensorBuffer[2] = (uint8_t)(ESC_POWER_FIRST_ID+1);
+							sensorBuffer[1] = (uint8_t)(ESC_POWER_FIRST_ID+1);
+							sensorBuffer[2] = (uint8_t)(ESC_POWER_FIRST_ID+1 >> 8);
+							NewData &= ~powerData;
+							}
 							break;
 						case 0xE9: //Sensor ID 10
+							if(NewData == 1){
+							sensorBuffer[0] = packetType;
 							dataTmp = (uint32_t)BattVoltage.value;
-							sensorBuffer[0] = 0x10;
 							sensorBuffer[1] = (uint8_t)(BATT_ID);
 							sensorBuffer[2] = (uint8_t)((BATT_ID)>>8);
+							NewData &= ~battData;
+							}
 							break;
 
 						default:
 							break;
 					}
+
 					sensorBuffer[3] = (uint8_t)dataTmp;
 					sensorBuffer[4] = (uint8_t)dataTmp>>8;
 					sensorBuffer[5] = (uint8_t)dataTmp>>16;
 					sensorBuffer[6] = (uint8_t)dataTmp>>24;
 					//sensorBuffer[7] = HAL_CRC_Calculate(&hcrc, (uint32_t *) sensorBuffer, (sizeof(sensorBuffer))-1);
-					sensorBuffer[7] = CRCCalc((uint8_t *)sensorBuffer);
+					if(NewData != 0)
+						sensorBuffer[7] = CRCCalc((uint8_t *)sensorBuffer);
 					//CDC_Transmit_FS(sensorBuffer, sizeof(sensorBuffer));
 					uartDriverLoadData(sensorBuffer, sizeof(sensorBuffer), &SportUart);
 					//while(!uartDriverLoadData(sensorBuffer, sizeof(sensorBuffer), &SportUart))
@@ -1543,23 +1568,24 @@ void StartPower(void const * argument)
 		 power_new.ESC1_powerValue = (power_new.ESC1_currentValue*power_new.ESC1_voltageValue);
 		 power_new.ESC2_powerValue = (power_new.ESC2_currentValue*power_new.ESC2_voltageValue);
 		 msgPtr = & power_new;
-		 xQueueOverwrite(powerQueue,( void * ) &msgPtr);
+		 if(powerQueue != NULL)
+			 xQueueOverwrite(powerQueue,( void * ) &msgPtr);
 		 osDelay(1000);
 
   }
   /* USER CODE END StartPower */
 }
 
-/* USER CODE BEGIN Header_StartTask04 */
+/* USER CODE BEGIN Header_StartBattVoltage */
 /**
 * @brief Function implementing the BattVoltage thread.
 * @param argument: Not used
 * @retval None
 */
-/* USER CODE END Header_StartTask04 */
-void StartTask04(void const * argument)
+/* USER CODE END Header_StartBattVoltage */
+void StartBattVoltage(void const * argument)
 {
-  /* USER CODE BEGIN StartTask04 */
+  /* USER CODE BEGIN StartBattVoltage */
 	BatteryMessage Bat = {.value = 0};
 	float temp = 0.0f;
 	BatteryMessage *msgPtr;
@@ -1576,10 +1602,11 @@ void StartTask04(void const * argument)
 	temp /= 0.15f ;
 	Bat.value = 10*temp;
 	msgPtr = & Bat;
-	xQueueOverwrite(battQueue,( void * ) &msgPtr);
+	if(battQueue != NULL)
+		xQueueOverwrite(battQueue,( void * ) &msgPtr);
 	osDelay(1000);
 	}
-  /* USER CODE END StartTask04 */
+  /* USER CODE END StartBattVoltage */
 }
 
 /* USER CODE BEGIN Header_StartSbusDecoder */
@@ -1594,6 +1621,8 @@ void StartSbusDecoder(void const * argument)
   /* USER CODE BEGIN StartSbusDecoder */
 	uint8_t SbusBuf[25];
 	uint16_t Channels[20];
+	uint8_t flagByte = 0;
+
 
 
   /* Infinite loop */
@@ -1604,9 +1633,7 @@ void StartSbusDecoder(void const * argument)
 		  unsigned bytes = uartDriverSpace(&SbusUart);
 		  if(bytes > 1){
 			  uartDriverReadData(SbusBuf, bytes, &SbusUart);
-			  uint16_t tmp = 0;
 			  if((SbusBuf[0] == 0x0F) && (SbusBuf[24] == 0x00)){
-
 				  //CH1 value
 				  Channels[0] = ((SbusBuf[1]|SbusBuf[2]<<8) & 0x7FF);
 				  //CH2 value
@@ -1628,18 +1655,20 @@ void StartSbusDecoder(void const * argument)
 				  //CH10 value
 				  Channels[9]  = ((SbusBuf[13]>>3|SbusBuf[14]<<5) & 0x07FF);
 				  //CH11 value
-				  Channels[10] = ((SbusBuf[14]>>6|SbusBuf[15]<<2|sbusData[16]<<10) & 0x07FF);
+				  Channels[10] = ((SbusBuf[14]>>6|SbusBuf[15]<<2|SbusBuf[16]<<10) & 0x07FF);
 				  //CH12 value
 				  Channels[11] = ((SbusBuf[16]>>1|SbusBuf[17]<<7) & 0x07FF);
 				  //CH13 value
 				  Channels[12] = ((SbusBuf[17]>>4|SbusBuf[18]<<4) & 0x07FF);
 				  //CH14 value
-				  Channels[13] = ((SbusBuf[18]>>7|SbusBuf[19]<<1|sbusData[20]<<9) & 0x07FF);
+				  Channels[13] = ((SbusBuf[18]>>7|SbusBuf[19]<<1|SbusBuf[20]<<9) & 0x07FF);
 				  //CH15 value
 				  Channels[14] = ((SbusBuf[20]>>2|SbusBuf[21]<<6) & 0x07FF);
 				  //CH16 value
 				  Channels[15] = ((SbusBuf[21]>>5|SbusBuf[22]<<3) & 0x07FF);
 
+				  //flag byte: [0 0 0 0 failsafe frame_lost ch18 ch17]
+				  flagByte = SbusBuf[23];
 
 
 				  //Channels[]
@@ -1659,9 +1688,22 @@ void StartSbusDecoder(void const * argument)
 		  }
 	  }
 
-	  SET_PWM_VALUE(Channels[6], 1, &htim4);
-	  SET_PWM_VALUE(Channels[6], 2, &htim4);
 
+	  uint16_t temp = 0;
+	  temp = (Channels[5]-192);
+	  SET_PWM_VALUE(temp, 1, &htim4);
+	  SET_PWM_VALUE(temp, 2, &htim4);
+
+
+	  if((Channels[6]) > 1400)
+		  HAL_GPIO_WritePin(OUT1_GPIO_Port, OUT1_Pin, GPIO_PIN_SET);
+	  else if(Channels[6] < 200)
+		  HAL_GPIO_WritePin(OUT1_GPIO_Port, OUT1_Pin, GPIO_PIN_RESET);
+
+	  if((Channels[7]) > 1400)
+		  HAL_GPIO_WritePin(OUT2_GPIO_Port, OUT2_Pin, GPIO_PIN_SET);
+	  else if(Channels[7] < 200)
+		  HAL_GPIO_WritePin(OUT2_GPIO_Port, OUT2_Pin, GPIO_PIN_RESET);
 
 
 	  //osDelay(1);
