@@ -1339,10 +1339,10 @@ void StartDefaultTask(void const * argument)
   HAL_ADC_Start_DMA(&hadc1, (uint32_t *)power_ADC_Buffer , powerBufferSize); // Start ESC voltage and current measurement ADC
   HAL_NVIC_DisableIRQ(DMA2_Channel2_IRQn); //Disable interrupt because the Cube won't let us and we don't need it
   HAL_ADC_Start_DMA(&hadc4, (uint32_t *)batVolt_ADC_Buffer, ADC_samples); // Start battery voltage measurement ADC
-
-  if(SET_PWM_VALUE(0, 1, &htim4) != HAL_OK)
+  //HAL_GPIO_WritePin(HC_OUTPUT_GPIO_Port, HC_OUTPUT_Pin, GPIO_PIN_RESET);
+  if(SET_PWM_VALUE(0, TIM_CHANNEL_1, &htim4) != HAL_OK)
 	  Error_Handler();
-  if(SET_PWM_VALUE(0, 2, &htim4) != HAL_OK)
+  if(SET_PWM_VALUE(0, TIM_CHANNEL_2, &htim4) != HAL_OK)
 	  Error_Handler();
 
   //CDC_Transmit_FS(startMsg, sizeof(startMsg));
@@ -1442,7 +1442,7 @@ void StartSendTelemetry(void const * argument)
 							sensorBuffer[0] = packetType;
 							dataTmp = (uint32_t)powerDataScaled.ESC2_voltageValue;
 							sensorBuffer[1] = (uint8_t)(ESC_POWER_FIRST_ID+1);
-							sensorBuffer[2] = (uint8_t)(ESC_POWER_FIRST_ID+1 >> 8);
+							sensorBuffer[2] = (uint8_t)((ESC_POWER_FIRST_ID+1) >> 8);
 							NewData &= ~powerData;
 							}
 							break;
@@ -1631,44 +1631,57 @@ void StartSbusDecoder(void const * argument)
 	  osEvent signalEvent = osSignalWait(0x0001, osWaitForever);
 	  if(signalEvent.status == osEventSignal){
 		  unsigned bytes = uartDriverSpace(&SbusUart);
-		  if(bytes > 1){
+		  if(bytes == 25){
 			  uartDriverReadData(SbusBuf, bytes, &SbusUart);
-			  if((SbusBuf[0] == 0x0F) && (SbusBuf[24] == 0x00)){
+			  uint8_t offset = 0;
+
+			  for(int i = 0; i < 25; i++){
+				  if((SbusBuf[i] == 0x0F) && (SbusBuf[(i+24)%25] == 0x00)){
+					  offset = i;
+					  break;
+				  }
+			  }
+
+
+			  if((SbusBuf[(offset + 0) % 25] == 0x0F) && (SbusBuf[(offset + 24) % 25] == 0x00)){
+
+
+
 				  //CH1 value
-				  Channels[0] = ((SbusBuf[1]|SbusBuf[2]<<8) & 0x7FF);
+				  Channels[0] = ((SbusBuf[(offset + 1) % 25]|SbusBuf[(offset + 2) % 25]<<8) & 0x7FF);
 				  //CH2 value
-				  Channels[1] = ((SbusBuf[2]>>3|SbusBuf[3]<<5) & 0x7FF);
+				  Channels[1] = ((SbusBuf[(offset + 2) % 25]>>3|SbusBuf[(offset + 3) % 25]<<5) & 0x7FF);
 				  //CH3 value
-				  Channels[2] = ((SbusBuf[3]>>6|SbusBuf[4]<<2|SbusBuf[5]<<10) & 0x7FF);
+				  Channels[2] = ((SbusBuf[(offset + 3) % 25]>>6|SbusBuf[(offset + 4) % 25]<<2|SbusBuf[(offset + 5) % 25]<<10) & 0x7FF);
 				  //CH4 value
-				  Channels[3] = ((SbusBuf[5]>>1|SbusBuf[6]<<7) & 0x7FF);
+				  Channels[3] = ((SbusBuf[(offset + 5) % 25]>>1|SbusBuf[(offset + 6) % 25]<<7) & 0x7FF);
 				  //CH5 value
-				  Channels[4] = ((SbusBuf[6]>>4|SbusBuf[7]<<4) & 0x7FF);
+				  Channels[4] = ((SbusBuf[(offset + 6) % 25]>>4|SbusBuf[(offset + 7) % 25]<<4) & 0x7FF);
 				  //CH6 value
-				  Channels[5] = ((SbusBuf[7]>>7|SbusBuf[8]<<1|SbusBuf[9]<<9) & 0x7FF);
+				  Channels[5] = ((SbusBuf[(offset + 7) % 25]>>7|SbusBuf[(offset + 8) % 25]<<1|SbusBuf[(offset + 9) % 25]<<9) & 0x7FF);
 				  //CH7 value
-				  Channels[6] = ((SbusBuf[9]>>2|SbusBuf[10]<<6) & 0x7FF);
+				  Channels[6] = ((SbusBuf[(offset + 9) % 25]>>2|SbusBuf[(offset + 10) % 25]<<6) & 0x7FF);
 				  //CH8 value
-				  Channels[7] = ((SbusBuf[10]>>5|SbusBuf[11]<<3) & 0x7FF);
+				  Channels[7] = ((SbusBuf[(offset + 10) % 25]>>5|SbusBuf[(offset + 11) % 25]<<3) & 0x7FF);
 				  //CH9 value
-				  Channels[8]  = ((SbusBuf[12]|SbusBuf[13]<< 8) & 0x07FF);
+				  Channels[8]  = ((SbusBuf[(offset + 12) % 25]|SbusBuf[(offset + 13) % 25]<< 8) & 0x07FF);
 				  //CH10 value
-				  Channels[9]  = ((SbusBuf[13]>>3|SbusBuf[14]<<5) & 0x07FF);
+				  Channels[9]  = ((SbusBuf[(offset + 13) % 25]>>3|SbusBuf[(offset + 14) % 25]<<5) & 0x07FF);
 				  //CH11 value
-				  Channels[10] = ((SbusBuf[14]>>6|SbusBuf[15]<<2|SbusBuf[16]<<10) & 0x07FF);
+				  Channels[10] = ((SbusBuf[(offset + 14) % 25]>>6|SbusBuf[(offset + 15) % 25]<<2|SbusBuf[16]<<10) & 0x07FF);
 				  //CH12 value
-				  Channels[11] = ((SbusBuf[16]>>1|SbusBuf[17]<<7) & 0x07FF);
+				  Channels[11] = ((SbusBuf[(offset + 16) % 25]>>1|SbusBuf[(offset + 17) % 25]<<7) & 0x07FF);
 				  //CH13 value
-				  Channels[12] = ((SbusBuf[17]>>4|SbusBuf[18]<<4) & 0x07FF);
+				  Channels[12] = ((SbusBuf[(offset + 17) % 25]>>4|SbusBuf[(offset + 18) % 25]<<4) & 0x07FF);
 				  //CH14 value
-				  Channels[13] = ((SbusBuf[18]>>7|SbusBuf[19]<<1|SbusBuf[20]<<9) & 0x07FF);
+				  Channels[13] = ((SbusBuf[(offset + 18) % 25]>>7|SbusBuf[(offset + 19) % 25]<<1|SbusBuf[(offset + 20) % 25]<<9) & 0x07FF);
 				  //CH15 value
-				  Channels[14] = ((SbusBuf[20]>>2|SbusBuf[21]<<6) & 0x07FF);
+				  Channels[14] = ((SbusBuf[(offset + 20) % 25]>>2|SbusBuf[(offset + 21) % 25]<<6) & 0x07FF);
 				  //CH16 value
-				  Channels[15] = ((SbusBuf[21]>>5|SbusBuf[22]<<3) & 0x07FF);
+				  Channels[15] = ((SbusBuf[(offset + 21) % 25]>>5|SbusBuf[(offset + 22) % 25]<<3) & 0x07FF);
 
 				  //flag byte: [0 0 0 0 failsafe frame_lost ch18 ch17]
-				  flagByte = SbusBuf[23];
+				  flagByte = SbusBuf[(offset + 23) % 25];
 
 
 				  //Channels[]
@@ -1688,23 +1701,40 @@ void StartSbusDecoder(void const * argument)
 		  }
 	  }
 
+	  uint8_t channelsReady = 1;
+	  for(uint8_t i = 0; i < 16; i++){
+		  if(Channels[i] < 172){
+			  channelsReady = 0;
+			  break;
+		  }
+	  }
 
-	  uint16_t temp = 0;
-	  temp = (Channels[5]-192);
-	  SET_PWM_VALUE(temp, 1, &htim4);
-	  SET_PWM_VALUE(temp, 2, &htim4);
+	  if(channelsReady){
+		  uint16_t temp = 0;
+		  temp = (Channels[4] - 172);
+		  	  SET_PWM_VALUE(temp, TIM_CHANNEL_1, &htim4);
+		  temp = (Channels[5] - 172);
+			  SET_PWM_VALUE(temp, TIM_CHANNEL_2, &htim4);
+		  temp = (Channels[6] - 172);
+			  SET_PWM_VALUE(temp, TIM_CHANNEL_4, &htim4);
 
 
-	  if((Channels[6]) > 1400)
-		  HAL_GPIO_WritePin(OUT1_GPIO_Port, OUT1_Pin, GPIO_PIN_SET);
-	  else if(Channels[6] < 200)
-		  HAL_GPIO_WritePin(OUT1_GPIO_Port, OUT1_Pin, GPIO_PIN_RESET);
+		  temp = (Channels[7] - 172);
+		  if(temp  > 1400)
+			  HAL_GPIO_WritePin(OUT1_GPIO_Port, OUT1_Pin, GPIO_PIN_SET);
+		  else if(temp < 200)
+			  HAL_GPIO_WritePin(OUT2_GPIO_Port, OUT1_Pin, GPIO_PIN_RESET);
 
-	  if((Channels[7]) > 1400)
-		  HAL_GPIO_WritePin(OUT2_GPIO_Port, OUT2_Pin, GPIO_PIN_SET);
-	  else if(Channels[7] < 200)
-		  HAL_GPIO_WritePin(OUT2_GPIO_Port, OUT2_Pin, GPIO_PIN_RESET);
+		  temp = (Channels[8] - 172);
+		  if(temp > 1400)
+			  HAL_GPIO_WritePin(OUT2_GPIO_Port, OUT2_Pin, GPIO_PIN_SET);
+		  else if(temp < 200)
+			  HAL_GPIO_WritePin(OUT2_GPIO_Port, OUT2_Pin, GPIO_PIN_RESET);
 
+
+
+
+	  }
 
 	  //osDelay(1);
   }

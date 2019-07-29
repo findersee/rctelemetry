@@ -206,9 +206,9 @@ uint8_t uartDriverLoadData(const void *data,unsigned bytes,uartDriver *_driver){
 
 unsigned uartDriverSpace(uartDriver *_driver){
 
-	unsigned head = _driver->rxBufSize - __HAL_DMA_GET_COUNTER(_driver->huart->hdmarx);
-	return (head - _driver->rxBufTail + _driver->rxBufSize) % _driver->rxBufSize;
-
+	//unsigned head = _driver->rxBufSize - __HAL_DMA_GET_COUNTER(_driver->huart->hdmarx);
+	//return (head - _driver->rxBufTail + _driver->rxBufSize) % _driver->rxBufSize;
+	return(__HAL_DMA_GET_COUNTER(_driver->huart->hdmarx));
 }
 
 void uartDriverClearRxBuffer(uartDriver *_driver){
