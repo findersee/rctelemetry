@@ -42,6 +42,7 @@ typedef struct
 	unsigned txBufHead;
 	unsigned txBufTail;
 	UartMode Mode;
+	uint8_t txActive;
 
 }uartDriver;
 

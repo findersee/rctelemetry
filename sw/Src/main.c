@@ -99,7 +99,7 @@ osMutexId SportMessageHandle;
 /* USER CODE BEGIN PV */
 uartDriver SportUart;
 UartTxData SportTXBuffer[3];
-uint8_t SportRXBuffer[4];
+uint8_t SportRXBuffer[2];
 
 uartDriver SbusUart;
 //UartTxData SbusTXBuffer[3];
@@ -170,6 +170,10 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
 	asm("nop");
+
+	if(huart->Instance == USART1){
+		osSignalSet(SendTelemetryHandle, 0x0002);
+	}
 }
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	asm("nop");
@@ -275,7 +279,7 @@ int main(void)
   SendTelemetryHandle = osThreadCreate(osThread(SendTelemetry), NULL);
 
   /* definition and creation of PowerParser */
-  osThreadDef(PowerParser, StartPower, osPriorityNormal, 0, 256);
+  osThreadDef(PowerParser, StartPower, osPriorityNormal, 0, 192);
   PowerParserHandle = osThreadCreate(osThread(PowerParser), NULL);
 
   /* definition and creation of BattVoltage */
@@ -1134,7 +1138,9 @@ static void MX_USART1_UART_Init(void)
   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
   huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_TXINVERT_INIT|UART_ADVFEATURE_RXINVERT_INIT;
+  huart1.AdvancedInit.TxPinLevelInvert = UART_ADVFEATURE_TXINV_ENABLE;
+  huart1.AdvancedInit.RxPinLevelInvert = UART_ADVFEATURE_RXINV_ENABLE;
   if (HAL_HalfDuplex_Init(&huart1) != HAL_OK)
   {
     Error_Handler();
@@ -1378,7 +1384,7 @@ void StartSendTelemetry(void const * argument)
 
 	uint8_t sensorBuffer[8];
 	uint8_t mBuffer[4];
-	const uint8_t packetType = 0x32;
+	const uint8_t packetType = 0x10;
 	const uint8_t powerData = 0x01;
 	const uint8_t battData = 0x02;
 
@@ -1388,7 +1394,7 @@ void StartSendTelemetry(void const * argument)
   {
 
 	if(powerQueue != 0){
-		if(xQueueReceive(powerQueue, &(powerPtr), 0) == pdTRUE){
+		if(xQueueReceive(powerQueue, &(powerPtr), (TickType_t)0) == pdTRUE){
 			powerDataScaled.ESC1_currentValue = (powerPtr->ESC1_currentValue)*100;
 			powerDataScaled.ESC1_powerValue = (powerPtr->ESC1_powerValue)*10;
 			powerDataScaled.ESC1_voltageValue = (powerPtr->ESC1_voltageValue)*10;
@@ -1401,82 +1407,100 @@ void StartSendTelemetry(void const * argument)
 	}
 
 	if(battQueue != 0){
-		if(xQueueReceive(battQueue, &(battPtr), 0) == pdTRUE){
+		if(xQueueReceive(battQueue, &(battPtr), (TickType_t)0) == pdTRUE){
 			BattVoltage.value = battPtr->value;
 			NewData |= battData;
 		}
 	}
 
-	osEvent signalEvent = osSignalWait(0x0001, 10);
+	osEvent signalEvent = osSignalWait(0x0001, osWaitForever);
 	if(signalEvent.status == osEventSignal)
 	{
-		memset(&sensorBuffer,0,8);
+
 		asm("nop");
 
 		unsigned ID = 0;
 		unsigned bytes = uartDriverSpace(&SportUart);
 
-		if(bytes > 0){
+		if(bytes > 1){
 			uartDriverReadData(&mBuffer, bytes, &SportUart);
+
 			for(unsigned cnt=0;cnt<bytes;cnt++){
 				ID = 0;
-				if((mBuffer[cnt] == 0x7E) &&( cnt < (bytes+1))){
+				if((mBuffer[cnt] == 0x7E) && ( cnt < (bytes+1)) && (mBuffer[cnt+1] != 0x00)){
 					cnt++;
 					ID = mBuffer[cnt];
 					uint32_t dataTmp = 0;
+					memset(&sensorBuffer,0,8);
 					switch(ID)
 					{
-						case 0x67: //Sensor ID 8
+						case 0x22: //Sensor ID 8
 							//Send ESC 1 power data
-							if(NewData == 1){
+							if((NewData & powerData) == powerData){
 							sensorBuffer[0] = packetType;
-							dataTmp = (uint32_t)powerDataScaled.ESC1_voltageValue;
-							sensorBuffer[1] = (uint8_t)(ESC_POWER_FIRST_ID);
-							sensorBuffer[2] = (uint8_t)(ESC_POWER_FIRST_ID >> 8);
+							dataTmp = (uint32_t)powerDataScaled.ESC1_currentValue;
+							//dataTmp = 0xDEADBEEF;
+							sensorBuffer[1] = (uint8_t)(CURR_FIRST_ID);
+							sensorBuffer[2] = (uint8_t)(CURR_FIRST_ID >> 8);
 							NewData &= ~powerData;
 							}
+							sensorBuffer[3] = (uint8_t)dataTmp;
+							sensorBuffer[4] = (uint8_t)(dataTmp>>8);
+							sensorBuffer[5] = (uint8_t)(dataTmp>>16);
+							sensorBuffer[6] = (uint8_t)(dataTmp>>24);
+
+							sensorBuffer[7] = CRCCalc((uint8_t *)sensorBuffer);
+
+							uartDriverLoadData(sensorBuffer, sizeof(sensorBuffer), &SportUart);
+							osDelay(1);
 							break;
-						case 0x48: //Sensor ID 9
+						case 0xB7: //Sensor ID 9
 							//Send ESC 2 power data
-							if(NewData == 1){
+							if((NewData & powerData) == powerData){
 							sensorBuffer[0] = packetType;
 							dataTmp = (uint32_t)powerDataScaled.ESC2_voltageValue;
-							sensorBuffer[1] = (uint8_t)(ESC_POWER_FIRST_ID+1);
-							sensorBuffer[2] = (uint8_t)((ESC_POWER_FIRST_ID+1) >> 8);
+							sensorBuffer[1] = (uint8_t)(ESC_POWER_FIRST_ID);
+							sensorBuffer[2] = (uint8_t)((ESC_POWER_FIRST_ID) >> 8);
 							NewData &= ~powerData;
 							}
+							sensorBuffer[3] = (uint8_t)dataTmp;
+							sensorBuffer[4] = (uint8_t)(dataTmp>>8);
+							sensorBuffer[5] = (uint8_t)(dataTmp);
+							sensorBuffer[6] = (uint8_t)(dataTmp>>8);
+
+							sensorBuffer[7] = CRCCalc((uint8_t *)sensorBuffer);
+
+							uartDriverLoadData(sensorBuffer, sizeof(sensorBuffer), &SportUart);
+							osDelay(1);
 							break;
 						case 0xE9: //Sensor ID 10
-							if(NewData == 1){
+							if((NewData & battData) == battData){
 							sensorBuffer[0] = packetType;
 							dataTmp = (uint32_t)BattVoltage.value;
-							sensorBuffer[1] = (uint8_t)(BATT_ID);
-							sensorBuffer[2] = (uint8_t)((BATT_ID)>>8);
+							sensorBuffer[1] = (uint8_t)(ALT_FIRST_ID);
+							sensorBuffer[2] = (uint8_t)((ALT_FIRST_ID)>>8);
 							NewData &= ~battData;
 							}
+							sensorBuffer[3] = (uint8_t)dataTmp;
+							sensorBuffer[4] = (uint8_t)(dataTmp>>8);
+							sensorBuffer[5] = (uint8_t)(dataTmp>>16);
+							sensorBuffer[6] = (uint8_t)(dataTmp>>24);
+
+							sensorBuffer[7] = CRCCalc((uint8_t *)sensorBuffer);
+
+							uartDriverLoadData(sensorBuffer, sizeof(sensorBuffer), &SportUart);
+							osDelay(1);
 							break;
 
 						default:
 							break;
 					}
-
-					sensorBuffer[3] = (uint8_t)dataTmp;
-					sensorBuffer[4] = (uint8_t)dataTmp>>8;
-					sensorBuffer[5] = (uint8_t)dataTmp>>16;
-					sensorBuffer[6] = (uint8_t)dataTmp>>24;
-					//sensorBuffer[7] = HAL_CRC_Calculate(&hcrc, (uint32_t *) sensorBuffer, (sizeof(sensorBuffer))-1);
-					if(NewData != 0)
-						sensorBuffer[7] = CRCCalc((uint8_t *)sensorBuffer);
-					//CDC_Transmit_FS(sensorBuffer, sizeof(sensorBuffer));
-					uartDriverLoadData(sensorBuffer, sizeof(sensorBuffer), &SportUart);
-					//while(!uartDriverLoadData(sensorBuffer, sizeof(sensorBuffer), &SportUart))
-						//osDelay(1);
-					//uartDriverClearRxBuffer(&SportUart);
-
+					//osSignalWait(0x0002, 2);
 				}
 				else
-					//uartDriverDMASync(&SportUart);
+					uartDriverDMASync(&SportUart);
 					asm("nop");
+
 			}
 		}
 	}
@@ -1506,7 +1530,7 @@ void StartPower(void const * argument)
 	powerMessage *msgPtr;
 
 	float temp = 0.0f;
-	powerQueue = xQueueCreate(1,sizeof(struct powerMessage * ));
+	powerQueue = xQueueCreate(1,sizeof(powerMessage * ));
   /* Infinite loop */
   for(;;)
   {
@@ -1589,7 +1613,11 @@ void StartBattVoltage(void const * argument)
 	BatteryMessage Bat = {.value = 0};
 	float temp = 0.0f;
 	BatteryMessage *msgPtr;
-	battQueue = xQueueCreate(1,sizeof(uint16_t));
+	while(battQueue == NULL){
+		battQueue = xQueueCreate(1,sizeof(BatteryMessage * ));
+		osDelay(10);
+
+	}
 	/* Infinite loop */
 	for(;;)
 	{
