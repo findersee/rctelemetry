@@ -107,7 +107,37 @@ void Error_Handler(void);
 #define PWM2_Pin GPIO_PIN_9
 #define PWM2_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
-//Taken from OpenTx source codes
+// Sport physical IDs
+#define SPORT_ID1	0x00
+#define SPORT_ID2	0xA1
+#define SPORT_ID3	0x22
+#define SPORT_ID4	0x83
+#define SPORT_ID5	0xE4
+#define SPORT_ID6	0x45
+#define SPORT_ID7	0xC6
+#define SPORT_ID8	0x67
+#define SPORT_ID9	0x48
+#define SPORT_ID10	0xE9
+#define SPORT_ID11	0x6A
+#define SPORT_ID12	0xCB
+#define SPORT_ID13	0xAC
+#define SPORT_ID14	0x0D
+#define SPORT_ID15	0x8E
+#define SPORT_ID16	0x2F
+#define SPORT_ID17	0xD0
+#define SPORT_ID18	0x71
+#define SPORT_ID19	0xF2
+#define SPORT_ID20	0x53
+#define SPORT_ID21	0x34
+#define SPORT_ID22	0x95
+#define SPORT_ID23	0x16
+#define SPORT_ID24	0xB7
+#define SPORT_ID25	0x98
+#define SPORT_ID26	0x39
+#define SPORT_ID27	0xBA
+#define SPORT_ID28	0x1B
+
+//Sport logical IDs Taken from OpenTx source codes
 #define ALT_FIRST_ID              0x0100
 #define ALT_LAST_ID               0x010f
 #define VARIO_FIRST_ID            0x0110

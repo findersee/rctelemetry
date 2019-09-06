@@ -383,14 +383,14 @@ static void MX_ADC1_Init(void)
   */
   hadc1.Instance = ADC1;
   hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
-  hadc1.Init.Resolution = ADC_RESOLUTION_10B;
+  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
   hadc1.Init.ScanConvMode = ADC_SCAN_ENABLE;
   hadc1.Init.ContinuousConvMode = ENABLE;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  hadc1.Init.NbrOfConversion = 4;
+  hadc1.Init.NbrOfConversion = 5;
   hadc1.Init.DMAContinuousRequests = DISABLE;
   hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   hadc1.Init.LowPowerAutoWait = DISABLE;
@@ -438,6 +438,15 @@ static void MX_ADC1_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_4;
   sConfig.Rank = ADC_REGULAR_RANK_4;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /** Configure Regular Channel 
+  */
+  sConfig.Channel = ADC_CHANNEL_VREFINT;
+  sConfig.Rank = ADC_REGULAR_RANK_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     Error_Handler();
@@ -532,7 +541,7 @@ static void MX_ADC4_Init(void)
   */
   hadc4.Instance = ADC4;
   hadc4.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
-  hadc4.Init.Resolution = ADC_RESOLUTION_10B;
+  hadc4.Init.Resolution = ADC_RESOLUTION_12B;
   hadc4.Init.ScanConvMode = ADC_SCAN_DISABLE;
   hadc4.Init.ContinuousConvMode = ENABLE;
   hadc4.Init.DiscontinuousConvMode = DISABLE;
@@ -1256,7 +1265,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pins : IN1_Pin IN2_Pin */
   GPIO_InitStruct.Pin = IN1_Pin|IN2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : OUT2_Pin OUT1_Pin */
@@ -1279,13 +1288,18 @@ static void MX_GPIO_Init(void)
 #define ADC_samples 8
 
 //Power ADC size definitions
-#define powerChannels 4
+#define powerChannels 5
 #define powerBufferSize (ADC_samples*powerChannels)
 
 //ADC Scaling definitions
 #define currentScaling 0.6f
 #define voltageScaling 0.15f
-#define ADC_step (3.3f/1024)
+//#define ADC_step (3.3f/4095)
+float ADC_step = (3.3f/4095);
+
+
+
+#define VREFINT_CAL_ADDR    0x1FFFF7BA
 
 
 uint16_t DAC_BUFFER[30];
@@ -1376,19 +1390,29 @@ void StartSendTelemetry(void const * argument)
 {
   /* USER CODE BEGIN StartSendTelemetry */
 
-	powerMessage *powerPtr;
-	powerMessage powerDataScaled = {.ESC1_currentValue = 0, .ESC1_powerValue = 0, .ESC1_voltageValue=0, \
-			.ESC2_currentValue = 0, .ESC2_powerValue = 0,.ESC2_voltageValue= 0};
-	BatteryMessage *battPtr;
-	BatteryMessage BattVoltage = {.value = 0};
+powerMessage *powerPtr;
+powerMessage powerDataScaled = {.ESC1_currentValue = 0, .ESC1_powerValue = 0, .ESC1_voltageValue=0, \
+		.ESC2_currentValue = 0, .ESC2_powerValue = 0,.ESC2_voltageValue= 0};
+BatteryMessage *battPtr;
+BatteryMessage BattVoltage = {.value = 0};
 
-	uint8_t sensorBuffer[8];
-	uint8_t mBuffer[4];
-	const uint8_t packetType = 0x10;
-	const uint8_t powerData = 0x01;
-	const uint8_t battData = 0x02;
+uint8_t sensorBuffer[8];
+uint8_t mBuffer[4];
+const uint8_t packetType = 0x10;
 
-	uint8_t NewData = 0;
+#define Esc1Data 0x01
+#define Esc2Data 0x10
+#define battData 0x02
+#define  IN1_data 0x04
+#define  IN2_data 0x08
+
+uint8_t IN1_prev = GPIO_PIN_RESET;
+uint8_t IN2_prev = GPIO_PIN_RESET;
+
+uint8_t IN1_cnt = 0;
+uint8_t IN2_cnt = 0;
+
+uint8_t NewData = 0;
   /* Infinite loop */
   for(;;)
   {
@@ -1397,12 +1421,13 @@ void StartSendTelemetry(void const * argument)
 		if(xQueueReceive(powerQueue, &(powerPtr), (TickType_t)0) == pdTRUE){
 			powerDataScaled.ESC1_currentValue = (powerPtr->ESC1_currentValue)*100;
 			powerDataScaled.ESC1_powerValue = (powerPtr->ESC1_powerValue)*10;
-			powerDataScaled.ESC1_voltageValue = (powerPtr->ESC1_voltageValue)*10;
+			powerDataScaled.ESC1_voltageValue = (powerPtr->ESC1_voltageValue)*100;
 
 			powerDataScaled.ESC2_currentValue = (powerPtr->ESC2_currentValue)*100;
 			powerDataScaled.ESC2_powerValue = (powerPtr->ESC2_powerValue)*10;
-			powerDataScaled.ESC2_voltageValue = (powerPtr->ESC2_voltageValue)*10;
-			NewData |= powerData;
+			powerDataScaled.ESC2_voltageValue = (powerPtr->ESC2_voltageValue)*100;
+			NewData |= Esc1Data;
+			NewData |= Esc2Data;
 		}
 	}
 
@@ -1412,6 +1437,20 @@ void StartSendTelemetry(void const * argument)
 			NewData |= battData;
 		}
 	}
+
+	if((IN1_prev != HAL_GPIO_ReadPin(IN1_GPIO_Port, IN1_Pin)) || (IN1_cnt >= 90)){
+		IN1_prev = HAL_GPIO_ReadPin(IN1_GPIO_Port, IN1_Pin);
+		NewData |= IN1_data;
+		IN1_cnt = 0;
+	}
+
+	if((IN2_prev != HAL_GPIO_ReadPin(IN2_GPIO_Port, IN2_Pin))  || (IN2_cnt >= 90)){
+		IN2_prev = HAL_GPIO_ReadPin(IN2_GPIO_Port, IN2_Pin);
+		NewData |= IN2_data;
+		IN2_cnt = 0;
+	}
+	IN1_cnt ++;
+	IN2_cnt ++;
 
 	osEvent signalEvent = osSignalWait(0x0001, osWaitForever);
 	if(signalEvent.status == osEventSignal)
@@ -1434,51 +1473,55 @@ void StartSendTelemetry(void const * argument)
 					memset(&sensorBuffer,0,8);
 					switch(ID)
 					{
-						case 0x22: //Sensor ID 8
+						case SPORT_ID3:
 							//Send ESC 1 power data
-							if((NewData & powerData) == powerData){
+							if((NewData & Esc1Data) == Esc1Data){
 							sensorBuffer[0] = packetType;
-							dataTmp = (uint32_t)powerDataScaled.ESC1_currentValue;
+							dataTmp = (uint16_t)powerDataScaled.ESC1_voltageValue;
 							//dataTmp = 0xDEADBEEF;
-							sensorBuffer[1] = (uint8_t)(CURR_FIRST_ID);
-							sensorBuffer[2] = (uint8_t)(CURR_FIRST_ID >> 8);
-							NewData &= ~powerData;
-							}
-							sensorBuffer[3] = (uint8_t)dataTmp;
-							sensorBuffer[4] = (uint8_t)(dataTmp>>8);
-							sensorBuffer[5] = (uint8_t)(dataTmp>>16);
-							sensorBuffer[6] = (uint8_t)(dataTmp>>24);
-
-							sensorBuffer[7] = CRCCalc((uint8_t *)sensorBuffer);
-
-							uartDriverLoadData(sensorBuffer, sizeof(sensorBuffer), &SportUart);
-							osDelay(1);
-							break;
-						case 0xB7: //Sensor ID 9
-							//Send ESC 2 power data
-							if((NewData & powerData) == powerData){
-							sensorBuffer[0] = packetType;
-							dataTmp = (uint32_t)powerDataScaled.ESC2_voltageValue;
 							sensorBuffer[1] = (uint8_t)(ESC_POWER_FIRST_ID);
-							sensorBuffer[2] = (uint8_t)((ESC_POWER_FIRST_ID) >> 8);
-							NewData &= ~powerData;
-							}
+							sensorBuffer[2] = (uint8_t)(ESC_POWER_FIRST_ID >> 8);
+							NewData &= ~Esc1Data;
+
 							sensorBuffer[3] = (uint8_t)dataTmp;
 							sensorBuffer[4] = (uint8_t)(dataTmp>>8);
+							dataTmp = (uint16_t)powerDataScaled.ESC1_currentValue;
 							sensorBuffer[5] = (uint8_t)(dataTmp);
 							sensorBuffer[6] = (uint8_t)(dataTmp>>8);
-
+							}
 							sensorBuffer[7] = CRCCalc((uint8_t *)sensorBuffer);
 
 							uartDriverLoadData(sensorBuffer, sizeof(sensorBuffer), &SportUart);
 							osDelay(1);
 							break;
-						case 0xE9: //Sensor ID 10
+
+						case SPORT_ID4:
+							//Send ESC 2 power data
+							if((NewData & Esc2Data) == Esc2Data){
+							sensorBuffer[0] = packetType;
+							dataTmp = (uint32_t)powerDataScaled.ESC2_voltageValue;
+							sensorBuffer[1] = (uint8_t)(ESC_POWER_FIRST_ID+1);
+							sensorBuffer[2] = (uint8_t)((ESC_POWER_FIRST_ID+1) >> 8);
+							NewData &= ~Esc2Data;
+
+							sensorBuffer[3] = (uint8_t)dataTmp;
+							sensorBuffer[4] = (uint8_t)(dataTmp>>8);
+							dataTmp = (uint16_t)powerDataScaled.ESC2_currentValue;
+							sensorBuffer[5] = (uint8_t)(dataTmp);
+							sensorBuffer[6] = (uint8_t)(dataTmp>>8);
+							}
+							sensorBuffer[7] = CRCCalc((uint8_t *)sensorBuffer);
+
+							uartDriverLoadData(sensorBuffer, sizeof(sensorBuffer), &SportUart);
+							osDelay(1);
+							break;
+
+						case SPORT_ID10:
 							if((NewData & battData) == battData){
 							sensorBuffer[0] = packetType;
 							dataTmp = (uint32_t)BattVoltage.value;
-							sensorBuffer[1] = (uint8_t)(ALT_FIRST_ID);
-							sensorBuffer[2] = (uint8_t)((ALT_FIRST_ID)>>8);
+							sensorBuffer[1] = (uint8_t)(A3_FIRST_ID);
+							sensorBuffer[2] = (uint8_t)(A3_FIRST_ID>>8);
 							NewData &= ~battData;
 							}
 							sensorBuffer[3] = (uint8_t)dataTmp;
@@ -1492,6 +1535,51 @@ void StartSendTelemetry(void const * argument)
 							osDelay(1);
 							break;
 
+						case SPORT_ID12:
+
+							if((NewData & IN1_data) == IN1_data){
+								sensorBuffer[0] = packetType;
+								sensorBuffer[1] = (uint8_t)(ADC1_ID);
+								sensorBuffer[2] = (uint8_t)(ADC1_ID>>8);
+
+								if(IN1_prev == GPIO_PIN_RESET)
+									sensorBuffer[3] = 50;
+								else{
+									sensorBuffer[3] = 0xE8;
+									sensorBuffer[4] = 0x03;
+								}
+
+								NewData &= ~IN1_data;
+							}
+
+							sensorBuffer[7] = CRCCalc((uint8_t *)sensorBuffer);
+
+							uartDriverLoadData(sensorBuffer, sizeof(sensorBuffer), &SportUart);
+							osDelay(1);
+							break;
+
+						case SPORT_ID13:
+
+							if((NewData & IN2_data) == IN2_data){
+								sensorBuffer[0] = packetType;
+								sensorBuffer[1] = (uint8_t)(ADC2_ID);
+								sensorBuffer[2] = (uint8_t)(ADC2_ID>>8);
+
+								if(IN2_prev == GPIO_PIN_RESET)
+									sensorBuffer[3] = 50;
+								else{
+									sensorBuffer[3] = 0xE8;
+									sensorBuffer[4] = 0x03;
+								}
+
+								NewData &= ~IN2_data;
+							}
+							sensorBuffer[7] = CRCCalc((uint8_t *)sensorBuffer);
+
+							uartDriverLoadData(sensorBuffer, sizeof(sensorBuffer), &SportUart);
+							osDelay(1);
+							break;
+
 						default:
 							break;
 					}
@@ -1499,7 +1587,6 @@ void StartSendTelemetry(void const * argument)
 				}
 				else
 					uartDriverDMASync(&SportUart);
-					asm("nop");
 
 			}
 		}
@@ -1525,6 +1612,8 @@ void StartPower(void const * argument)
 	#define currentScaling 0.6f
 	#define voltageScaling 0.15f
 	//#define ADC_step (3.3f/1024)
+
+
 	powerMessage power_new = {.ESC1_currentValue = 0, .ESC1_powerValue = 0, .ESC1_voltageValue=0, \
 			.ESC2_currentValue = 0, .ESC2_powerValue = 0,.ESC2_voltageValue= 0};
 	powerMessage *msgPtr;
@@ -1589,6 +1678,16 @@ void StartPower(void const * argument)
 			 temp = 0;
 		 power_new.ESC2_currentValue = temp;
 
+		 temp = measurements[4];
+
+		 //uint16_t vrefint_cal;                        // VREFINT calibration value
+		 //vrefint_cal= *((uint16_t*)VREFINT_CAL_ADDR); // read VREFINT_CAL_ADDR memory location
+
+		 if(temp != 0)
+			 ADC_step = (3.3f*(*((uint16_t*)VREFINT_CAL_ADDR)/temp))/4095;
+
+
+
 		 power_new.ESC1_powerValue = (power_new.ESC1_currentValue*power_new.ESC1_voltageValue);
 		 power_new.ESC2_powerValue = (power_new.ESC2_currentValue*power_new.ESC2_voltageValue);
 		 msgPtr = & power_new;
@@ -1628,7 +1727,7 @@ void StartBattVoltage(void const * argument)
 	temp = (loopTemp/ADC_samples);
 	temp = (temp*ADC_step);
 	temp /= 0.15f ;
-	Bat.value = 10*temp;
+	Bat.value = 100*temp;
 	msgPtr = & Bat;
 	if(battQueue != NULL)
 		xQueueOverwrite(battQueue,( void * ) &msgPtr);
@@ -1715,17 +1814,11 @@ void StartSbusDecoder(void const * argument)
 				  //Channels[]
 
 				  //Channels[0] = SbusBuf[1]+SbusBuf[2]>>
-				  asm("nop");
+				  //asm("nop");
 
 
 
 			  }
-			  /*
-			  else{
-				  uartDriverDMASync(&SbusUart);
-			  }
-				*/
-
 		  }
 	  }
 
@@ -1746,19 +1839,25 @@ void StartSbusDecoder(void const * argument)
 		  temp = (Channels[6] - 172);
 			  SET_PWM_VALUE(temp, TIM_CHANNEL_4, &htim4);
 
-
 		  temp = (Channels[7] - 172);
+		  if(temp > 1400){
+			  HAL_GPIO_WritePin(OUT2_GPIO_Port, OUT2_Pin, GPIO_PIN_SET);
+			  HAL_GPIO_WritePin(OUT1_GPIO_Port, OUT1_Pin, GPIO_PIN_RESET);
+		  }
+		  else if(temp < 600){
+			  HAL_GPIO_WritePin(OUT2_GPIO_Port, OUT2_Pin, GPIO_PIN_RESET);
+			  HAL_GPIO_WritePin(OUT1_GPIO_Port, OUT1_Pin, GPIO_PIN_RESET);
+		  }
+		  else{
+			  HAL_GPIO_WritePin(OUT2_GPIO_Port, OUT2_Pin, GPIO_PIN_SET);
+			  HAL_GPIO_WritePin(OUT1_GPIO_Port, OUT1_Pin, GPIO_PIN_SET);
+		  }
+
+		  temp = (Channels[8] - 172);
 		  if(temp  > 1400)
 			  HAL_GPIO_WritePin(OUT1_GPIO_Port, OUT1_Pin, GPIO_PIN_SET);
 		  else if(temp < 200)
-			  HAL_GPIO_WritePin(OUT2_GPIO_Port, OUT1_Pin, GPIO_PIN_RESET);
-
-		  temp = (Channels[8] - 172);
-		  if(temp > 1400)
-			  HAL_GPIO_WritePin(OUT2_GPIO_Port, OUT2_Pin, GPIO_PIN_SET);
-		  else if(temp < 200)
-			  HAL_GPIO_WritePin(OUT2_GPIO_Port, OUT2_Pin, GPIO_PIN_RESET);
-
+			  HAL_GPIO_WritePin(OUT1_GPIO_Port, OUT1_Pin, GPIO_PIN_RESET);
 
 
 

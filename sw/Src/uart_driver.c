@@ -26,7 +26,7 @@ static void UART_DMATransmitCplt(DMA_HandleTypeDef *hdma)
 	if(huart->Instance == USART1)
 		_driver = &SportUart;
 	else if(huart->Instance == USART2)
-		_driver = NULL;
+		_driver = &SbusUart;
 	else if(huart->Instance == USART3)
 		_driver = &SbusUart;
 
@@ -142,7 +142,19 @@ uartDriver uartDriverInit(UartTxData * TxBuffer,unsigned TxBufferSize,uint8_t * 
 
 				//__HAL_LOCK(_huart);
 				_huart->hdmarx->XferCpltCallback = UART_DMAReceiveCplt;
-				_huart->hdmarx->XferHalfCpltCallback = UART_DMAReceiveCplt;
+				//_huart->hdmarx->XferHalfCpltCallback = UART_DMAReceiveCplt;
+				HAL_DMA_Start_IT(_huart->hdmarx, (uint32_t)&_huart->Instance->RDR, (uint32_t)driver.rxBuf, driver.rxBufSize);
+
+				//__HAL_UNLOCK(_huart);
+				SET_BIT(_huart->Instance->CR3, USART_CR3_DMAR);
+				//SET_BIT(_huart->Instance->CR1, USART_CR1_RXNEIE);
+				return driver;
+			}
+			else if(_huart->Instance == USART2){
+
+				//__HAL_LOCK(_huart);
+				_huart->hdmarx->XferCpltCallback = UART_DMAReceiveCplt;
+				//_huart->hdmarx->XferHalfCpltCallback = UART_DMAReceiveCplt;
 				HAL_DMA_Start_IT(_huart->hdmarx, (uint32_t)&_huart->Instance->RDR, (uint32_t)driver.rxBuf, driver.rxBufSize);
 
 				//__HAL_UNLOCK(_huart);
