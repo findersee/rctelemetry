@@ -5,9 +5,10 @@ Telemetry features:<ul>
 <li>Battery input voltage measurement</li>
 </ul>
 Sbus integration:<ul>
-  <li>4 servo channels</li>
+  <li>2 servo channels</li>
   <li>2 PWM cabable output channels 10A each</li>
   <li>2 PWM cabable output channels 4A each</li>
   <li>2 Digital output channels 4A each</li>
   <li>2 Opto-isolated inputs</li>
+  <li> Expansion UART </li>
 </ul>
