@@ -1,15 +1,14 @@
 EESchema Schematic File Version 4
-LIBS:Telemetry-cache
-EELAYER 26 0
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 4
 Title "RC Telemetry board"
-Date "2019-05-20"
-Rev "0.1"
+Date "2020-02-12"
+Rev "0.2"
 Comp "www.findersee.fi"
-Comment1 ""
+Comment1 "https://github.com/findersee/rctelemetry"
 Comment2 ""
 Comment3 ""
 Comment4 ""
@@ -412,42 +411,42 @@ USB_D+
 $Comp
 L Connector:USB_B_Micro J105
 U 1 1 5CEC877C
-P 3800 6350
-F 0 "J105" H 3855 6817 50  0000 C CNN
-F 1 "USB_B_Micro" H 3855 6726 50  0000 C CNN
-F 2 "PCBDecals:USB_Micro-B" H 3950 6300 50  0001 C CNN
-F 3 "~" H 3950 6300 50  0001 C CNN
-	1    3800 6350
-	1    0    0    -1  
+P 8950 5550
+F 0 "J105" H 9005 6017 50  0000 C CNN
+F 1 "USB_B_Micro" H 9005 5926 50  0000 C CNN
+F 2 "PCBDecals:USB_Micro-B" H 9100 5500 50  0001 C CNN
+F 3 "~" H 9100 5500 50  0001 C CNN
+	1    8950 5550
+	-1   0    0    -1  
 $EndComp
 Wire Wire Line
-	4100 6350 4200 6350
+	8650 5550 8050 5550
 Wire Wire Line
-	4100 6450 4200 6450
-Text Label 4200 6450 0    50   ~ 0
+	8650 5650 7700 5650
+Text Label 7700 5650 2    50   ~ 0
 USB_D-
-Text Label 4200 6350 0    50   ~ 0
+Text Label 7700 5550 2    50   ~ 0
 USB_D+
 $Comp
 L power:GND #PWR0113
 U 1 1 5CECDD97
-P 3800 6850
-F 0 "#PWR0113" H 3800 6600 50  0001 C CNN
-F 1 "GND" H 3805 6677 50  0000 C CNN
-F 2 "" H 3800 6850 50  0001 C CNN
-F 3 "" H 3800 6850 50  0001 C CNN
-	1    3800 6850
-	1    0    0    -1  
+P 8950 6050
+F 0 "#PWR0113" H 8950 5800 50  0001 C CNN
+F 1 "GND" H 8955 5877 50  0000 C CNN
+F 2 "" H 8950 6050 50  0001 C CNN
+F 3 "" H 8950 6050 50  0001 C CNN
+	1    8950 6050
+	-1   0    0    -1  
 $EndComp
 Wire Wire Line
-	3800 6850 3800 6800
+	8950 6050 8950 6000
 Wire Wire Line
-	3800 6800 3700 6800
+	8950 6000 9050 6000
 Wire Wire Line
-	3700 6800 3700 6750
+	9050 6000 9050 5950
 Wire Wire Line
-	3800 6800 3800 6750
-Connection ~ 3800 6800
+	8950 6000 8950 5950
+Connection ~ 8950 6000
 Wire Wire Line
 	4850 2000 4200 2000
 $Comp
@@ -582,14 +581,6 @@ Text Label 8550 1400 0    50   ~ 0
 SPI_MOSI
 Text Label 8550 1200 0    50   ~ 0
 SPI_CS
-Text GLabel 6150 2500 2    50   Output ~ 0
-SERVO_1
-Text GLabel 6150 3100 2    50   Output ~ 0
-SERVO_2
-Text GLabel 6150 4200 2    50   Output ~ 0
-SERVO_3
-Text GLabel 6150 4100 2    50   Output ~ 0
-SERVO_4
 Wire Wire Line
 	6150 2500 6050 2500
 Wire Wire Line
@@ -638,53 +629,49 @@ Wire Wire Line
 	6150 4100 6050 4100
 Wire Wire Line
 	6150 4200 6050 4200
-Text Label 7350 6100 2    50   ~ 0
-UART_TX
-Text Label 7350 6000 2    50   ~ 0
-UART_RX
 Wire Wire Line
-	7450 6100 7350 6100
+	6250 6300 6150 6300
 Wire Wire Line
-	7350 6000 7450 6000
+	6150 6200 6250 6200
 $Comp
 L power:GND #PWR0122
 U 1 1 5CE5F3AC
-P 7400 6250
-F 0 "#PWR0122" H 7400 6000 50  0001 C CNN
-F 1 "GND" H 7405 6077 50  0000 C CNN
-F 2 "" H 7400 6250 50  0001 C CNN
-F 3 "" H 7400 6250 50  0001 C CNN
-	1    7400 6250
+P 6200 6450
+F 0 "#PWR0122" H 6200 6200 50  0001 C CNN
+F 1 "GND" H 6205 6277 50  0000 C CNN
+F 2 "" H 6200 6450 50  0001 C CNN
+F 3 "" H 6200 6450 50  0001 C CNN
+	1    6200 6450
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	7450 6200 7400 6200
+	6250 6400 6200 6400
 Wire Wire Line
-	7400 6200 7400 6250
+	6200 6400 6200 6450
 $Comp
 L Connector_Generic:Conn_01x04 J106
 U 1 1 5CE6386B
-P 7650 6000
-F 0 "J106" H 7729 5992 50  0000 L CNN
-F 1 "UART_EXP" H 7729 5901 50  0000 L CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x04" H 7650 6000 50  0001 C CNN
-F 3 "~" H 7650 6000 50  0001 C CNN
-	1    7650 6000
+P 6450 6200
+F 0 "J106" H 6529 6192 50  0000 L CNN
+F 1 "UART_EXP" H 6529 6101 50  0000 L CNN
+F 2 "Connector_PinSocket_1.27mm:PinSocket_1x04_P1.27mm_Vertical" H 6450 6200 50  0001 C CNN
+F 3 "~" H 6450 6200 50  0001 C CNN
+	1    6450 6200
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	7450 5900 7400 5900
+	6250 6100 6200 6100
 Wire Wire Line
-	7400 5900 7400 5850
+	6200 6100 6200 6050
 $Comp
 L power:VCC #PWR0123
 U 1 1 5CE67EB7
-P 7400 5850
-F 0 "#PWR0123" H 7400 5700 50  0001 C CNN
-F 1 "VCC" H 7417 6023 50  0000 C CNN
-F 2 "" H 7400 5850 50  0001 C CNN
-F 3 "" H 7400 5850 50  0001 C CNN
-	1    7400 5850
+P 6200 6050
+F 0 "#PWR0123" H 6200 5900 50  0001 C CNN
+F 1 "VCC" H 6217 6223 50  0000 C CNN
+F 2 "" H 6200 6050 50  0001 C CNN
+F 3 "" H 6200 6050 50  0001 C CNN
+	1    6200 6050
 	1    0    0    -1  
 $EndComp
 Text GLabel 6150 3900 2    50   Input ~ 0
@@ -708,25 +695,23 @@ Connection ~ 8900 2600
 Wire Wire Line
 	8900 2050 8900 2100
 Wire Wire Line
-	4100 6150 4350 6150
+	8650 5350 8400 5350
 NoConn ~ 4850 2200
 Wire Wire Line
-	4350 6150 4350 6100
+	8400 5350 8400 5300
 $Comp
 L power:VBUS #PWR0112
 U 1 1 5CEEB052
-P 4350 6100
-F 0 "#PWR0112" H 4350 5950 50  0001 C CNN
-F 1 "VBUS" H 4365 6273 50  0000 C CNN
-F 2 "" H 4350 6100 50  0001 C CNN
-F 3 "" H 4350 6100 50  0001 C CNN
-	1    4350 6100
-	1    0    0    -1  
+P 8400 5300
+F 0 "#PWR0112" H 8400 5150 50  0001 C CNN
+F 1 "VBUS" H 8415 5473 50  0000 C CNN
+F 2 "" H 8400 5300 50  0001 C CNN
+F 3 "" H 8400 5300 50  0001 C CNN
+	1    8400 5300
+	-1   0    0    -1  
 $EndComp
 Wire Wire Line
 	6050 4000 6150 4000
-Text GLabel 6150 4000 2    50   Input ~ 0
-COOLING_TEMP
 Wire Wire Line
 	8250 1200 8250 1800
 Wire Wire Line
@@ -775,7 +760,7 @@ Wire Wire Line
 Wire Wire Line
 	7650 4400 7250 4400
 $Comp
-L Misc:STM32F303CBx U101
+L Telemetry-rescue:STM32F303CBx-Misc U101
 U 1 1 5CE38426
 P 5450 3100
 F 0 "U101" H 5450 5465 50  0000 C CNN
@@ -883,35 +868,10 @@ F 3 "~" H 5650 7500 50  0001 C CNN
 $EndComp
 Text GLabel 6200 1400 2    50   Output ~ 0
 DAC_OUT
-Text GLabel 6150 4600 2    50   Output ~ 0
+Text GLabel 6150 4100 2    50   Output ~ 0
 AMP_CS
 Wire Wire Line
 	6050 4600 6150 4600
-$Comp
-L Connector:TestPoint TP102
-U 1 1 5CECADFA
-P 6850 2300
-F 0 "TP102" H 6908 2420 50  0000 L CNN
-F 1 "SWDIO" H 6908 2329 50  0000 L CNN
-F 2 "Wire_Pads:SolderWirePad_single_0-8mmDrill" H 7050 2300 50  0001 C CNN
-F 3 "~" H 7050 2300 50  0001 C CNN
-	1    6850 2300
-	1    0    0    -1  
-$EndComp
-$Comp
-L Connector:TestPoint TP103
-U 1 1 5CECB040
-P 7850 2400
-F 0 "TP103" H 7908 2520 50  0000 L CNN
-F 1 "SWCLK" H 7908 2429 50  0000 L CNN
-F 2 "Wire_Pads:SolderWirePad_single_0-8mmDrill" H 8050 2400 50  0001 C CNN
-F 3 "~" H 8050 2400 50  0001 C CNN
-	1    7850 2400
-	1    0    0    -1  
-$EndComp
-Connection ~ 7850 2400
-Wire Wire Line
-	7850 2400 8300 2400
 Connection ~ 6850 2300
 Wire Wire Line
 	6850 2300 6050 2300
@@ -980,7 +940,7 @@ $EndComp
 Wire Wire Line
 	2850 7250 2850 7300
 $Comp
-L Misc:SG-310_SCF_8.000000MHZ X101
+L Telemetry-rescue:SG-310_SCF_8.000000MHZ-Misc X101
 U 1 1 5CECEA0C
 P 3900 2000
 F 0 "X101" H 3950 2250 50  0000 L CNN
@@ -997,7 +957,7 @@ Wire Wire Line
 Wire Wire Line
 	10400 1500 10400 1750
 $Comp
-L Misc:IS25LP032D U102
+L Telemetry-rescue:IS25LP032D-Misc U102
 U 1 1 5CF328C7
 P 9950 1400
 F 0 "U102" H 9950 1975 50  0000 C CNN
@@ -1021,72 +981,73 @@ Wire Wire Line
 	6150 3500 6050 3500
 Wire Wire Line
 	6050 3200 6150 3200
-Text GLabel 6150 3000 2    50   Output ~ 0
+Text GLabel 6150 4000 2    50   Output ~ 0
 AMP_CLK
-Text GLabel 6150 3200 2    50   Output ~ 0
+Text GLabel 6150 4200 2    50   Output ~ 0
 AMP_DIN
 NoConn ~ 6050 4500
-NoConn ~ 4100 6550
+NoConn ~ 8650 5750
 NoConn ~ 3550 2000
-$Comp
-L Connector_Generic:Conn_01x02 J101
-U 1 1 5CF7480D
-P 6650 6100
-F 0 "J101" H 6570 5775 50  0000 C CNN
-F 1 "BOOT0" H 6570 5866 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch1.27mm" H 6650 6100 50  0001 C CNN
-F 3 "~" H 6650 6100 50  0001 C CNN
-	1    6650 6100
-	1    0    0    -1  
-$EndComp
-Text GLabel 6250 6100 0    50   Input ~ 0
-COOLING_TEMP
-$Comp
-L Device:R_Small R104
-U 1 1 5CF74AE7
-P 6400 5850
-F 0 "R104" H 6459 5896 50  0000 L CNN
-F 1 "10k" H 6459 5805 50  0000 L CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 6400 5850 50  0001 C CNN
-F 3 "~" H 6400 5850 50  0001 C CNN
-	1    6400 5850
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	6250 6100 6400 6100
-Wire Wire Line
-	6400 5950 6400 6100
-Connection ~ 6400 6100
-Wire Wire Line
-	6400 6100 6450 6100
-Wire Wire Line
-	6400 5700 6400 5750
-Wire Wire Line
-	6450 6200 6400 6200
-Wire Wire Line
-	6400 6200 6400 6450
-$Comp
-L power:GND #PWR0130
-U 1 1 5CF8CD64
-P 6400 6450
-F 0 "#PWR0130" H 6400 6200 50  0001 C CNN
-F 1 "GND" H 6405 6277 50  0000 C CNN
-F 2 "" H 6400 6450 50  0001 C CNN
-F 3 "" H 6400 6450 50  0001 C CNN
-	1    6400 6450
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:+3V3 #PWR0129
-U 1 1 5CF8CEC5
-P 6400 5700
-F 0 "#PWR0129" H 6400 5550 50  0001 C CNN
-F 1 "+3V3" H 6415 5873 50  0000 C CNN
-F 2 "" H 6400 5700 50  0001 C CNN
-F 3 "" H 6400 5700 50  0001 C CNN
-	1    6400 5700
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	6050 3700 9000 3700
+$Comp
+L Connector:TestPoint TP102
+U 1 1 5CECADFA
+P 6850 2300
+F 0 "TP102" H 6908 2420 50  0000 L CNN
+F 1 "SWDIO" H 6908 2329 50  0000 L CNN
+F 2 "Wire_Pads:SolderWirePad_single_0-8mmDrill" H 7050 2300 50  0001 C CNN
+F 3 "~" H 7050 2300 50  0001 C CNN
+	1    6850 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint TP103
+U 1 1 5CECB040
+P 7850 2400
+F 0 "TP103" H 7908 2520 50  0000 L CNN
+F 1 "SWCLK" H 8000 2400 50  0000 L CNN
+F 2 "Wire_Pads:SolderWirePad_single_0-8mmDrill" H 8050 2400 50  0001 C CNN
+F 3 "~" H 8050 2400 50  0001 C CNN
+	1    7850 2400
+	1    0    0    -1  
+$EndComp
+Text GLabel 6150 6200 0    50   Output ~ 0
+UART_RX
+Text GLabel 6150 6300 0    50   Input ~ 0
+UART_TX
+Text GLabel 6150 3100 2    50   Output ~ 0
+SERVO_1
+Text GLabel 6150 3200 2    50   Output ~ 0
+SERVO_2
+Text GLabel 6150 3800 2    50   Output ~ 0
+USB_ENUMRATION
+Wire Wire Line
+	6050 3800 6150 3800
+Wire Wire Line
+	8050 5550 8050 5700
+Connection ~ 8050 5550
+Wire Wire Line
+	8050 5550 7700 5550
+Wire Wire Line
+	8050 5900 8050 5950
+Wire Wire Line
+	8050 5950 7650 5950
+Text GLabel 7650 5950 0    50   Input ~ 0
+USB_ENUMRATION
+$Comp
+L Device:R_Small R105
+U 1 1 5E4B8124
+P 8050 5800
+F 0 "R105" H 8109 5846 50  0000 L CNN
+F 1 "1k5" H 8109 5755 50  0000 L CNN
+F 2 "digikey-footprints:0603" H 8050 5800 50  0001 C CNN
+F 3 "~" H 8050 5800 50  0001 C CNN
+	1    8050 5800
+	1    0    0    -1  
+$EndComp
+Text GLabel 6150 2500 2    50   Input ~ 0
+UART_RX
+Text GLabel 6150 3000 2    50   Output ~ 0
+UART_TX
 $EndSCHEMATC

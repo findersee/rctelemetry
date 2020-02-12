@@ -1,15 +1,14 @@
 EESchema Schematic File Version 4
-LIBS:Telemetry-cache
-EELAYER 26 0
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 4 4
 Title "RC Telemetry board"
-Date "2019-05-20"
-Rev "0.1"
+Date "2020-02-12"
+Rev "0.2"
 Comp "www.findersee.fi"
-Comment1 ""
+Comment1 "https://github.com/findersee/rctelemetry"
 Comment2 ""
 Comment3 ""
 Comment4 ""
@@ -135,19 +134,9 @@ Wire Wire Line
 Wire Wire Line
 	2150 6500 2150 6100
 Wire Wire Line
-	2100 6800 2150 6800
-Wire Wire Line
-	2150 6800 2150 6500
-Connection ~ 2150 6500
-Wire Wire Line
 	1600 6500 1550 6500
 Wire Wire Line
 	1550 6500 1550 6100
-Wire Wire Line
-	1600 6800 1550 6800
-Wire Wire Line
-	1550 6800 1550 6500
-Connection ~ 1550 6500
 Wire Wire Line
 	1600 6600 1500 6600
 Wire Wire Line
@@ -158,10 +147,6 @@ Wire Wire Line
 	2100 6400 2400 6400
 Text GLabel 2400 6400 2    50   Input ~ 0
 SERVO_2
-Text GLabel 2400 6900 2    50   Input ~ 0
-SERVO_4
-Text GLabel 1250 6900 0    50   Input ~ 0
-SERVO_3
 Text GLabel 1250 6400 0    50   Input ~ 0
 SERVO_1
 $Comp
@@ -469,17 +454,6 @@ IN1
 Wire Wire Line
 	4900 3650 4850 3650
 $Comp
-L Connector_Generic:Conn_02x06_Odd_Even J409
-U 1 1 5CEF71B9
-P 1800 6600
-F 0 "J409" H 1850 7017 50  0000 C CNN
-F 1 "SERVO_OUT" H 1850 6926 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_2x06" H 1800 6600 50  0001 C CNN
-F 3 "~" H 1800 6600 50  0001 C CNN
-	1    1800 6600
-	1    0    0    -1  
-$EndComp
-$Comp
 L power:VCC #PWR0404
 U 1 1 5CEFB1E7
 P 7600 2800
@@ -594,28 +568,12 @@ F 3 "~" H 1550 5950 50  0001 C CNN
 	1    1550 5950
 	0    -1   -1   0   
 $EndComp
-Wire Wire Line
-	2200 6600 2200 6700
-Wire Wire Line
-	1500 6600 1500 6700
-Wire Wire Line
-	1600 6700 1500 6700
-Connection ~ 1500 6700
-Wire Wire Line
-	1500 6700 1500 7000
-Wire Wire Line
-	2100 6700 2200 6700
-Connection ~ 2200 6700
-Wire Wire Line
-	2200 6700 2200 7000
-Wire Wire Line
-	2100 6900 2400 6900
-Wire Wire Line
-	1600 6900 1250 6900
 $Comp
-L Driver_FET:MCP1416 U402
+L Telemetry-rescue:MCP1416-Driver_FET U402
 U 1 1 5CEC7B81
 P 1650 3650
+AR Path="/5CEC7B81" Ref="U402"  Part="1" 
+AR Path="/5CEA3FFC/5CEC7B81" Ref="U402"  Part="1" 
 F 0 "U402" H 1750 3900 50  0000 L CNN
 F 1 "MCP1416" H 1750 3400 50  0000 L CNN
 F 2 "TO_SOT_Packages_SMD:SOT-23-5_HandSoldering" H 1650 3250 50  0001 C CIN
@@ -639,9 +597,11 @@ Connection ~ 2700 2950
 Wire Wire Line
 	2700 2950 2700 3100
 $Comp
-L Driver_FET:MCP1416 U401
+L Telemetry-rescue:MCP1416-Driver_FET U401
 U 1 1 5CED0BC8
 P 1700 1800
+AR Path="/5CED0BC8" Ref="U401"  Part="1" 
+AR Path="/5CEA3FFC/5CED0BC8" Ref="U401"  Part="1" 
 F 0 "U401" H 1800 2050 50  0000 L CNN
 F 1 "MCP1416" H 1800 1550 50  0000 L CNN
 F 2 "TO_SOT_Packages_SMD:SOT-23-5_HandSoldering" H 1700 1400 50  0001 C CIN
@@ -1034,7 +994,7 @@ Connection ~ 4700 6050
 Wire Wire Line
 	4700 6050 4750 6050
 $Comp
-L Misc:AD5160BRJZ10-R2 U403
+L Telemetry-rescue:AD5160BRJZ10-R2-Misc U403
 U 1 1 5CEF134B
 P 4100 6100
 F 0 "U403" H 4100 6433 50  0000 C CNN
@@ -1283,4 +1243,19 @@ Wire Wire Line
 	9400 1800 9800 1800
 Wire Wire Line
 	10100 2000 10100 2100
+$Comp
+L Connector_Generic:Conn_02x03_Odd_Even J409
+U 1 1 5E5305C4
+P 1800 6500
+F 0 "J409" H 1850 6817 50  0000 C CNN
+F 1 "ServoCon" H 1850 6726 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_2x03_P2.54mm_Vertical" H 1800 6500 50  0001 C CNN
+F 3 "~" H 1800 6500 50  0001 C CNN
+	1    1800 6500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1500 6600 1500 7000
+Wire Wire Line
+	2200 6600 2200 7000
 $EndSCHEMATC

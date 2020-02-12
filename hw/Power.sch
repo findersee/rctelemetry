@@ -1,21 +1,20 @@
 EESchema Schematic File Version 4
-LIBS:Telemetry-cache
-EELAYER 26 0
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 2 4
 Title "RC Telemetry board"
-Date "2019-05-20"
-Rev "0.1"
+Date "2020-02-12"
+Rev "0.2"
 Comp "www.findersee.fi"
-Comment1 ""
+Comment1 "https://github.com/findersee/rctelemetry"
 Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L Misc:RT6200 U202
+L Telemetry-rescue:RT6200-Misc U202
 U 1 1 5CE222A1
 P 3100 5650
 F 0 "U202" H 3100 6149 50  0000 C CNN
@@ -201,8 +200,6 @@ $EndComp
 Wire Wire Line
 	1550 5750 1550 6200
 Connection ~ 1550 5400
-Wire Wire Line
-	1550 5400 1750 5400
 $Comp
 L power:+BATT #PWR0208
 U 1 1 5CE24C07
@@ -298,8 +295,6 @@ Wire Wire Line
 	4100 2150 4100 2450
 Wire Wire Line
 	6450 1900 6450 1850
-Wire Wire Line
-	6450 1850 6300 1850
 $Comp
 L Device:R_Small R202
 U 1 1 5CE2DDDB
@@ -540,72 +535,6 @@ Wire Wire Line
 	6900 1850 7150 1850
 Wire Wire Line
 	6900 2200 6900 2450
-$Comp
-L dk_Transistors-FETs-MOSFETs-Single:AO3401A Q201
-U 1 1 5CF36B07
-P 1350 4450
-F 0 "Q201" V 1617 4450 60  0000 C CNN
-F 1 "AO3401A" V 1511 4450 60  0001 C CNN
-F 2 "digikey-footprints:SOT-23-3" H 1550 4650 60  0001 L CNN
-F 3 "http://aosmd.com/res/data_sheets/AO3401A.pdf" H 1550 4750 60  0001 L CNN
-F 4 "785-1001-1-ND" H 1550 4850 60  0001 L CNN "Digi-Key_PN"
-F 5 "AO3401A" H 1550 4950 60  0001 L CNN "MPN"
-F 6 "Discrete Semiconductor Products" H 1550 5050 60  0001 L CNN "Category"
-F 7 "Transistors - FETs, MOSFETs - Single" H 1550 5150 60  0001 L CNN "Family"
-F 8 "http://aosmd.com/res/data_sheets/AO3401A.pdf" H 1550 5250 60  0001 L CNN "DK_Datasheet_Link"
-F 9 "/product-detail/en/alpha-omega-semiconductor-inc/AO3401A/785-1001-1-ND/1855943" H 1550 5350 60  0001 L CNN "DK_Detail_Page"
-F 10 "MOSFET P-CH 30V 4A SOT23" H 1550 5450 60  0001 L CNN "Description"
-F 11 "Alpha & Omega Semiconductor Inc." H 1550 5550 60  0001 L CNN "Manufacturer"
-F 12 "Active" H 1550 5650 60  0001 L CNN "Status"
-	1    1350 4450
-	0    -1   -1   0   
-$EndComp
-$Comp
-L Device:R_Small R209
-U 1 1 5CF36D51
-P 1450 4950
-F 0 "R209" H 1509 4996 50  0000 L CNN
-F 1 "100k" H 1509 4905 50  0000 L CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 1450 4950 50  0001 C CNN
-F 3 "~" H 1450 4950 50  0001 C CNN
-	1    1450 4950
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:GND #PWR0219
-U 1 1 5CF36E27
-P 1450 5100
-F 0 "#PWR0219" H 1450 4850 50  0001 C CNN
-F 1 "GND" H 1455 4927 50  0000 C CNN
-F 2 "" H 1450 5100 50  0001 C CNN
-F 3 "" H 1450 5100 50  0001 C CNN
-	1    1450 5100
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	1450 4750 1450 4800
-Wire Wire Line
-	1450 5050 1450 5100
-Wire Wire Line
-	1150 4450 1100 4450
-$Comp
-L power:+BATT #PWR0218
-U 1 1 5CF3EA9B
-P 1000 4700
-F 0 "#PWR0218" H 1000 4550 50  0001 C CNN
-F 1 "+BATT" H 1015 4873 50  0000 C CNN
-F 2 "" H 1000 4700 50  0001 C CNN
-F 3 "" H 1000 4700 50  0001 C CNN
-	1    1000 4700
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	1450 4800 1000 4800
-Wire Wire Line
-	1000 4800 1000 4700
-Connection ~ 1450 4800
-Wire Wire Line
-	1450 4800 1450 4850
 Wire Wire Line
 	5900 2150 6000 2150
 $Comp
@@ -651,107 +580,10 @@ Wire Wire Line
 	5150 2350 5150 2450
 Wire Wire Line
 	950  5400 950  5350
-$Comp
-L power:VBUS #PWR0223
-U 1 1 5CEF4C73
-P 1100 4150
-F 0 "#PWR0223" H 1100 4000 50  0001 C CNN
-F 1 "VBUS" H 1115 4323 50  0000 C CNN
-F 2 "" H 1100 4150 50  0001 C CNN
-F 3 "" H 1100 4150 50  0001 C CNN
-	1    1100 4150
-	1    0    0    -1  
-$EndComp
-$Comp
-L dk_Transistors-FETs-MOSFETs-Single:AO3401A Q202
-U 1 1 5CEF50AC
-P 5750 950
-F 0 "Q202" V 6017 950 60  0000 C CNN
-F 1 "AO3401A" V 5911 950 60  0000 C CNN
-F 2 "digikey-footprints:SOT-23-3" H 5950 1150 60  0001 L CNN
-F 3 "http://aosmd.com/res/data_sheets/AO3401A.pdf" H 5950 1250 60  0001 L CNN
-F 4 "785-1001-1-ND" H 5950 1350 60  0001 L CNN "Digi-Key_PN"
-F 5 "AO3401A" H 5950 1450 60  0001 L CNN "MPN"
-F 6 "Discrete Semiconductor Products" H 5950 1550 60  0001 L CNN "Category"
-F 7 "Transistors - FETs, MOSFETs - Single" H 5950 1650 60  0001 L CNN "Family"
-F 8 "http://aosmd.com/res/data_sheets/AO3401A.pdf" H 5950 1750 60  0001 L CNN "DK_Datasheet_Link"
-F 9 "/product-detail/en/alpha-omega-semiconductor-inc/AO3401A/785-1001-1-ND/1855943" H 5950 1850 60  0001 L CNN "DK_Detail_Page"
-F 10 "MOSFET P-CH 30V 4A SOT23" H 5950 1950 60  0001 L CNN "Description"
-F 11 "Alpha & Omega Semiconductor Inc." H 5950 2050 60  0001 L CNN "Manufacturer"
-F 12 "Active" H 5950 2150 60  0001 L CNN "Status"
-	1    5750 950 
-	0    -1   -1   0   
-$EndComp
-Wire Wire Line
-	5550 950  5450 950 
-Wire Wire Line
-	5450 950  5450 850 
-$Comp
-L power:VBUS #PWR0215
-U 1 1 5CEF50B5
-P 5450 850
-F 0 "#PWR0215" H 5450 700 50  0001 C CNN
-F 1 "VBUS" H 5465 1023 50  0000 C CNN
-F 2 "" H 5450 850 50  0001 C CNN
-F 3 "" H 5450 850 50  0001 C CNN
-	1    5450 850 
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:R_Small R210
-U 1 1 5CEF717D
-P 5850 1450
-F 0 "R210" H 5909 1496 50  0000 L CNN
-F 1 "100k" H 5909 1405 50  0000 L CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 5850 1450 50  0001 C CNN
-F 3 "~" H 5850 1450 50  0001 C CNN
-	1    5850 1450
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:+BATT #PWR0217
-U 1 1 5CEF71E5
-P 5400 1250
-F 0 "#PWR0217" H 5400 1100 50  0001 C CNN
-F 1 "+BATT" H 5415 1423 50  0000 C CNN
-F 2 "" H 5400 1250 50  0001 C CNN
-F 3 "" H 5400 1250 50  0001 C CNN
-	1    5400 1250
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	5850 1250 5850 1300
-Wire Wire Line
-	5850 1300 5400 1300
-Wire Wire Line
-	5400 1300 5400 1250
-Connection ~ 5850 1300
-Wire Wire Line
-	5850 1300 5850 1350
-$Comp
-L power:GND #PWR0220
-U 1 1 5CEFD851
-P 5850 1600
-F 0 "#PWR0220" H 5850 1350 50  0001 C CNN
-F 1 "GND" H 5855 1427 50  0000 C CNN
-F 2 "" H 5850 1600 50  0001 C CNN
-F 3 "" H 5850 1600 50  0001 C CNN
-	1    5850 1600
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	5850 1550 5850 1600
-Wire Wire Line
-	6300 1850 6300 950 
-Wire Wire Line
-	6300 950  5950 950 
-Connection ~ 6300 1850
-Wire Wire Line
-	6300 1850 6000 1850
 Wire Wire Line
 	950  5400 1550 5400
 $Comp
-L Misc:AP1501-K5 U201
+L Telemetry-rescue:AP1501-K5-Misc U201
 U 1 1 5CE284E9
 P 4500 1950
 F 0 "U201" H 4625 2275 50  0000 C CNN
@@ -762,196 +594,15 @@ F 3 "https://www.diodes.com/assets/Datasheets/AP1501.pdf" H 4500 1950 50  0001 C
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	3300 2000 3500 2000
-Wire Wire Line
-	1100 4150 1100 4450
-Wire Wire Line
-	1550 4450 1750 4450
-$Comp
-L dk_Transistors-FETs-MOSFETs-Single:IRLML6344TRPBF Q203
-U 1 1 5CF39E77
-P 3500 2750
-F 0 "Q203" H 3607 2803 60  0000 L CNN
-F 1 "IRLML6344TRPBF" H 3607 2697 60  0001 L CNN
-F 2 "digikey-footprints:SOT-23-3" H 3700 2950 60  0001 L CNN
-F 3 "https://www.infineon.com/dgdl/irlml6344pbf.pdf?fileId=5546d462533600a4015356689c44262c" H 3700 3050 60  0001 L CNN
-F 4 "IRLML6344TRPBFCT-ND" H 3700 3150 60  0001 L CNN "Digi-Key_PN"
-F 5 "IRLML6344TRPBF" H 3700 3250 60  0001 L CNN "MPN"
-F 6 "Discrete Semiconductor Products" H 3700 3350 60  0001 L CNN "Category"
-F 7 "Transistors - FETs, MOSFETs - Single" H 3700 3450 60  0001 L CNN "Family"
-F 8 "https://www.infineon.com/dgdl/irlml6344pbf.pdf?fileId=5546d462533600a4015356689c44262c" H 3700 3550 60  0001 L CNN "DK_Datasheet_Link"
-F 9 "/product-detail/en/infineon-technologies/IRLML6344TRPBF/IRLML6344TRPBFCT-ND/2538168" H 3700 3650 60  0001 L CNN "DK_Detail_Page"
-F 10 "MOSFET N-CH 30V 5A SOT23" H 3700 3750 60  0001 L CNN "Description"
-F 11 "Infineon Technologies" H 3700 3850 60  0001 L CNN "Manufacturer"
-F 12 "Active" H 3700 3950 60  0001 L CNN "Status"
-	1    3500 2750
-	1    0    0    -1  
-$EndComp
-$Comp
-L dk_Transistors-FETs-MOSFETs-Single:IRLML6344TRPBF Q204
-U 1 1 5CF39F1F
-P 2850 3350
-F 0 "Q204" H 2957 3403 60  0000 L CNN
-F 1 "IRLML6344TRPBF" H 2957 3297 60  0001 L CNN
-F 2 "digikey-footprints:SOT-23-3" H 3050 3550 60  0001 L CNN
-F 3 "https://www.infineon.com/dgdl/irlml6344pbf.pdf?fileId=5546d462533600a4015356689c44262c" H 3050 3650 60  0001 L CNN
-F 4 "IRLML6344TRPBFCT-ND" H 3050 3750 60  0001 L CNN "Digi-Key_PN"
-F 5 "IRLML6344TRPBF" H 3050 3850 60  0001 L CNN "MPN"
-F 6 "Discrete Semiconductor Products" H 3050 3950 60  0001 L CNN "Category"
-F 7 "Transistors - FETs, MOSFETs - Single" H 3050 4050 60  0001 L CNN "Family"
-F 8 "https://www.infineon.com/dgdl/irlml6344pbf.pdf?fileId=5546d462533600a4015356689c44262c" H 3050 4150 60  0001 L CNN "DK_Datasheet_Link"
-F 9 "/product-detail/en/infineon-technologies/IRLML6344TRPBF/IRLML6344TRPBFCT-ND/2538168" H 3050 4250 60  0001 L CNN "DK_Detail_Page"
-F 10 "MOSFET N-CH 30V 5A SOT23" H 3050 4350 60  0001 L CNN "Description"
-F 11 "Infineon Technologies" H 3050 4450 60  0001 L CNN "Manufacturer"
-F 12 "Active" H 3050 4550 60  0001 L CNN "Status"
-	1    2850 3350
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:VBUS #PWR0221
-U 1 1 5CF3C6BB
-P 2500 2700
-F 0 "#PWR0221" H 2500 2550 50  0001 C CNN
-F 1 "VBUS" H 2515 2873 50  0000 C CNN
-F 2 "" H 2500 2700 50  0001 C CNN
-F 3 "" H 2500 2700 50  0001 C CNN
-	1    2500 2700
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:+BATT #PWR0224
-U 1 1 5CF3C6FE
-P 2150 3350
-F 0 "#PWR0224" H 2150 3200 50  0001 C CNN
-F 1 "+BATT" H 2165 3523 50  0000 C CNN
-F 2 "" H 2150 3350 50  0001 C CNN
-F 3 "" H 2150 3350 50  0001 C CNN
-	1    2150 3350
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:GND #PWR0226
-U 1 1 5CF41727
-P 2850 3900
-F 0 "#PWR0226" H 2850 3650 50  0001 C CNN
-F 1 "GND" H 2855 3727 50  0000 C CNN
-F 2 "" H 2850 3900 50  0001 C CNN
-F 3 "" H 2850 3900 50  0001 C CNN
-	1    2850 3900
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	3500 2550 3500 2000
-Connection ~ 3500 2000
-Wire Wire Line
-	3500 2000 4150 2000
-$Comp
-L power:GND #PWR0222
-U 1 1 5CF53AC4
-P 3500 3150
-F 0 "#PWR0222" H 3500 2900 50  0001 C CNN
-F 1 "GND" H 3505 2977 50  0000 C CNN
-F 2 "" H 3500 3150 50  0001 C CNN
-F 3 "" H 3500 3150 50  0001 C CNN
-	1    3500 3150
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	3500 2950 3500 3150
-$Comp
-L Device:R_Small R212
-U 1 1 5CF56439
-P 3150 3000
-F 0 "R212" H 3209 3046 50  0000 L CNN
-F 1 "100k" H 3209 2955 50  0000 L CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 3150 3000 50  0001 C CNN
-F 3 "~" H 3150 3000 50  0001 C CNN
-	1    3150 3000
-	-1   0    0    -1  
-$EndComp
-Wire Wire Line
-	3150 3100 3150 3150
-Wire Wire Line
-	3150 3150 3500 3150
-Connection ~ 3500 3150
-Wire Wire Line
-	3150 2900 3150 2850
-Wire Wire Line
-	3150 2850 3200 2850
-Connection ~ 3150 2850
-Wire Wire Line
-	1750 5400 1750 4450
-Connection ~ 1750 5400
-Wire Wire Line
-	1750 5400 2000 5400
-Wire Wire Line
 	2350 5400 2750 5400
-Wire Wire Line
-	2850 2850 2850 3150
-Wire Wire Line
-	2850 2850 3150 2850
-$Comp
-L Device:R_Small R213
-U 1 1 5CF6A8D0
-P 2350 3450
-F 0 "R213" V 2154 3450 50  0000 C CNN
-F 1 "10k" V 2245 3450 50  0000 C CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 2350 3450 50  0001 C CNN
-F 3 "~" H 2350 3450 50  0001 C CNN
-	1    2350 3450
-	0    1    1    0   
-$EndComp
-$Comp
-L Device:R_Small R211
-U 1 1 5CF6AAD4
-P 2700 2850
-F 0 "R211" V 2504 2850 50  0000 C CNN
-F 1 "10k" V 2595 2850 50  0000 C CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 2700 2850 50  0001 C CNN
-F 3 "~" H 2700 2850 50  0001 C CNN
-	1    2700 2850
-	0    1    1    0   
-$EndComp
-Wire Wire Line
-	2850 2850 2800 2850
-Connection ~ 2850 2850
-Wire Wire Line
-	2600 2850 2500 2850
-Wire Wire Line
-	2500 2850 2500 2700
-Wire Wire Line
-	2550 3450 2500 3450
-Wire Wire Line
-	2250 3450 2150 3450
-Wire Wire Line
-	2150 3450 2150 3350
-$Comp
-L Device:R_Small R214
-U 1 1 5CF77375
-P 2500 3700
-F 0 "R214" H 2559 3746 50  0000 L CNN
-F 1 "100k" H 2559 3655 50  0000 L CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 2500 3700 50  0001 C CNN
-F 3 "~" H 2500 3700 50  0001 C CNN
-	1    2500 3700
-	-1   0    0    -1  
-$EndComp
-Wire Wire Line
-	2850 3550 2850 3850
-Wire Wire Line
-	2850 3850 2500 3850
-Wire Wire Line
-	2500 3850 2500 3800
-Connection ~ 2850 3850
-Wire Wire Line
-	2850 3850 2850 3900
-Wire Wire Line
-	2500 3600 2500 3450
-Connection ~ 2500 3450
-Wire Wire Line
-	2500 3450 2450 3450
 Wire Wire Line
 	5550 1850 6000 1850
 Wire Wire Line
 	5150 1850 5250 1850
+Wire Wire Line
+	1550 5400 2000 5400
+Wire Wire Line
+	3300 2000 4150 2000
+Wire Wire Line
+	6000 1850 6450 1850
 $EndSCHEMATC

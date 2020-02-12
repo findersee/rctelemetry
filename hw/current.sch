@@ -1,15 +1,14 @@
 EESchema Schematic File Version 4
-LIBS:Telemetry-cache
-EELAYER 26 0
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 3 4
 Title "RC Telemetry board"
-Date "2019-05-20"
-Rev "0.1"
+Date "2020-02-12"
+Rev "0.2"
 Comp "www.findersee.fi"
-Comment1 ""
+Comment1 "https://github.com/findersee/rctelemetry"
 Comment2 ""
 Comment3 ""
 Comment4 ""
