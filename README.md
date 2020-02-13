@@ -6,8 +6,8 @@ Telemetry features:<ul>
 </ul>
 Sbus integration:<ul>
   <li>2 servo channels</li>
-  <li>2 PWM cabable output channels 10A each</li>
-  <li>2 PWM cabable output channels 4A each</li>
+  <li>2 PWM capable output channels 10A each</li>
+  <li>2 PWM capable output channels 4A each</li>
   <li>2 Digital output channels 4A each</li>
   <li>2 Opto-isolated inputs</li>
   <li> Expansion UART </li>
