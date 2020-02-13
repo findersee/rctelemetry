@@ -212,7 +212,7 @@ U 1 1 5CEB7F37
 P 5150 2000
 F 0 "R405" H 5091 1954 50  0000 R CNN
 F 1 "10k" H 5091 2045 50  0000 R CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 5150 2000 50  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 5150 2000 50  0001 C CNN
 F 3 "~" H 5150 2000 50  0001 C CNN
 	1    5150 2000
 	1    0    0    1   
@@ -222,30 +222,19 @@ Wire Wire Line
 Wire Wire Line
 	5500 2100 5150 2100
 Wire Wire Line
-	5150 1900 5150 1800
-Wire Wire Line
-	5150 1800 5200 1800
-Wire Wire Line
 	5500 2100 5500 1900
 Connection ~ 5500 2100
-Wire Wire Line
-	5150 1800 5100 1800
-Connection ~ 5150 1800
 $Comp
 L Device:R_Small R402
 U 1 1 5CEBF122
 P 5000 1800
 F 0 "R402" V 4804 1800 50  0000 C CNN
 F 1 "10" V 4895 1800 50  0000 C CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 5000 1800 50  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 5000 1800 50  0001 C CNN
 F 3 "~" H 5000 1800 50  0001 C CNN
 	1    5000 1800
 	0    1    1    0   
 $EndComp
-Text GLabel 4850 1800 0    50   Input ~ 0
-PWM1
-Wire Wire Line
-	4900 1800 4850 1800
 $Comp
 L Connector_Generic:Conn_01x02 J405
 U 1 1 5CEC27F6
@@ -257,8 +246,6 @@ F 3 "~" H 9150 1700 50  0001 C CNN
 	1    9150 1700
 	-1   0    0    1   
 $EndComp
-Text GLabel 4850 3650 0    50   Input ~ 0
-PWM2
 $Comp
 L dk_Transistors-FETs-MOSFETs-Single:IRLML6344TRPBF Q402
 U 1 1 5CEC3A82
@@ -316,46 +303,22 @@ F 3 "" H 7600 2150 50  0001 C CNN
 	1    7600 2150
 	1    0    0    -1  
 $EndComp
-$Comp
-L Device:R_Small R406
-U 1 1 5CEC3A9E
-P 7250 2000
-F 0 "R406" H 7191 1954 50  0000 R CNN
-F 1 "10k" H 7191 2045 50  0000 R CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 7250 2000 50  0001 C CNN
-F 3 "~" H 7250 2000 50  0001 C CNN
-	1    7250 2000
-	1    0    0    1   
-$EndComp
 Wire Wire Line
 	7600 2150 7600 2100
 Wire Wire Line
-	7600 2100 7250 2100
-Wire Wire Line
-	7250 1900 7250 1800
-Wire Wire Line
-	7250 1800 7300 1800
-Wire Wire Line
 	7600 2100 7600 1900
 Connection ~ 7600 2100
-Wire Wire Line
-	7250 1800 7200 1800
-Connection ~ 7250 1800
 $Comp
 L Device:R_Small R403
 U 1 1 5CEC3AAD
 P 7100 1800
 F 0 "R403" V 6904 1800 50  0000 C CNN
 F 1 "10" V 6995 1800 50  0000 C CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 7100 1800 50  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 7100 1800 50  0001 C CNN
 F 3 "~" H 7100 1800 50  0001 C CNN
 	1    7100 1800
 	0    1    1    0   
 $EndComp
-Text GLabel 6950 1800 0    50   Input ~ 0
-OUT1
-Wire Wire Line
-	7000 1800 6950 1800
 $Comp
 L dk_Transistors-FETs-MOSFETs-Single:IRLML6344TRPBF Q406
 U 1 1 5CEC3ABF
@@ -413,46 +376,13 @@ F 3 "" H 5500 4000 50  0001 C CNN
 	1    5500 4000
 	1    0    0    -1  
 $EndComp
-$Comp
-L Device:R_Small R414
-U 1 1 5CEC3ADB
-P 5150 3850
-F 0 "R414" H 5091 3804 50  0000 R CNN
-F 1 "10k" H 5091 3895 50  0000 R CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 5150 3850 50  0001 C CNN
-F 3 "~" H 5150 3850 50  0001 C CNN
-	1    5150 3850
-	1    0    0    1   
-$EndComp
 Wire Wire Line
 	5500 4000 5500 3950
 Wire Wire Line
-	5500 3950 5150 3950
-Wire Wire Line
-	5150 3750 5150 3650
-Wire Wire Line
-	5150 3650 5200 3650
-Wire Wire Line
 	5500 3950 5500 3750
 Connection ~ 5500 3950
-Wire Wire Line
-	5150 3650 5100 3650
-Connection ~ 5150 3650
-$Comp
-L Device:R_Small R410
-U 1 1 5CEC3AEA
-P 5000 3650
-F 0 "R410" V 4804 3650 50  0000 C CNN
-F 1 "10" V 4895 3650 50  0000 C CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 5000 3650 50  0001 C CNN
-F 3 "~" H 5000 3650 50  0001 C CNN
-	1    5000 3650
-	0    1    1    0   
-$EndComp
 Text GLabel 10700 1700 2    50   Output ~ 0
 IN1
-Wire Wire Line
-	4900 3650 4850 3650
 $Comp
 L power:VCC #PWR0404
 U 1 1 5CEFB1E7
@@ -490,44 +420,11 @@ F 3 "" H 7600 4000 50  0001 C CNN
 	1    7600 4000
 	1    0    0    -1  
 $EndComp
-$Comp
-L Device:R_Small R407
-U 1 1 5CEFB1FB
-P 7250 3850
-F 0 "R407" H 7191 3804 50  0000 R CNN
-F 1 "10k" H 7191 3895 50  0000 R CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 7250 3850 50  0001 C CNN
-F 3 "~" H 7250 3850 50  0001 C CNN
-	1    7250 3850
-	1    0    0    1   
-$EndComp
 Wire Wire Line
 	7600 4000 7600 3950
 Wire Wire Line
-	7600 3950 7250 3950
-Wire Wire Line
-	7250 3750 7250 3650
-Wire Wire Line
-	7250 3650 7300 3650
-Wire Wire Line
 	7600 3950 7600 3750
 Connection ~ 7600 3950
-Wire Wire Line
-	7250 3650 7200 3650
-Connection ~ 7250 3650
-$Comp
-L Device:R_Small R404
-U 1 1 5CEFB209
-P 7100 3650
-F 0 "R404" V 6904 3650 50  0000 C CNN
-F 1 "10" V 6995 3650 50  0000 C CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 7100 3650 50  0001 C CNN
-F 3 "~" H 7100 3650 50  0001 C CNN
-	1    7100 3650
-	0    1    1    0   
-$EndComp
-Wire Wire Line
-	7000 3650 6950 3650
 $Comp
 L Connector_Generic:Conn_01x02 J407
 U 1 1 5CEFB226
@@ -635,7 +532,7 @@ U 1 1 5CEDA6FC
 P 2350 1250
 F 0 "C401" H 2259 1204 50  0000 R CNN
 F 1 "1u" H 2259 1295 50  0000 R CNN
-F 2 "Capacitors_SMD:C_0805_HandSoldering" H 2350 1250 50  0001 C CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 2350 1250 50  0001 C CNN
 F 3 "~" H 2350 1250 50  0001 C CNN
 	1    2350 1250
 	1    0    0    1   
@@ -646,7 +543,7 @@ U 1 1 5CEDA76C
 P 2200 3200
 F 0 "C402" H 2109 3154 50  0000 R CNN
 F 1 "1u" H 2109 3245 50  0000 R CNN
-F 2 "Capacitors_SMD:C_0805_HandSoldering" H 2200 3200 50  0001 C CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 2200 3200 50  0001 C CNN
 F 3 "~" H 2200 3200 50  0001 C CNN
 	1    2200 3200
 	1    0    0    1   
@@ -710,7 +607,7 @@ U 1 1 5CEBDEBF
 P 4550 7450
 F 0 "R408" V 4354 7450 50  0000 C CNN
 F 1 "10k" V 4445 7450 50  0000 C CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 4550 7450 50  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 4550 7450 50  0001 C CNN
 F 3 "~" H 4550 7450 50  0001 C CNN
 	1    4550 7450
 	0    1    1    0   
@@ -721,7 +618,7 @@ U 1 1 5CEBE092
 P 4850 6050
 F 0 "R401" V 4654 6050 50  0000 C CNN
 F 1 "10k" V 4745 6050 50  0000 C CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 4850 6050 50  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 4850 6050 50  0001 C CNN
 F 3 "~" H 4850 6050 50  0001 C CNN
 	1    4850 6050
 	0    1    1    0   
@@ -777,7 +674,7 @@ U 1 1 5CF2496D
 P 6050 7150
 F 0 "C404" V 5821 7150 50  0000 C CNN
 F 1 "10u" V 5912 7150 50  0000 C CNN
-F 2 "Capacitors_SMD:C_0603_HandSoldering" H 6050 7150 50  0001 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 6050 7150 50  0001 C CNN
 F 3 "~" H 6050 7150 50  0001 C CNN
 	1    6050 7150
 	0    1    1    0   
@@ -819,7 +716,7 @@ U 1 1 5CF494E5
 P 5200 6750
 F 0 "C403" V 4971 6750 50  0000 C CNN
 F 1 "100n" V 5062 6750 50  0000 C CNN
-F 2 "Capacitors_SMD:C_0603_HandSoldering" H 5200 6750 50  0001 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 5200 6750 50  0001 C CNN
 F 3 "~" H 5200 6750 50  0001 C CNN
 	1    5200 6750
 	0    1    1    0   
@@ -875,7 +772,7 @@ U 1 1 5CFB53EC
 P 5400 6350
 F 0 "C405" V 5171 6350 50  0000 C CNN
 F 1 "100n" V 5262 6350 50  0000 C CNN
-F 2 "Capacitors_SMD:C_0603_HandSoldering" H 5400 6350 50  0001 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 5400 6350 50  0001 C CNN
 F 3 "~" H 5400 6350 50  0001 C CNN
 	1    5400 6350
 	0    1    1    0   
@@ -896,7 +793,7 @@ U 1 1 5CFEB336
 P 3400 5800
 F 0 "C406" V 3171 5800 50  0000 C CNN
 F 1 "100n" V 3262 5800 50  0000 C CNN
-F 2 "Capacitors_SMD:C_0603_HandSoldering" H 3400 5800 50  0001 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 3400 5800 50  0001 C CNN
 F 3 "~" H 3400 5800 50  0001 C CNN
 	1    3400 5800
 	0    1    1    0   
@@ -925,8 +822,6 @@ Wire Notes Line
 	3000 7750 3000 5400
 Text Notes 3250 5500 0    50   ~ 0
 DAC AMPLIFIER
-Wire Notes Line
-	6600 650  6600 4500
 Wire Notes Line
 	4350 4500 4350 650 
 Wire Notes Line
@@ -1048,8 +943,6 @@ F 12 "Active" H 10300 2900 60  0001 L CNN "Status"
 $EndComp
 Text GLabel 10700 3400 2    50   Output ~ 0
 IN2
-Text GLabel 6950 3650 0    50   Input ~ 0
-OUT2
 $Comp
 L dk_Transistors-FETs-MOSFETs-Single:IRLML6344TRPBF Q403
 U 1 1 5CEFB1E1
@@ -1096,7 +989,7 @@ U 1 1 5D1521BC
 P 9550 3300
 F 0 "R411" V 9354 3300 50  0000 C CNN
 F 1 "100" V 9445 3300 50  0000 C CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 9550 3300 50  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 9550 3300 50  0001 C CNN
 F 3 "~" H 9550 3300 50  0001 C CNN
 	1    9550 3300
 	0    1    1    0   
@@ -1107,7 +1000,7 @@ U 1 1 5D1526A8
 P 9550 1600
 F 0 "R409" V 9354 1600 50  0000 C CNN
 F 1 "100" V 9445 1600 50  0000 C CNN
-F 2 "Resistors_SMD:R_0603_HandSoldering" H 9550 1600 50  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 9550 1600 50  0001 C CNN
 F 3 "~" H 9550 1600 50  0001 C CNN
 	1    9550 1600
 	0    1    1    0   
@@ -1163,7 +1056,7 @@ U 1 1 5D198B7B
 P 10250 1200
 F 0 "C407" V 10021 1200 50  0000 C CNN
 F 1 "100n" V 10112 1200 50  0000 C CNN
-F 2 "Capacitors_SMD:C_0603_HandSoldering" H 10250 1200 50  0001 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 10250 1200 50  0001 C CNN
 F 3 "~" H 10250 1200 50  0001 C CNN
 	1    10250 1200
 	0    1    1    0   
@@ -1174,7 +1067,7 @@ U 1 1 5D1990C7
 P 10250 2800
 F 0 "C408" V 10021 2800 50  0000 C CNN
 F 1 "100n" V 10112 2800 50  0000 C CNN
-F 2 "Capacitors_SMD:C_0603_HandSoldering" H 10250 2800 50  0001 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 10250 2800 50  0001 C CNN
 F 3 "~" H 10250 2800 50  0001 C CNN
 	1    10250 2800
 	0    1    1    0   
@@ -1258,4 +1151,111 @@ Wire Wire Line
 	1500 6600 1500 7000
 Wire Wire Line
 	2200 6600 2200 7000
+Wire Wire Line
+	7600 2100 7250 2100
+$Comp
+L Device:R_Small R406
+U 1 1 5CEC3A9E
+P 7250 2000
+F 0 "R406" H 7191 1954 50  0000 R CNN
+F 1 "10k" H 7191 2045 50  0000 R CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 7250 2000 50  0001 C CNN
+F 3 "~" H 7250 2000 50  0001 C CNN
+	1    7250 2000
+	1    0    0    1   
+$EndComp
+$Comp
+L Device:R_Small R404
+U 1 1 5CEFB209
+P 7100 3650
+F 0 "R404" V 6904 3650 50  0000 C CNN
+F 1 "10" V 6995 3650 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 7100 3650 50  0001 C CNN
+F 3 "~" H 7100 3650 50  0001 C CNN
+	1    7100 3650
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R_Small R410
+U 1 1 5CEC3AEA
+P 5000 3650
+F 0 "R410" V 4804 3650 50  0000 C CNN
+F 1 "10" V 4895 3650 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 5000 3650 50  0001 C CNN
+F 3 "~" H 5000 3650 50  0001 C CNN
+	1    5000 3650
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	5500 3950 5150 3950
+$Comp
+L Device:R_Small R414
+U 1 1 5CEC3ADB
+P 5150 3850
+F 0 "R414" H 5091 3804 50  0000 R CNN
+F 1 "10k" H 5091 3895 50  0000 R CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 5150 3850 50  0001 C CNN
+F 3 "~" H 5150 3850 50  0001 C CNN
+	1    5150 3850
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	7600 3950 7250 3950
+$Comp
+L Device:R_Small R407
+U 1 1 5CEFB1FB
+P 7250 3850
+F 0 "R407" H 7191 3804 50  0000 R CNN
+F 1 "10k" H 7191 3895 50  0000 R CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 7250 3850 50  0001 C CNN
+F 3 "~" H 7250 3850 50  0001 C CNN
+	1    7250 3850
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	5150 3650 5100 3650
+Wire Wire Line
+	5150 3650 5200 3650
+Connection ~ 5150 3650
+Wire Wire Line
+	5150 3750 5150 3650
+Wire Wire Line
+	5150 1800 5100 1800
+Wire Wire Line
+	5150 1800 5200 1800
+Connection ~ 5150 1800
+Wire Wire Line
+	5150 1900 5150 1800
+Wire Wire Line
+	7250 1800 7200 1800
+Wire Wire Line
+	7250 1800 7300 1800
+Connection ~ 7250 1800
+Wire Wire Line
+	7250 1900 7250 1800
+Wire Wire Line
+	7250 3650 7200 3650
+Wire Wire Line
+	7250 3650 7300 3650
+Connection ~ 7250 3650
+Wire Wire Line
+	7250 3750 7250 3650
+Wire Wire Line
+	7000 3650 6950 3650
+Text GLabel 6950 3650 0    50   Input ~ 0
+OUT2
+Wire Wire Line
+	7000 1800 6950 1800
+Text GLabel 6950 1800 0    50   Input ~ 0
+OUT1
+Wire Notes Line
+	6600 650  6600 4500
+Wire Wire Line
+	4900 3650 4850 3650
+Text GLabel 4850 3650 0    50   Input ~ 0
+PWM2
+Wire Wire Line
+	4900 1800 4850 1800
+Text GLabel 4850 1800 0    50   Input ~ 0
+PWM1
 $EndSCHEMATC

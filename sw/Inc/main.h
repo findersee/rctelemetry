@@ -78,8 +78,8 @@ void Error_Handler(void);
 #define OUT2_GPIO_Port GPIOB
 #define OUT1_Pin GPIO_PIN_2
 #define OUT1_GPIO_Port GPIOB
-#define USB_ENUMERATE_Pin GPIO_PIN_11
-#define USB_ENUMERATE_GPIO_Port GPIOB
+#define WP_Pin GPIO_PIN_11
+#define WP_GPIO_Port GPIOB
 #define BAT_VOLTAGE_Pin GPIO_PIN_12
 #define BAT_VOLTAGE_GPIO_Port GPIOB
 #define AMP_CS_Pin GPIO_PIN_14
@@ -88,8 +88,8 @@ void Error_Handler(void);
 #define SPI_CS_GPIO_Port GPIOA
 #define Sport_UART_Pin GPIO_PIN_9
 #define Sport_UART_GPIO_Port GPIOA
-#define WP_Pin GPIO_PIN_10
-#define WP_GPIO_Port GPIOA
+#define USB_ENUMERATE_Pin GPIO_PIN_10
+#define USB_ENUMERATE_GPIO_Port GPIOA
 #define Servo_2_Pin GPIO_PIN_4
 #define Servo_2_GPIO_Port GPIOB
 #define Servo_1_Pin GPIO_PIN_5
