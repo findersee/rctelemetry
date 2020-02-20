@@ -30,7 +30,7 @@ U 1 1 5CEA51F6
 P 2900 1250
 F 0 "J404" H 2980 1242 50  0000 L CNN
 F 1 "Conn_01x02" H 2980 1151 50  0000 L CNN
-F 2 "Connectors_Phoenix:PhoenixContact_MCV-G_02x3.81mm_Vertical" H 2900 1250 50  0001 C CNN
+F 2 "TerminalBlock_Phoenix:TerminalBlock_Phoenix_PT-1,5-2-5.0-H_1x02_P5.00mm_Horizontal" H 2900 1250 50  0001 C CNN
 F 3 "~" H 2900 1250 50  0001 C CNN
 	1    2900 1250
 	1    0    0    -1  
@@ -67,7 +67,7 @@ U 1 1 5CEA77CB
 P 2900 3100
 F 0 "J408" H 2980 3092 50  0000 L CNN
 F 1 "Conn_01x02" H 2980 3001 50  0000 L CNN
-F 2 "Connectors_Phoenix:PhoenixContact_MCV-G_02x3.81mm_Vertical" H 2900 3100 50  0001 C CNN
+F 2 "TerminalBlock_Phoenix:TerminalBlock_Phoenix_PT-1,5-2-5.0-H_1x02_P5.00mm_Horizontal" H 2900 3100 50  0001 C CNN
 F 3 "~" H 2900 3100 50  0001 C CNN
 	1    2900 3100
 	1    0    0    -1  
@@ -186,7 +186,7 @@ U 1 1 5CEB6D65
 P 5700 1200
 F 0 "J401" H 5780 1192 50  0000 L CNN
 F 1 "Conn_01x02" H 5780 1101 50  0000 L CNN
-F 2 "Pin_Headers:Pin_Header_Angled_1x02_Pitch2.54mm" H 5700 1200 50  0001 C CNN
+F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 5700 1200 50  0001 C CNN
 F 3 "~" H 5700 1200 50  0001 C CNN
 	1    5700 1200
 	1    0    0    -1  
@@ -241,7 +241,7 @@ U 1 1 5CEC27F6
 P 9150 1700
 F 0 "J405" H 9230 1692 50  0000 L CNN
 F 1 "Conn_01x02" H 9230 1601 50  0000 L CNN
-F 2 "Pin_Headers:Pin_Header_Angled_1x02_Pitch2.54mm" H 9150 1700 50  0001 C CNN
+F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 9150 1700 50  0001 C CNN
 F 3 "~" H 9150 1700 50  0001 C CNN
 	1    9150 1700
 	-1   0    0    1   
@@ -283,7 +283,7 @@ U 1 1 5CEC3A8F
 P 7800 1200
 F 0 "J402" H 7880 1192 50  0000 L CNN
 F 1 "Conn_01x02" H 7880 1101 50  0000 L CNN
-F 2 "Pin_Headers:Pin_Header_Angled_1x02_Pitch2.54mm" H 7800 1200 50  0001 C CNN
+F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 7800 1200 50  0001 C CNN
 F 3 "~" H 7800 1200 50  0001 C CNN
 	1    7800 1200
 	1    0    0    -1  
@@ -356,7 +356,7 @@ U 1 1 5CEC3ACC
 P 5700 3050
 F 0 "J406" H 5780 3042 50  0000 L CNN
 F 1 "Conn_01x02" H 5780 2951 50  0000 L CNN
-F 2 "Pin_Headers:Pin_Header_Angled_1x02_Pitch2.54mm" H 5700 3050 50  0001 C CNN
+F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 5700 3050 50  0001 C CNN
 F 3 "~" H 5700 3050 50  0001 C CNN
 	1    5700 3050
 	1    0    0    -1  
@@ -400,7 +400,7 @@ U 1 1 5CEFB1ED
 P 7800 3050
 F 0 "J403" H 7880 3042 50  0000 L CNN
 F 1 "Conn_01x02" H 7880 2951 50  0000 L CNN
-F 2 "Pin_Headers:Pin_Header_Angled_1x02_Pitch2.54mm" H 7800 3050 50  0001 C CNN
+F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 7800 3050 50  0001 C CNN
 F 3 "~" H 7800 3050 50  0001 C CNN
 	1    7800 3050
 	1    0    0    -1  
@@ -431,7 +431,7 @@ U 1 1 5CEFB226
 P 9150 3400
 F 0 "J407" H 9230 3392 50  0000 L CNN
 F 1 "Conn_01x02" H 9230 3301 50  0000 L CNN
-F 2 "Pin_Headers:Pin_Header_Angled_1x02_Pitch2.54mm" H 9150 3400 50  0001 C CNN
+F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 9150 3400 50  0001 C CNN
 F 3 "~" H 9150 3400 50  0001 C CNN
 	1    9150 3400
 	-1   0    0    1   
@@ -460,7 +460,7 @@ U 1 1 5CE95F20
 P 1550 5950
 F 0 "JP401" V 1596 5903 50  0000 R CNN
 F 1 "Jumper_NC_Small" V 1505 5903 50  0000 R CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x02" H 1550 5950 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 1550 5950 50  0001 C CNN
 F 3 "~" H 1550 5950 50  0001 C CNN
 	1    1550 5950
 	0    -1   -1   0   
@@ -661,7 +661,7 @@ AR Path="/5CF13188" Ref="J?"  Part="1"
 AR Path="/5CEA3FFC/5CF13188" Ref="J410"  Part="1" 
 F 0 "J410" H 6420 6925 50  0000 C CNN
 F 1 "AUDIO" H 6420 7016 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.54mm" H 6500 7250 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 6500 7250 50  0001 C CNN
 F 3 "~" H 6500 7250 50  0001 C CNN
 	1    6500 7250
 	1    0    0    1   

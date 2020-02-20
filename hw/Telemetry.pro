@@ -1,4 +1,4 @@
-update=12.2.2020 20.10.39
+update=17.2.2020 20.03.24
 version=1
 last_client=kicad
 [general]
@@ -24,7 +24,7 @@ LabSize=50
 ERC_TestSimilarLabels=1
 [pcbnew]
 version=1
-PageLayoutDescrFile=
+PageLayoutDescrFile=C:/Users/akiku/OneDrive/Projects/Layout_blank.kicad_wks
 LastNetListRead=Telemetry.net
 CopperLayerCount=4
 BoardThickness=1.6
@@ -55,6 +55,9 @@ ViaDrill3=0.6
 dPairWidth1=0.17
 dPairGap1=0.2
 dPairViaGap1=0.25
+dPairWidth2=0.20574
+dPairGap2=0.127
+dPairViaGap2=0
 SilkLineWidth=0.15
 SilkTextSizeV=0.7
 SilkTextSizeH=0.7
@@ -78,7 +81,7 @@ OthersTextUpright=1
 SolderMaskClearance=0.18
 SolderMaskMinWidth=0.06
 SolderPasteClearance=0
-SolderPasteRatio=0
+SolderPasteRatio=-0
 [pcbnew/Layer.F.Cu]
 Name=F.Cu
 Type=0
@@ -248,6 +251,17 @@ Enabled=0
 [pcbnew/Netclasses]
 [pcbnew/Netclasses/Default]
 Name=Default
+Clearance=0.2
+TrackWidth=0.25
+ViaDiameter=0.65
+ViaDrill=0.3
+uViaDiameter=0.3
+uViaDrill=0.1
+dPairWidth=0.17
+dPairGap=0.2
+dPairViaGap=0.25
+[pcbnew/Netclasses/1]
+Name=USB
 Clearance=0.2
 TrackWidth=0.25
 ViaDiameter=0.65

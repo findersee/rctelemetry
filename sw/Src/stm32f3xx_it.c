@@ -68,8 +68,8 @@ extern UART_HandleTypeDef huart3;
 extern TIM_HandleTypeDef htim7;
 
 /* USER CODE BEGIN EV */
-extern osThreadId SendTelemetryHandle;
-extern SemaphoreHandle_t powerMutex;
+//extern osThreadId SendTelemetryHandle;
+//extern SemaphoreHandle_t powerMutex;
 
 
 /* USER CODE END EV */
