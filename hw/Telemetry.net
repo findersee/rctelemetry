@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source C:\Users\akiku\GIT\rctelemetry\hw\Telemetry.sch)
-    (date "20.2.2020 22.12.58")
+    (date "21.2.2020 20.51.20")
     (tool "Eeschema (5.1.5)-3")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -308,7 +308,7 @@
       (tstamp 5CE2245D))
     (comp (ref L201)
       (value " SPN30304R7MPTE")
-      (footprint Inductors:Inductor_Taiyo-Yuden_MD-3030)
+      (footprint PCBDecals:L_Sunlord_MWSA0402)
       (datasheet https://datasheet.lcsc.com/szlcsc/1901081516_Darfon-Elec-SPN30304R7MPTE_C359291.pdf)
       (fields
         (field (name "LCSC Part-number") C359291))
@@ -408,7 +408,7 @@
       (tstamp 5CF27FB6))
     (comp (ref L202)
       (value " BCRH1212Y-680M")
-      (footprint PCBDecals:12x12_inductor)
+      (footprint PCBDecals:L_Sunlord_MWSA1206)
       (datasheet https://datasheet.lcsc.com/szlcsc/Bao-Cheng-Elec-BC-BCRH1212Y-680M_C238002.pdf)
       (fields
         (field (name "LCSC Part-number") " C238002"))
