@@ -1,5 +1,6 @@
 # rctelemetry
 <p>FrSky Smart port compatible Telemetry board.</p>
+<img src=https://github.com/findersee/rctelemetry/tree/master/Board.jpg height=400>
 Telemetry features:<ul>
 <li>Two DC power measurement channels, current and Voltage for speed controllers.</li>
 <li>Battery input voltage measurement</li>
