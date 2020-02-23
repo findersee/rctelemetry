@@ -221,7 +221,7 @@ F0 "Power supplies" 50
 F1 "Power.sch" 50
 $EndSheet
 $Sheet
-S 9750 2200 1100 1050
+S 1150 3500 1100 1050
 U 5CE3A6F3
 F0 "Current measurement" 50
 F1 "current.sch" 50
@@ -491,7 +491,7 @@ Wire Wire Line
 	4800 850  4800 1000
 Connection ~ 4800 1000
 $Sheet
-S 9750 3400 1100 1000
+S 1150 4750 1100 1000
 U 5CEA3FFC
 F0 "Outputs" 50
 F1 "output.sch" 50
