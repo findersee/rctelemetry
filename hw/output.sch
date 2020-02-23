@@ -5,8 +5,8 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 4 4
 Title "RC Telemetry board"
-Date "2020-02-12"
-Rev "0.2"
+Date "2020-02-23"
+Rev "1.1"
 Comp "www.findersee.fi"
 Comment1 "https://github.com/findersee/rctelemetry"
 Comment2 ""
@@ -24,19 +24,8 @@ F 3 "" H 2700 900 50  0001 C CNN
 	1    2700 900 
 	1    0    0    -1  
 $EndComp
-$Comp
-L Connector_Generic:Conn_01x02 J404
-U 1 1 5CEA51F6
-P 2900 1250
-F 0 "J404" H 2980 1242 50  0000 L CNN
-F 1 "Conn_01x02" H 2980 1151 50  0000 L CNN
-F 2 "TerminalBlock_Phoenix:TerminalBlock_Phoenix_PT-1,5-2-5.0-H_1x02_P5.00mm_Horizontal" H 2900 1250 50  0001 C CNN
-F 3 "~" H 2900 1250 50  0001 C CNN
-	1    2900 1250
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
-	2700 1350 2700 1600
+	2700 1550 2700 1600
 $Comp
 L power:GND #PWR0408
 U 1 1 5CEA5274
@@ -61,19 +50,8 @@ F 3 "" H 2700 2750 50  0001 C CNN
 	1    2700 2750
 	1    0    0    -1  
 $EndComp
-$Comp
-L Connector_Generic:Conn_01x02 J408
-U 1 1 5CEA77CB
-P 2900 3100
-F 0 "J408" H 2980 3092 50  0000 L CNN
-F 1 "Conn_01x02" H 2980 3001 50  0000 L CNN
-F 2 "TerminalBlock_Phoenix:TerminalBlock_Phoenix_PT-1,5-2-5.0-H_1x02_P5.00mm_Horizontal" H 2900 3100 50  0001 C CNN
-F 3 "~" H 2900 3100 50  0001 C CNN
-	1    2900 3100
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
-	2700 3200 2700 3450
+	2700 3400 2700 3450
 $Comp
 L power:GND #PWR0416
 U 1 1 5CEA77D3
@@ -188,6 +166,7 @@ F 0 "J401" H 5780 1192 50  0000 L CNN
 F 1 "Conn_01x02" H 5780 1101 50  0000 L CNN
 F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 5700 1200 50  0001 C CNN
 F 3 "~" H 5700 1200 50  0001 C CNN
+F 4 "-prod" H 5700 1200 50  0001 C CNN "Config"
 	1    5700 1200
 	1    0    0    -1  
 $EndComp
@@ -243,6 +222,7 @@ F 0 "J405" H 9230 1692 50  0000 L CNN
 F 1 "Conn_01x02" H 9230 1601 50  0000 L CNN
 F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 9150 1700 50  0001 C CNN
 F 3 "~" H 9150 1700 50  0001 C CNN
+F 4 "-prod" H 9150 1700 50  0001 C CNN "Config"
 	1    9150 1700
 	-1   0    0    1   
 $EndComp
@@ -285,6 +265,7 @@ F 0 "J402" H 7880 1192 50  0000 L CNN
 F 1 "Conn_01x02" H 7880 1101 50  0000 L CNN
 F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 7800 1200 50  0001 C CNN
 F 3 "~" H 7800 1200 50  0001 C CNN
+F 4 "-prod" H 7800 1200 50  0001 C CNN "Config"
 	1    7800 1200
 	1    0    0    -1  
 $EndComp
@@ -358,6 +339,7 @@ F 0 "J406" H 5780 3042 50  0000 L CNN
 F 1 "Conn_01x02" H 5780 2951 50  0000 L CNN
 F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 5700 3050 50  0001 C CNN
 F 3 "~" H 5700 3050 50  0001 C CNN
+F 4 "-prod" H 5700 3050 50  0001 C CNN "Config"
 	1    5700 3050
 	1    0    0    -1  
 $EndComp
@@ -402,6 +384,7 @@ F 0 "J403" H 7880 3042 50  0000 L CNN
 F 1 "Conn_01x02" H 7880 2951 50  0000 L CNN
 F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 7800 3050 50  0001 C CNN
 F 3 "~" H 7800 3050 50  0001 C CNN
+F 4 "-prod" H 7800 3050 50  0001 C CNN "Config"
 	1    7800 3050
 	1    0    0    -1  
 $EndComp
@@ -433,6 +416,7 @@ F 0 "J407" H 9230 3392 50  0000 L CNN
 F 1 "Conn_01x02" H 9230 3301 50  0000 L CNN
 F 2 "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical" H 9150 3400 50  0001 C CNN
 F 3 "~" H 9150 3400 50  0001 C CNN
+F 4 "-prod" H 9150 3400 50  0001 C CNN "Config"
 	1    9150 3400
 	-1   0    0    1   
 $EndComp
@@ -462,6 +446,7 @@ F 0 "JP401" V 1596 5903 50  0000 R CNN
 F 1 "Jumper_NC_Small" V 1505 5903 50  0000 R CNN
 F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 1550 5950 50  0001 C CNN
 F 3 "~" H 1550 5950 50  0001 C CNN
+F 4 "-prod" H 1550 5950 50  0001 C CNN "Config"
 	1    1550 5950
 	0    -1   -1   0   
 $EndComp
@@ -475,6 +460,9 @@ F 0 "U402" H 1750 3900 50  0000 L CNN
 F 1 "MCP1416" H 1750 3400 50  0000 L CNN
 F 2 "TO_SOT_Packages_SMD:SOT-23-5_HandSoldering" H 1650 3250 50  0001 C CIN
 F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/20002092F.pdf" H 1450 3900 50  0001 C CNN
+F 4 "MCP1416" H 1650 3650 50  0001 C CNN "MPN"
+F 5 "Microchip" H 1650 3650 50  0001 C CNN "Manufacturer"
+F 6 "Tiny 1.5A, High-Speed Power MOSFET DriverLo" H 1650 3650 50  0001 C CNN "Description"
 	1    1650 3650
 	1    0    0    -1  
 $EndComp
@@ -491,8 +479,6 @@ Wire Wire Line
 Wire Wire Line
 	1650 2950 2200 2950
 Connection ~ 2700 2950
-Wire Wire Line
-	2700 2950 2700 3100
 $Comp
 L Telemetry-rescue:MCP1416-Driver_FET U401
 U 1 1 5CED0BC8
@@ -503,6 +489,9 @@ F 0 "U401" H 1800 2050 50  0000 L CNN
 F 1 "MCP1416" H 1800 1550 50  0000 L CNN
 F 2 "TO_SOT_Packages_SMD:SOT-23-5_HandSoldering" H 1700 1400 50  0001 C CIN
 F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/20002092F.pdf" H 1500 2050 50  0001 C CNN
+F 4 "MCP1416" H 1700 1800 50  0001 C CNN "MPN"
+F 5 "Microchip" H 1700 1800 50  0001 C CNN "Manufacturer"
+F 6 "Tiny 1.5A, High-Speed Power MOSFET DriverLo" H 1700 1800 50  0001 C CNN "Description"
 	1    1700 1800
 	1    0    0    -1  
 $EndComp
@@ -523,15 +512,13 @@ Wire Wire Line
 	1700 1000 2350 1000
 Connection ~ 2700 1000
 Wire Wire Line
-	2700 1000 2700 1250
-Wire Wire Line
 	1400 1800 1050 1800
 $Comp
 L Device:C_Small C401
 U 1 1 5CEDA6FC
 P 2350 1250
 F 0 "C401" H 2259 1204 50  0000 R CNN
-F 1 "1u" H 2259 1295 50  0000 R CNN
+F 1 "1u/35V" H 2259 1295 50  0000 R CNN
 F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 2350 1250 50  0001 C CNN
 F 3 "~" H 2350 1250 50  0001 C CNN
 	1    2350 1250
@@ -542,7 +529,7 @@ L Device:C_Small C402
 U 1 1 5CEDA76C
 P 2200 3200
 F 0 "C402" H 2109 3154 50  0000 R CNN
-F 1 "1u" H 2109 3245 50  0000 R CNN
+F 1 "1u/35V" H 2109 3245 50  0000 R CNN
 F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 2200 3200 50  0001 C CNN
 F 3 "~" H 2200 3200 50  0001 C CNN
 	1    2200 3200
@@ -576,6 +563,8 @@ F 0 "Q408" H 2806 3696 50  0000 L CNN
 F 1 "CSD17306Q5A" H 2806 3605 50  0000 L CNN
 F 2 "TO_SOT_Packages_SMD:TDSON-8-1_HandSoldering" H 2800 3575 50  0001 L CIN
 F 3 "http://www.ti.com/lit/gpn/csd17306q5a" V 2600 3650 50  0001 L CNN
+F 4 "CSD17306Q5A" H 2600 3650 50  0001 C CNN "MPN"
+F 5 "Texas Instruments" H 2600 3650 50  0001 C CNN "Manufacturer"
 	1    2600 3650
 	1    0    0    -1  
 $EndComp
@@ -587,6 +576,8 @@ F 0 "Q404" H 2806 1846 50  0000 L CNN
 F 1 "CSD17306Q5A" H 2806 1755 50  0000 L CNN
 F 2 "TO_SOT_Packages_SMD:TDSON-8-1_HandSoldering" H 2800 1725 50  0001 L CIN
 F 3 "http://www.ti.com/lit/gpn/csd17306q5a" V 2600 1800 50  0001 L CNN
+F 4 "CSD17306Q5A" H 2600 1800 50  0001 C CNN "MPN"
+F 5 "Texas Instruments" H 2600 1800 50  0001 C CNN "Manufacturer"
 	1    2600 1800
 	1    0    0    -1  
 $EndComp
@@ -663,6 +654,7 @@ F 0 "J410" H 6420 6925 50  0000 C CNN
 F 1 "AUDIO" H 6420 7016 50  0000 C CNN
 F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 6500 7250 50  0001 C CNN
 F 3 "~" H 6500 7250 50  0001 C CNN
+F 4 "-prod" H 6500 7250 50  0001 C CNN "Config"
 	1    6500 7250
 	1    0    0    1   
 $EndComp
@@ -673,7 +665,7 @@ L Device:C_Small C404
 U 1 1 5CF2496D
 P 6050 7150
 F 0 "C404" V 5821 7150 50  0000 C CNN
-F 1 "10u" V 5912 7150 50  0000 C CNN
+F 1 "10u/10V" V 5912 7150 50  0000 C CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 6050 7150 50  0001 C CNN
 F 3 "~" H 6050 7150 50  0001 C CNN
 	1    6050 7150
@@ -715,7 +707,7 @@ L Device:C_Small C403
 U 1 1 5CF494E5
 P 5200 6750
 F 0 "C403" V 4971 6750 50  0000 C CNN
-F 1 "100n" V 5062 6750 50  0000 C CNN
+F 1 "100n/50V" V 5062 6750 50  0000 C CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 5200 6750 50  0001 C CNN
 F 3 "~" H 5200 6750 50  0001 C CNN
 	1    5200 6750
@@ -771,7 +763,7 @@ L Device:C_Small C405
 U 1 1 5CFB53EC
 P 5400 6350
 F 0 "C405" V 5171 6350 50  0000 C CNN
-F 1 "100n" V 5262 6350 50  0000 C CNN
+F 1 "100n/50V" V 5262 6350 50  0000 C CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 5400 6350 50  0001 C CNN
 F 3 "~" H 5400 6350 50  0001 C CNN
 	1    5400 6350
@@ -792,7 +784,7 @@ L Device:C_Small C406
 U 1 1 5CFEB336
 P 3400 5800
 F 0 "C406" V 3171 5800 50  0000 C CNN
-F 1 "100n" V 3262 5800 50  0000 C CNN
+F 1 "100n/50V" V 3262 5800 50  0000 C CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 3400 5800 50  0001 C CNN
 F 3 "~" H 3400 5800 50  0001 C CNN
 	1    3400 5800
@@ -825,13 +817,13 @@ DAC AMPLIFIER
 Wire Notes Line
 	4350 4500 4350 650 
 Wire Notes Line
-	3650 650  3650 4500
+	4150 650  4150 4500
 Wire Notes Line
-	3650 4500 600  4500
+	4150 4500 600  4500
 Wire Notes Line
 	600  4500 600  650 
 Wire Notes Line
-	600  650  3650 650 
+	1100 650  4150 650 
 Wire Notes Line
 	8600 650  8600 4500
 Wire Notes Line
@@ -860,6 +852,8 @@ F 0 "U404" H 5100 7300 50  0000 L CNN
 F 1 "MCP6001-OT" H 5100 7000 50  0001 L CNN
 F 2 "TO_SOT_Packages_SMD:SOT-23-5_HandSoldering" H 5000 6950 50  0001 L CNN
 F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/21733j.pdf" H 5100 7350 50  0001 C CNN
+F 4 "MCP6001-OT" H 5100 7150 50  0001 C CNN "MPN"
+F 5 "Microchip" H 5100 7150 50  0001 C CNN "Manufacturer"
 	1    5100 7150
 	1    0    0    -1  
 $EndComp
@@ -871,6 +865,7 @@ F 0 "R412" H 4759 6246 50  0000 L CNN
 F 1 "0R" H 4759 6155 50  0000 L CNN
 F 2 "Resistors_SMD:R_0402_NoSilk" H 4700 6200 50  0001 C CNN
 F 3 "~" H 4700 6200 50  0001 C CNN
+F 4 "dnp" H 4700 6200 50  0001 C CNN "Config"
 	1    4700 6200
 	1    0    0    -1  
 $EndComp
@@ -896,6 +891,9 @@ F 0 "U403" H 4100 6433 50  0000 C CNN
 F 1 "AD5160BRJZ10-R2" H 4100 6500 50  0001 C CNN
 F 2 "digikey-footprints:SOT-23-8" H 3900 6100 50  0001 C CNN
 F 3 "https://www.analog.com/media/en/technical-documentation/data-sheets/AD5160.pdf" H 3900 6100 50  0001 C CNN
+F 4 "Analog Devices" H 4100 6100 50  0001 C CNN "MPN"
+F 5 "AD5160BRJZ10-R2" H 4100 6100 50  0001 C CNN "Manufacturer"
+F 6 "SPI Digital potentiometer 10k" H 4100 6100 50  0001 C CNN "Description"
 	1    4100 6100
 	1    0    0    -1  
 $EndComp
@@ -930,7 +928,7 @@ F 1 "TLP2361_TPL_E" H 10250 1500 60  0000 L CNN
 F 2 "digikey-footprints:SOIC-6-5_W4.55mm" H 10300 1900 60  0001 L CNN
 F 3 "https://toshiba.semicon-storage.com/info/docget.jsp?did=14229&prodName=TLP2361" H 10300 2000 60  0001 L CNN
 F 4 "TLP2361(TPLECT-ND" H 10300 2100 60  0001 L CNN "Digi-Key_PN"
-F 5 "TLP2361(TPL,E" H 10300 2200 60  0001 L CNN "MPN"
+F 5 "TLP2361-TPLECT" H 10300 2200 60  0001 L CNN "MPN"
 F 6 "Isolators" H 10300 2300 60  0001 L CNN "Category"
 F 7 "Optoisolators - Logic Output" H 10300 2400 60  0001 L CNN "Family"
 F 8 "https://toshiba.semicon-storage.com/info/docget.jsp?did=14229&prodName=TLP2361" H 10300 2500 60  0001 L CNN "DK_Datasheet_Link"
@@ -972,7 +970,7 @@ F 1 "TLP2361_TPL_E" H 10250 3200 60  0000 L CNN
 F 2 "digikey-footprints:SOIC-6-5_W4.55mm" H 10300 3600 60  0001 L CNN
 F 3 "https://toshiba.semicon-storage.com/info/docget.jsp?did=14229&prodName=TLP2361" H 10300 3700 60  0001 L CNN
 F 4 "TLP2361(TPLECT-ND" H 10300 3800 60  0001 L CNN "Digi-Key_PN"
-F 5 "TLP2361(TPL,E" H 10300 3900 60  0001 L CNN "MPN"
+F 5 "TLP2361-TPLECT" H 10300 3900 60  0001 L CNN "MPN"
 F 6 "Isolators" H 10300 4000 60  0001 L CNN "Category"
 F 7 "Optoisolators - Logic Output" H 10300 4100 60  0001 L CNN "Family"
 F 8 "https://toshiba.semicon-storage.com/info/docget.jsp?did=14229&prodName=TLP2361" H 10300 4200 60  0001 L CNN "DK_Datasheet_Link"
@@ -1055,7 +1053,7 @@ L Device:C_Small C407
 U 1 1 5D198B7B
 P 10250 1200
 F 0 "C407" V 10021 1200 50  0000 C CNN
-F 1 "100n" V 10112 1200 50  0000 C CNN
+F 1 "100n/50V" V 10112 1200 50  0000 C CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 10250 1200 50  0001 C CNN
 F 3 "~" H 10250 1200 50  0001 C CNN
 	1    10250 1200
@@ -1066,7 +1064,7 @@ L Device:C_Small C408
 U 1 1 5D1990C7
 P 10250 2800
 F 0 "C408" V 10021 2800 50  0000 C CNN
-F 1 "100n" V 10112 2800 50  0000 C CNN
+F 1 "100n/50V" V 10112 2800 50  0000 C CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 10250 2800 50  0001 C CNN
 F 3 "~" H 10250 2800 50  0001 C CNN
 	1    10250 2800
@@ -1144,6 +1142,7 @@ F 0 "J409" H 1850 6817 50  0000 C CNN
 F 1 "ServoCon" H 1850 6726 50  0000 C CNN
 F 2 "Connector_PinHeader_2.54mm:PinHeader_2x03_P2.54mm_Vertical" H 1800 6500 50  0001 C CNN
 F 3 "~" H 1800 6500 50  0001 C CNN
+F 4 "-prod" H 1800 6500 50  0001 C CNN "Config"
 	1    1800 6500
 	1    0    0    -1  
 $EndComp
@@ -1258,4 +1257,39 @@ Wire Wire Line
 	4900 1800 4850 1800
 Text GLabel 4850 1800 0    50   Input ~ 0
 PWM1
+$Comp
+L Connector:Screw_Terminal_01x04 J404
+U 1 1 5E67202C
+P 3750 2400
+F 0 "J404" H 3830 2392 50  0000 L CNN
+F 1 "HC_OUT" H 3830 2301 50  0000 L CNN
+F 2 "TerminalBlock_Phoenix:TerminalBlock_Phoenix_PT-1,5-4-5.0-H_1x04_P5.00mm_Horizontal" H 3750 2400 50  0001 C CNN
+F 3 "~" H 3750 2400 50  0001 C CNN
+	1    3750 2400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3550 2300 3500 2300
+Wire Wire Line
+	3500 2300 3500 1000
+Wire Wire Line
+	3500 1000 2700 1000
+Wire Wire Line
+	2700 1550 3400 1550
+Wire Wire Line
+	3400 1550 3400 2400
+Wire Wire Line
+	3400 2400 3550 2400
+Wire Wire Line
+	2700 2950 3400 2950
+Wire Wire Line
+	3400 2950 3400 2500
+Wire Wire Line
+	3400 2500 3550 2500
+Wire Wire Line
+	3550 2600 3500 2600
+Wire Wire Line
+	3500 2600 3500 3400
+Wire Wire Line
+	3500 3400 2700 3400
 $EndSCHEMATC

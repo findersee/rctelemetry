@@ -5,8 +5,8 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 3 4
 Title "RC Telemetry board"
-Date "2020-02-12"
-Rev "0.2"
+Date "2020-02-23"
+Rev "1.1"
 Comp "www.findersee.fi"
 Comment1 "https://github.com/findersee/rctelemetry"
 Comment2 ""
@@ -18,21 +18,14 @@ L Sensor_Current:ACS770xCB-100U-PSF U302
 U 1 1 5CE3A7DE
 P 6750 2100
 F 0 "U302" H 6800 2350 50  0000 L CNN
-F 1 "ACS770xCB-100U-PSF" H 6800 1850 50  0000 L CNN
+F 1 "ACS758LCB-100B-PFF-T" H 6800 1850 50  0000 L CNN
 F 2 "PCBDecals:Allegro_PFF" H 6750 2100 50  0001 C CNN
 F 3 "http://www.allegromicro.com/~/media/Files/Datasheets/ACS758-Datasheet.ashx?la=en" H 6750 2100 50  0001 C CNN
+F 4 "-prod" H 6750 2100 50  0001 C CNN "Config"
+F 5 "ACS758LCB-100B-PFF-T" H 6750 2100 50  0001 C CNN "MPN"
+F 6 "Allegro" H 6750 2100 50  0001 C CNN "Manufacturer"
+F 7 "Thermally Enhanced, Fully Integrated, Hall-Effect-Based Linear Current Sensor IC with 100 µΩ Current Conductor" H 6750 2100 50  0001 C CNN "Description"
 	1    6750 2100
-	1    0    0    -1  
-$EndComp
-$Comp
-L Sensor_Current:ACS770xCB-100U-PSF U304
-U 1 1 5CE3A9FD
-P 6650 4350
-F 0 "U304" H 6700 4600 50  0000 L CNN
-F 1 "ACS770xCB-100U-PSF" H 6700 4100 50  0000 L CNN
-F 2 "PCBDecals:Allegro_PFF" H 6650 4350 50  0001 C CNN
-F 3 "http://www.allegromicro.com/~/media/Files/Datasheets/ACS758-Datasheet.ashx?la=en" H 6650 4350 50  0001 C CNN
-	1    6650 4350
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -119,6 +112,7 @@ F 0 "J301" H 7180 2742 50  0000 L CNN
 F 1 "Conn_01x02" H 7180 2651 50  0000 L CNN
 F 2 "PCBDecals:2Pin_4mm" H 7100 2750 50  0001 C CNN
 F 3 "~" H 7100 2750 50  0001 C CNN
+F 4 "-prod" H 7100 2750 50  0001 C CNN "Config"
 	1    7100 2750
 	1    0    0    -1  
 $EndComp
@@ -130,6 +124,7 @@ F 0 "J302" H 7180 5042 50  0000 L CNN
 F 1 "Conn_01x02" H 7180 4951 50  0000 L CNN
 F 2 "PCBDecals:2Pin_4mm" H 7100 5050 50  0001 C CNN
 F 3 "~" H 7100 5050 50  0001 C CNN
+F 4 "-prod" H 7100 5050 50  0001 C CNN "Config"
 	1    7100 5050
 	1    0    0    -1  
 $EndComp
@@ -268,62 +263,36 @@ ESC1_CURRENT_OUT
 $Comp
 L Device:C_Small C303
 U 1 1 5CE5A73F
-P 7000 1750
-F 0 "C303" V 6771 1750 50  0000 C CNN
-F 1 "100n" V 6862 1750 50  0000 C CNN
-F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 7000 1750 50  0001 C CNN
-F 3 "~" H 7000 1750 50  0001 C CNN
-	1    7000 1750
+P 7150 1750
+F 0 "C303" V 6921 1750 50  0000 C CNN
+F 1 "100n/50V" V 7012 1750 50  0000 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 7150 1750 50  0001 C CNN
+F 3 "~" H 7150 1750 50  0001 C CNN
+	1    7150 1750
 	0    1    1    0   
-$EndComp
-$Comp
-L Device:C_Small C306
-U 1 1 5CE5A7C1
-P 6850 4000
-F 0 "C306" V 6621 4000 50  0000 C CNN
-F 1 "100n" V 6712 4000 50  0000 C CNN
-F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 6850 4000 50  0001 C CNN
-F 3 "~" H 6850 4000 50  0001 C CNN
-	1    6850 4000
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR0313
-U 1 1 5CE5A8D9
-P 7050 4050
-F 0 "#PWR0313" H 7050 3800 50  0001 C CNN
-F 1 "GND" H 7055 3877 50  0000 C CNN
-F 2 "" H 7050 4050 50  0001 C CNN
-F 3 "" H 7050 4050 50  0001 C CNN
-	1    7050 4050
-	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR0305
 U 1 1 5CE5A980
-P 7200 1800
-F 0 "#PWR0305" H 7200 1550 50  0001 C CNN
-F 1 "GND" H 7205 1627 50  0000 C CNN
-F 2 "" H 7200 1800 50  0001 C CNN
-F 3 "" H 7200 1800 50  0001 C CNN
-	1    7200 1800
+P 7300 1800
+F 0 "#PWR0305" H 7300 1550 50  0001 C CNN
+F 1 "GND" H 7305 1627 50  0000 C CNN
+F 2 "" H 7300 1800 50  0001 C CNN
+F 3 "" H 7300 1800 50  0001 C CNN
+	1    7300 1800
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	7100 1750 7200 1750
+	7250 1750 7300 1750
 Wire Wire Line
-	7200 1750 7200 1800
+	7300 1750 7300 1800
 Wire Wire Line
-	6900 1750 6750 1750
+	7050 1750 6750 1750
 Connection ~ 6750 1750
 Wire Wire Line
 	6750 1750 6750 1800
 Wire Wire Line
-	6950 4000 7050 4000
-Wire Wire Line
-	7050 4000 7050 4050
-Wire Wire Line
-	6750 4000 6650 4000
+	6850 4000 6650 4000
 Connection ~ 6650 4000
 Wire Wire Line
 	6650 4000 6650 4050
@@ -382,7 +351,7 @@ L Device:C_Small C307
 U 1 1 5CE649B1
 P 8000 5200
 F 0 "C307" V 7771 5200 50  0000 C CNN
-F 1 "100n" V 7862 5200 50  0000 C CNN
+F 1 "100n/50V" V 7862 5200 50  0000 C CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 8000 5200 50  0001 C CNN
 F 3 "~" H 8000 5200 50  0001 C CNN
 	1    8000 5200
@@ -428,7 +397,7 @@ L Device:C_Small C304
 U 1 1 5CE68FD1
 P 8050 2900
 F 0 "C304" V 7821 2900 50  0000 C CNN
-F 1 "100n" V 7912 2900 50  0000 C CNN
+F 1 "100n/50V" V 7912 2900 50  0000 C CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 8050 2900 50  0001 C CNN
 F 3 "~" H 8050 2900 50  0001 C CNN
 	1    8050 2900
@@ -491,10 +460,10 @@ F 3 "" H 3700 1600 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	3700 1600 3700 1550
-Text GLabel 4850 1050 2    50   Output ~ 0
+Text GLabel 5550 1050 2    50   Output ~ 0
 +5VA
 Wire Wire Line
-	4850 1050 4600 1050
+	5550 1050 4950 1050
 $Comp
 L power:VCC #PWR0301
 U 1 1 5CEBEF98
@@ -606,18 +575,21 @@ F 0 "U301" H 3700 1492 50  0000 C CNN
 F 1 "LP2985-5.0" H 3700 1401 50  0000 C CNN
 F 2 "TO_SOT_Packages_SMD:SOT-23-5_HandSoldering" H 3700 1475 50  0001 C CNN
 F 3 "http://www.ti.com/lit/ds/symlink/lp2985.pdf" H 3700 1150 50  0001 C CNN
+F 4 "Texas Instruments" H 3700 1150 50  0001 C CNN "Manufacturer"
+F 5 "LP2985-5.0" H 3700 1150 50  0001 C CNN "MPN"
+F 6 "Micropower 150-mA Low-Noise Ultra-Low-Dropout Regulator" H 3700 1150 50  0001 C CNN "Description"
 	1    3700 1150
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	4100 1050 4600 1050
-Connection ~ 4600 1050
+	4100 1050 4950 1050
+Connection ~ 4950 1050
 $Comp
 L Device:C_Small C302
 U 1 1 5CEBF878
 P 4250 1350
 F 0 "C302" H 4342 1396 50  0000 L CNN
-F 1 "10n" H 4342 1305 50  0000 L CNN
+F 1 "10n/50V" H 4342 1305 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 4250 1350 50  0001 C CNN
 F 3 "~" H 4250 1350 50  0001 C CNN
 	1    4250 1350
@@ -631,7 +603,7 @@ Wire Wire Line
 	4250 1450 4250 1550
 Connection ~ 4250 1550
 Wire Wire Line
-	4250 1550 4600 1550
+	4250 1550 4950 1550
 Wire Wire Line
 	3300 1050 3150 1050
 Connection ~ 2950 1050
@@ -647,7 +619,7 @@ L Device:C_Small C301
 U 1 1 5CEB3613
 P 2950 1350
 F 0 "C301" H 2858 1304 50  0000 R CNN
-F 1 "1u" H 2858 1395 50  0000 R CNN
+F 1 "1u/35V" H 2858 1395 50  0000 R CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 2950 1350 50  0001 C CNN
 F 3 "~" H 2950 1350 50  0001 C CNN
 	1    2950 1350
@@ -656,18 +628,18 @@ $EndComp
 $Comp
 L Device:C_Small C309
 U 1 1 5CEC8EFA
-P 4600 1350
-F 0 "C309" H 4508 1304 50  0000 R CNN
-F 1 "2u2" H 4508 1395 50  0000 R CNN
-F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 4600 1350 50  0001 C CNN
-F 3 "~" H 4600 1350 50  0001 C CNN
-	1    4600 1350
+P 4950 1350
+F 0 "C309" H 4858 1304 50  0000 R CNN
+F 1 "2u2/10V" H 4858 1395 50  0000 R CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 4950 1350 50  0001 C CNN
+F 3 "~" H 4950 1350 50  0001 C CNN
+	1    4950 1350
 	-1   0    0    1   
 $EndComp
 Wire Wire Line
-	4600 1050 4600 1250
+	4950 1050 4950 1250
 Wire Wire Line
-	4600 1450 4600 1550
+	4950 1450 4950 1550
 Wire Wire Line
 	3700 1450 3700 1550
 Wire Wire Line
@@ -686,6 +658,8 @@ F 0 "U303" H 7950 3450 50  0000 L CNN
 F 1 "MCP6001-OT" H 7950 3050 50  0001 L CNN
 F 2 "TO_SOT_Packages_SMD:SOT-23-5_HandSoldering" H 7850 3050 50  0001 L CNN
 F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/21733j.pdf" H 7950 3450 50  0001 C CNN
+F 4 "Microchip" H 7950 3250 50  0001 C CNN "Manufacturer"
+F 5 "MCP6001-OT" H 7950 3250 50  0001 C CNN "MPN"
 	1    7950 3250
 	1    0    0    -1  
 $EndComp
@@ -697,7 +671,50 @@ F 0 "U305" H 7850 5750 50  0000 L CNN
 F 1 "MCP6001-OT" H 7850 5350 50  0001 L CNN
 F 2 "TO_SOT_Packages_SMD:SOT-23-5_HandSoldering" H 7750 5350 50  0001 L CNN
 F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/21733j.pdf" H 7850 5750 50  0001 C CNN
+F 4 "MCP6001-OT" H 7850 5550 50  0001 C CNN "MPN"
+F 5 "Microchip" H 7850 5550 50  0001 C CNN "Manufacturer"
 	1    7850 5550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7150 4000 7150 4050
+Wire Wire Line
+	7050 4000 7150 4000
+$Comp
+L power:GND #PWR0313
+U 1 1 5CE5A8D9
+P 7150 4050
+F 0 "#PWR0313" H 7150 3800 50  0001 C CNN
+F 1 "GND" H 7155 3877 50  0000 C CNN
+F 2 "" H 7150 4050 50  0001 C CNN
+F 3 "" H 7150 4050 50  0001 C CNN
+	1    7150 4050
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C_Small C306
+U 1 1 5CE5A7C1
+P 6950 4000
+F 0 "C306" V 6721 4000 50  0000 C CNN
+F 1 "100n/50V" V 6812 4000 50  0000 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 6950 4000 50  0001 C CNN
+F 3 "~" H 6950 4000 50  0001 C CNN
+	1    6950 4000
+	0    1    1    0   
+$EndComp
+$Comp
+L Sensor_Current:ACS770xCB-100U-PSF U304
+U 1 1 5CE3A9FD
+P 6650 4350
+F 0 "U304" H 6700 4600 50  0000 L CNN
+F 1 "ACS758LCB-100B-PFF-T" H 6700 4100 50  0000 L CNN
+F 2 "PCBDecals:Allegro_PFF" H 6650 4350 50  0001 C CNN
+F 3 "http://www.allegromicro.com/~/media/Files/Datasheets/ACS758-Datasheet.ashx?la=en" H 6650 4350 50  0001 C CNN
+F 4 "-prod" H 6650 4350 50  0001 C CNN "Config"
+F 5 "ACS758LCB-100B-PFF-T" H 6650 4350 50  0001 C CNN "MPN"
+F 6 "Allegro" H 6650 4350 50  0001 C CNN "Manufacturer"
+F 7 "Thermally Enhanced, Fully Integrated, Hall-Effect-Based Linear Current Sensor IC with 100 µΩ Current Conductor" H 6650 4350 50  0001 C CNN "Description"
+	1    6650 4350
 	1    0    0    -1  
 $EndComp
 $EndSCHEMATC
