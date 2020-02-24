@@ -5,7 +5,7 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 2 4
 Title "RC Telemetry board"
-Date "2020-02-23"
+Date "2020-02-24"
 Rev "1.1"
 Comp "www.findersee.fi"
 Comment1 "https://github.com/findersee/rctelemetry"
@@ -19,7 +19,7 @@ U 1 1 5CE222A1
 P 5600 4500
 F 0 "U202" H 5600 4999 50  0000 C CNN
 F 1 "RT6200" H 5600 4915 40  0000 C CNN
-F 2 "TO_SOT_Packages_SMD:SOT-23-6_Handsoldering" H 5600 4500 50  0001 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-6_Handsoldering" H 5600 4500 50  0001 C CNN
 F 3 "https://www.richtek.com/assets/product_file/RT6200/DS6200-04.pdf" H 5600 4500 50  0001 C CNN
 F 4 "RT6200" H 5600 4500 50  0001 C CNN "MPN"
 F 5 "Richtek Tech" H 5600 4500 50  0001 C CNN "Manufacturer"

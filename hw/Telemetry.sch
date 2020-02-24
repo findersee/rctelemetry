@@ -5,7 +5,7 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 4
 Title "RC Telemetry board"
-Date "2020-02-23"
+Date "2020-02-24"
 Rev "1.1"
 Comp "www.findersee.fi"
 Comment1 "https://github.com/findersee/rctelemetry"
@@ -1165,4 +1165,5 @@ F 3 "~" H 750 1150 50  0001 C CNN
 	1    750  1150
 	1    0    0    -1  
 $EndComp
+NoConn ~ 6150 4600
 $EndSCHEMATC
