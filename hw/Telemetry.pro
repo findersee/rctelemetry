@@ -1,4 +1,4 @@
-update=24.2.2020 22.17.34
+update=25.2.2020 18.02.22
 version=1
 last_client=kicad
 [general]
@@ -251,6 +251,17 @@ dPairWidth=0.17
 dPairGap=0.2
 dPairViaGap=0.25
 [pcbnew/Netclasses/1]
+Name=Analog Meas
+Clearance=0.16
+TrackWidth=0.25
+ViaDiameter=0.65
+ViaDrill=0.3
+uViaDiameter=0.3
+uViaDrill=0.1
+dPairWidth=0.17
+dPairGap=0.2
+dPairViaGap=0.25
+[pcbnew/Netclasses/2]
 Name=USB
 Clearance=0.2
 TrackWidth=0.25
