@@ -473,11 +473,11 @@ X 2 2 200 0 100 L 50 50 0 1 P
 ENDDRAW
 ENDDEF
 #
-# Telemetry-rescue_AD5160BRJZ10-R2-Misc
+# Telemetry-rescue_AD5160BRJZ10-R2-Misc-Telemetry-rescue
 #
-DEF Telemetry-rescue_AD5160BRJZ10-R2-Misc U 0 40 Y Y 1 F N
+DEF Telemetry-rescue_AD5160BRJZ10-R2-Misc-Telemetry-rescue U 0 40 Y Y 1 F N
 F0 "U" 0 300 50 H V C CNN
-F1 "Telemetry-rescue_AD5160BRJZ10-R2-Misc" 0 400 50 H I C CNN
+F1 "Telemetry-rescue_AD5160BRJZ10-R2-Misc-Telemetry-rescue" 0 400 50 H I C CNN
 F2 "" -200 0 50 H I C CNN
 F3 "" -200 0 50 H I C CNN
 DRAW
@@ -493,11 +493,11 @@ X A 8 400 50 200 L 50 50 1 1 B
 ENDDRAW
 ENDDEF
 #
-# Telemetry-rescue_AP1501-K5-Misc
+# Telemetry-rescue_AP1501-K5-Misc-Telemetry-rescue
 #
-DEF Telemetry-rescue_AP1501-K5-Misc U 0 40 Y Y 1 F N
+DEF Telemetry-rescue_AP1501-K5-Misc-Telemetry-rescue U 0 40 Y Y 1 F N
 F0 "U" -100 200 50 H V C CNN
-F1 "Telemetry-rescue_AP1501-K5-Misc" 100 -300 50 H V C CNN
+F1 "Telemetry-rescue_AP1501-K5-Misc-Telemetry-rescue" 100 -300 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -510,11 +510,11 @@ X ~SD 5 -350 -50 200 R 50 50 1 1 I
 ENDDRAW
 ENDDEF
 #
-# Telemetry-rescue_IS25LP032D-Misc
+# Telemetry-rescue_IS25LP032D-Misc-Telemetry-rescue
 #
-DEF Telemetry-rescue_IS25LP032D-Misc U 0 40 Y Y 1 F N
+DEF Telemetry-rescue_IS25LP032D-Misc-Telemetry-rescue U 0 40 Y Y 1 F N
 F0 "U" 0 450 50 H V C CNN
-F1 "Telemetry-rescue_IS25LP032D-Misc" 0 550 50 H V C CNN
+F1 "Telemetry-rescue_IS25LP032D-Misc-Telemetry-rescue" 0 550 50 H V C CNN
 F2 "" -100 -150 50 H I C CNN
 F3 "" -100 -150 50 H I C CNN
 DRAW
@@ -530,11 +530,11 @@ X VCC 8 -450 350 200 R 50 50 1 1 W
 ENDDRAW
 ENDDEF
 #
-# Telemetry-rescue_MCP1416-Driver_FET
+# Telemetry-rescue_MCP1416-Driver_FET-Telemetry-rescue
 #
-DEF Telemetry-rescue_MCP1416-Driver_FET U 0 40 Y Y 1 F N
+DEF Telemetry-rescue_MCP1416-Driver_FET-Telemetry-rescue U 0 40 Y Y 1 F N
 F0 "U" -200 250 50 H V L CNN
-F1 "Telemetry-rescue_MCP1416-Driver_FET" 50 250 50 H V L CNN
+F1 "Telemetry-rescue_MCP1416-Driver_FET-Telemetry-rescue" 50 250 50 H V L CNN
 F2 "Package_TO_SOT_SMD:SOT-23-5" 0 -400 50 H I C CIN
 F3 "" -200 250 50 H I C CNN
 $FPLIST
@@ -550,11 +550,11 @@ X OUT 5 400 0 100 L 50 50 1 1 O
 ENDDRAW
 ENDDEF
 #
-# Telemetry-rescue_RT6200-Misc
+# Telemetry-rescue_RT6200-Misc-Telemetry-rescue
 #
-DEF Telemetry-rescue_RT6200-Misc U 0 20 Y Y 1 F N
+DEF Telemetry-rescue_RT6200-Misc-Telemetry-rescue U 0 20 Y Y 1 F N
 F0 "U" -200 400 50 H V C CNN
-F1 "Telemetry-rescue_RT6200-Misc" 0 -250 40 H V C CNN
+F1 "Telemetry-rescue_RT6200-Misc-Telemetry-rescue" 0 -250 40 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -571,11 +571,11 @@ X PHASE 6 350 100 100 L 50 50 1 1 w
 ENDDRAW
 ENDDEF
 #
-# Telemetry-rescue_SG-310_SCF_8.000000MHZ-Misc
+# Telemetry-rescue_SG-310_SCF_8.000000MHZ-Misc-Telemetry-rescue
 #
-DEF Telemetry-rescue_SG-310_SCF_8.000000MHZ-Misc X 0 40 Y Y 1 F N
+DEF Telemetry-rescue_SG-310_SCF_8.000000MHZ-Misc-Telemetry-rescue X 0 40 Y Y 1 F N
 F0 "X" 100 250 50 H V C CNN
-F1 "Telemetry-rescue_SG-310_SCF_8.000000MHZ-Misc" 550 -250 50 H I C CNN
+F1 "Telemetry-rescue_SG-310_SCF_8.000000MHZ-Misc-Telemetry-rescue" 550 -250 50 H I C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -588,11 +588,11 @@ X Vdd 4 0 300 100 D 50 40 1 1 W
 ENDDRAW
 ENDDEF
 #
-# Telemetry-rescue_STM32F303CBx-Misc
+# Telemetry-rescue_STM32F303CBx-Misc-Telemetry-rescue
 #
-DEF Telemetry-rescue_STM32F303CBx-Misc U 0 40 Y Y 1 F N
+DEF Telemetry-rescue_STM32F303CBx-Misc-Telemetry-rescue U 0 40 Y Y 1 F N
 F0 "U" 300 2250 50 H V C CNN
-F1 "Telemetry-rescue_STM32F303CBx-Misc" -400 2250 50 H V L CNN
+F1 "Telemetry-rescue_STM32F303CBx-Misc-Telemetry-rescue" -400 2250 50 H V L CNN
 F2 "" 750 1850 50 H I C CNN
 F3 "" 750 1850 50 H I C CNN
 DRAW

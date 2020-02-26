@@ -60,7 +60,9 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define ERROR_LED_Pin GPIO_PIN_13
+#define FLASH_CS_Pin GPIO_PIN_13
+#define FLASH_CS_GPIO_Port GPIOC
+#define ERROR_LED_Pin GPIO_PIN_15
 #define ERROR_LED_GPIO_Port GPIOC
 #define ESC1_VOLTAGE_Pin GPIO_PIN_0
 #define ESC1_VOLTAGE_GPIO_Port GPIOA
@@ -72,20 +74,26 @@ void Error_Handler(void);
 #define ESC2_CURRENT_GPIO_Port GPIOA
 #define DAC_OUT_Pin GPIO_PIN_4
 #define DAC_OUT_GPIO_Port GPIOA
+#define FLASH_SCK_Pin GPIO_PIN_5
+#define FLASH_SCK_GPIO_Port GPIOA
+#define FLASH_MISO_Pin GPIO_PIN_6
+#define FLASH_MISO_GPIO_Port GPIOA
+#define FLASH_MOSI_Pin GPIO_PIN_7
+#define FLASH_MOSI_GPIO_Port GPIOA
 #define IN1_Pin GPIO_PIN_0
 #define IN1_GPIO_Port GPIOB
 #define OUT2_Pin GPIO_PIN_1
 #define OUT2_GPIO_Port GPIOB
 #define OUT1_Pin GPIO_PIN_2
 #define OUT1_GPIO_Port GPIOB
-#define WP_Pin GPIO_PIN_11
-#define WP_GPIO_Port GPIOB
+#define FLASH_WP_Pin GPIO_PIN_11
+#define FLASH_WP_GPIO_Port GPIOB
 #define BAT_VOLTAGE_Pin GPIO_PIN_12
 #define BAT_VOLTAGE_GPIO_Port GPIOB
 #define AMP_CS_Pin GPIO_PIN_14
 #define AMP_CS_GPIO_Port GPIOB
-#define SPI_CS_Pin GPIO_PIN_8
-#define SPI_CS_GPIO_Port GPIOA
+#define FLASH_HOLD_Pin GPIO_PIN_8
+#define FLASH_HOLD_GPIO_Port GPIOA
 #define Sport_UART_Pin GPIO_PIN_9
 #define Sport_UART_GPIO_Port GPIOA
 #define USB_ENUMERATE_Pin GPIO_PIN_10

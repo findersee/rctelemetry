@@ -496,14 +496,6 @@ U 5CEA3FFC
 F0 "Outputs" 50
 F1 "output.sch" 50
 $EndSheet
-Text Label 8550 1500 0    50   ~ 0
-SPI_SCK
-Text Label 8550 1300 0    50   ~ 0
-SPI_MISO
-Text Label 8550 1400 0    50   ~ 0
-SPI_MOSI
-Text Label 8550 1200 0    50   ~ 0
-SPI_CS
 Wire Wire Line
 	6150 2500 6050 2500
 Wire Wire Line
@@ -597,11 +589,7 @@ F 3 "" H 10100 4750 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	6050 4000 6150 4000
-Wire Wire Line
-	8250 1200 8250 1800
 Connection ~ 9000 3700
-Wire Wire Line
-	8250 1200 9500 1200
 $Comp
 L power:+3V3 #PWR0101
 U 1 1 5CEF7FBB
@@ -613,35 +601,34 @@ F 3 "" H 9500 700 50  0001 C CNN
 	1    9500 700 
 	1    0    0    -1  
 $EndComp
-NoConn ~ 9500 1650
 $Comp
 L Device:LED D101
 U 1 1 5CF14422
-P 7100 4400
-F 0 "D101" H 7091 4616 50  0000 C CNN
-F 1 "LED_Green" H 7091 4525 50  0000 C CNN
-F 2 "LEDs:LED_0603_HandSoldering" H 7100 4400 50  0001 C CNN
-F 3 "~" H 7100 4400 50  0001 C CNN
-	1    7100 4400
+P 6800 4600
+F 0 "D101" H 6791 4816 50  0000 C CNN
+F 1 "LED_Green" H 6791 4725 50  0000 C CNN
+F 2 "LEDs:LED_0603_HandSoldering" H 6800 4600 50  0001 C CNN
+F 3 "~" H 6800 4600 50  0001 C CNN
+	1    6800 4600
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:+3V3 #PWR0125
 U 1 1 5CF145CC
-P 7650 4300
-F 0 "#PWR0125" H 7650 4150 50  0001 C CNN
-F 1 "+3V3" H 7665 4473 50  0000 C CNN
-F 2 "" H 7650 4300 50  0001 C CNN
-F 3 "" H 7650 4300 50  0001 C CNN
-	1    7650 4300
+P 7350 4500
+F 0 "#PWR0125" H 7350 4350 50  0001 C CNN
+F 1 "+3V3" H 7365 4673 50  0000 C CNN
+F 2 "" H 7350 4500 50  0001 C CNN
+F 3 "" H 7350 4500 50  0001 C CNN
+	1    7350 4500
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	7650 4300 7650 4400
+	7350 4500 7350 4600
 Wire Wire Line
-	7650 4400 7250 4400
+	7350 4600 6950 4600
 $Comp
-L Telemetry-rescue:STM32F303CBx-Misc U101
+L Telemetry-rescue:STM32F303CBx-Misc-Telemetry-rescue U101
 U 1 1 5CE38426
 P 5450 3100
 F 0 "U101" H 5450 5465 50  0000 C CNN
@@ -653,23 +640,21 @@ F 5 "STM32F303CB" H 5450 3100 50  0001 C CNN "MPN"
 	1    5450 3100
 	1    0    0    -1  
 $EndComp
-Text Notes 7200 4500 0    50   ~ 0
+Text Notes 6900 4700 0    50   ~ 0
 ERROR LED
 $Comp
 L Device:R R103
 U 1 1 5CF2EC11
-P 6600 4400
-F 0 "R103" V 6500 4400 50  0000 C CNN
-F 1 "470R" V 6600 4400 50  0000 C CNN
-F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" V 6530 4400 50  0001 C CNN
-F 3 "~" H 6600 4400 50  0001 C CNN
-	1    6600 4400
+P 6300 4600
+F 0 "R103" V 6200 4600 50  0000 C CNN
+F 1 "470R" V 6300 4600 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" V 6230 4600 50  0001 C CNN
+F 3 "~" H 6300 4600 50  0001 C CNN
+	1    6300 4600
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	6950 4400 6750 4400
-Wire Wire Line
-	6050 4400 6450 4400
+	6650 4600 6450 4600
 $Comp
 L Device:C_Small C106
 U 1 1 5CF3E241
@@ -686,21 +671,7 @@ Wire Wire Line
 Wire Wire Line
 	6050 1400 6200 1400
 Wire Wire Line
-	8250 1800 6050 1800
-Wire Wire Line
-	6050 1600 8050 1600
-Wire Wire Line
-	8050 1300 8050 1600
-Wire Wire Line
-	8150 1400 9500 1400
-Wire Wire Line
-	6050 1700 8150 1700
-Wire Wire Line
-	8150 1400 8150 1700
-Wire Wire Line
-	6050 1500 9500 1500
-Wire Wire Line
-	9500 1750 9400 1750
+	9500 1750 9450 1750
 $Comp
 L Mechanical:MountingHole MH101
 U 1 1 5CF43C55
@@ -753,8 +724,6 @@ Text GLabel 6200 1400 2    50   Output ~ 0
 DAC_OUT
 Text GLabel 6150 4100 2    50   Output ~ 0
 AMP_CS
-Wire Wire Line
-	6050 4600 6150 4600
 $Comp
 L Connector:TestPoint TP101
 U 1 1 5CED0971
@@ -820,7 +789,7 @@ $EndComp
 Wire Wire Line
 	1800 1850 1800 1900
 $Comp
-L Telemetry-rescue:SG-310_SCF_8.000000MHZ-Misc X101
+L Telemetry-rescue:SG-310_SCF_8.000000MHZ-Misc-Telemetry-rescue X101
 U 1 1 5CECEA0C
 P 3900 2000
 F 0 "X101" H 3950 2250 50  0000 L CNN
@@ -836,11 +805,9 @@ $EndComp
 Wire Wire Line
 	3450 1650 3900 1650
 Wire Wire Line
-	8050 1300 9500 1300
-Wire Wire Line
 	10400 1500 10400 1750
 $Comp
-L Telemetry-rescue:IS25LP032D-Misc U102
+L Telemetry-rescue:IS25LP032D-Misc-Telemetry-rescue U102
 U 1 1 5CF328C7
 P 9950 1400
 AR Path="/5CF328C7" Ref="U102"  Part="1" 
@@ -872,7 +839,6 @@ Text GLabel 6150 4000 2    50   Output ~ 0
 AMP_CLK
 Text GLabel 6150 4200 2    50   Output ~ 0
 AMP_DIN
-NoConn ~ 6050 4500
 NoConn ~ 10350 5200
 NoConn ~ 3550 2000
 Wire Wire Line
@@ -937,10 +903,10 @@ Text GLabel 6150 2500 2    50   Input ~ 0
 UART_RX
 Text GLabel 6900 3000 2    50   Output ~ 0
 UART_TX
-Text GLabel 9400 1750 0    50   Input ~ 0
-WP
+Text GLabel 9450 1750 0    50   Input ~ 0
+FLASH_WP
 Text GLabel 6150 3800 2    50   Output ~ 0
-WP
+FLASH_WP
 $Comp
 L Device:R R104
 U 1 1 5E4C8C09
@@ -1138,7 +1104,6 @@ F 3 "~" H 750 1150 50  0001 C CNN
 	1    750  1150
 	1    0    0    -1  
 $EndComp
-NoConn ~ 6150 4600
 $Comp
 L power:VCC #PWR0123
 U 1 1 5CE67EB7
@@ -1210,4 +1175,47 @@ F 4 "dnp" H 6100 5550 50  0001 C CNN "Config"
 $EndComp
 Wire Wire Line
 	6500 5750 6500 6050
+Wire Wire Line
+	6150 4600 6050 4600
+Text GLabel 6200 1800 2    50   Output ~ 0
+FLASH_HOLD
+Text GLabel 9450 1650 0    50   Input ~ 0
+FLASH_HOLD
+Wire Wire Line
+	9450 1650 9500 1650
+Text GLabel 6150 4400 2    50   Output ~ 0
+FLASH_CS
+Text GLabel 9450 1200 0    50   Input ~ 0
+FLASH_CS
+Text GLabel 6200 1500 2    50   Output ~ 0
+FLASH_SCK
+Text GLabel 6200 1700 2    50   Output ~ 0
+FLASH_MOSI
+Text GLabel 6200 1600 2    50   Input ~ 0
+FLASH_MISO
+Text GLabel 9450 1300 0    50   Output ~ 0
+FLASH_MISO
+Text GLabel 9450 1500 0    50   Input ~ 0
+FLASH_SCK
+Text GLabel 9450 1400 0    50   Input ~ 0
+FLASH_MOSI
+Wire Wire Line
+	9450 1200 9500 1200
+Wire Wire Line
+	9450 1300 9500 1300
+Wire Wire Line
+	9450 1400 9500 1400
+Wire Wire Line
+	9500 1500 9450 1500
+Wire Wire Line
+	6050 1500 6200 1500
+Wire Wire Line
+	6200 1600 6050 1600
+Wire Wire Line
+	6050 1700 6200 1700
+Wire Wire Line
+	6200 1800 6050 1800
+NoConn ~ 6050 4500
+Wire Wire Line
+	6150 4400 6050 4400
 $EndSCHEMATC

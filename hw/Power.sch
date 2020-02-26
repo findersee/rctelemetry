@@ -14,9 +14,11 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L Telemetry-rescue:RT6200-Misc U202
+L Telemetry-rescue:RT6200-Misc-Telemetry-rescue U202
 U 1 1 5CE222A1
 P 5600 4500
+AR Path="/5CE222A1" Ref="U202"  Part="1" 
+AR Path="/5CE22262/5CE222A1" Ref="U202"  Part="1" 
 F 0 "U202" H 5600 4999 50  0000 C CNN
 F 1 "RT6200" H 5600 4915 40  0000 C CNN
 F 2 "Package_TO_SOT_SMD:SOT-23-6_Handsoldering" H 5600 4500 50  0001 C CNN
@@ -291,7 +293,7 @@ L Device:R_Small R204
 U 1 1 5CE2DFB1
 P 6850 2350
 F 0 "R204" H 6909 2396 50  0000 L CNN
-F 1 "5k6" H 6909 2305 50  0000 L CNN
+F 1 "6k2" H 6909 2305 50  0000 L CNN
 F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 6850 2350 50  0001 C CNN
 F 3 "~" H 6850 2350 50  0001 C CNN
 	1    6850 2350
@@ -452,7 +454,7 @@ $EndComp
 Wire Wire Line
 	6100 5000 6100 5050
 Text Notes 6350 2900 0    50   ~ 0
-Voltage Set to 6.5\n\n
+Voltage Set to 6 V\n\n
 $Comp
 L Device:CP C201
 U 1 1 5CEBF5AB
@@ -560,9 +562,11 @@ Wire Wire Line
 Wire Wire Line
 	2900 4250 3500 4250
 $Comp
-L Telemetry-rescue:AP1501-K5-Misc U201
+L Telemetry-rescue:AP1501-K5-Misc-Telemetry-rescue U201
 U 1 1 5CE284E9
 P 5350 1950
+AR Path="/5CE284E9" Ref="U201"  Part="1" 
+AR Path="/5CE22262/5CE284E9" Ref="U201"  Part="1" 
 F 0 "U201" H 5475 2275 50  0000 C CNN
 F 1 "AP1501-K5" H 5475 2184 50  0000 C CNN
 F 2 "TO_SOT_Packages_SMD:TO-263-5_TabPin3" H 5350 1950 50  0001 C CNN
@@ -596,12 +600,12 @@ Wire Wire Line
 $Comp
 L Device:R_Small R201
 U 1 1 5CE2B122
-P 4600 2500
-F 0 "R201" H 4750 2550 50  0000 C CNN
-F 1 "10k" H 4750 2450 50  0000 C CNN
-F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" V 4530 2500 50  0001 C CNN
-F 3 "~" H 4600 2500 50  0001 C CNN
-	1    4600 2500
+P 4300 2500
+F 0 "R201" H 4450 2550 50  0000 C CNN
+F 1 "10k" H 4450 2450 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" V 4230 2500 50  0001 C CNN
+F 3 "~" H 4300 2500 50  0001 C CNN
+	1    4300 2500
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -609,16 +613,16 @@ Wire Wire Line
 $Comp
 L power:GND #PWR0215
 U 1 1 5E5D1E18
-P 4600 2750
-F 0 "#PWR0215" H 4600 2500 50  0001 C CNN
-F 1 "GND" H 4605 2577 50  0000 C CNN
-F 2 "" H 4600 2750 50  0001 C CNN
-F 3 "" H 4600 2750 50  0001 C CNN
-	1    4600 2750
+P 4300 2750
+F 0 "#PWR0215" H 4300 2500 50  0001 C CNN
+F 1 "GND" H 4305 2577 50  0000 C CNN
+F 2 "" H 4300 2750 50  0001 C CNN
+F 3 "" H 4300 2750 50  0001 C CNN
+	1    4300 2750
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	4600 2600 4600 2750
+	4300 2600 4300 2750
 $Comp
 L Device:C C210
 U 1 1 5E5D4A58
@@ -631,10 +635,10 @@ F 3 "~" H 4300 2050 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	4600 2200 4300 2200
-Connection ~ 4600 2200
+	4300 2250 4300 2200
+Connection ~ 4300 2250
 Wire Wire Line
-	4600 2200 4600 2400
+	4300 2250 4300 2400
 Wire Wire Line
 	4300 1900 4300 1850
 Connection ~ 4300 1850
@@ -787,9 +791,9 @@ Wire Wire Line
 Wire Wire Line
 	7450 4750 7450 5050
 Wire Wire Line
-	4600 2200 4850 2200
+	4300 2250 4850 2250
 Wire Wire Line
-	4850 2200 4850 2000
+	4850 2250 4850 2000
 Wire Wire Line
 	4850 2000 5000 2000
 $EndSCHEMATC

@@ -1239,17 +1239,24 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(ERROR_LED_GPIO_Port, ERROR_LED_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, FLASH_CS_Pin|ERROR_LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, OUT2_Pin|OUT1_Pin|WP_Pin|AMP_CS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, OUT2_Pin|OUT1_Pin|FLASH_WP_Pin|AMP_CS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, SPI_CS_Pin|USB_ENUMERATE_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, FLASH_HOLD_Pin|USB_ENUMERATE_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : FLASH_CS_Pin */
+  GPIO_InitStruct.Pin = FLASH_CS_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(FLASH_CS_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : ERROR_LED_Pin */
   GPIO_InitStruct.Pin = ERROR_LED_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(ERROR_LED_GPIO_Port, &GPIO_InitStruct);
@@ -1260,15 +1267,15 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : OUT2_Pin OUT1_Pin WP_Pin AMP_CS_Pin */
-  GPIO_InitStruct.Pin = OUT2_Pin|OUT1_Pin|WP_Pin|AMP_CS_Pin;
+  /*Configure GPIO pins : OUT2_Pin OUT1_Pin FLASH_WP_Pin AMP_CS_Pin */
+  GPIO_InitStruct.Pin = OUT2_Pin|OUT1_Pin|FLASH_WP_Pin|AMP_CS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : SPI_CS_Pin USB_ENUMERATE_Pin */
-  GPIO_InitStruct.Pin = SPI_CS_Pin|USB_ENUMERATE_Pin;
+  /*Configure GPIO pins : FLASH_HOLD_Pin USB_ENUMERATE_Pin */
+  GPIO_InitStruct.Pin = FLASH_HOLD_Pin|USB_ENUMERATE_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
