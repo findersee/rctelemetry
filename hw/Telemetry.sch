@@ -143,32 +143,6 @@ Wire Wire Line
 	4800 3750 4800 3650
 Connection ~ 4800 3650
 $Comp
-L Device:R R101
-U 1 1 5CE1F394
-P 3550 1100
-F 0 "R101" V 3450 1100 50  0000 C CNN
-F 1 "10k" V 3550 1100 50  0000 C CNN
-F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" V 3480 1100 50  0001 C CNN
-F 3 "~" H 3550 1100 50  0001 C CNN
-	1    3550 1100
-	0    1    1    0   
-$EndComp
-$Comp
-L power:+3V3 #PWR0103
-U 1 1 5CE1F49F
-P 3350 950
-F 0 "#PWR0103" H 3350 800 50  0001 C CNN
-F 1 "+3V3" H 3365 1123 50  0000 C CNN
-F 2 "" H 3350 950 50  0001 C CNN
-F 3 "" H 3350 950 50  0001 C CNN
-	1    3350 950 
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	3400 1100 3350 1100
-Wire Wire Line
-	3350 1100 3350 950 
-$Comp
 L Device:R R102
 U 1 1 5CE1FC54
 P 4600 1400
@@ -196,24 +170,6 @@ Wire Wire Line
 	4600 1200 4600 1250
 Wire Wire Line
 	4600 1550 4600 1600
-$Comp
-L Connector_Generic:Conn_01x02 J102
-U 1 1 5CE208B4
-P 3000 1200
-F 0 "J102" H 2920 875 50  0000 C CNN
-F 1 "BOOT0" H 2920 966 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch1.27mm" H 3000 1200 50  0001 C CNN
-F 3 "~" H 3000 1200 50  0001 C CNN
-F 4 "-prod" H 3000 1200 50  0001 C CNN "Config"
-	1    3000 1200
-	-1   0    0    1   
-$EndComp
-Wire Wire Line
-	3200 1100 3350 1100
-Connection ~ 3350 1100
-Wire Wire Line
-	4600 1200 3200 1200
-Connection ~ 4600 1200
 $Sheet
 S 1150 2300 1100 1000
 U 5CE22262
@@ -1218,4 +1174,48 @@ Wire Wire Line
 NoConn ~ 6050 4500
 Wire Wire Line
 	6150 4400 6050 4400
+Connection ~ 4600 1200
+Wire Wire Line
+	4600 1200 3200 1200
+Connection ~ 3350 1100
+Wire Wire Line
+	3200 1100 3350 1100
+$Comp
+L Connector_Generic:Conn_01x02 J102
+U 1 1 5CE208B4
+P 3000 1200
+F 0 "J102" H 2920 875 50  0000 C CNN
+F 1 "BOOT0" H 2920 966 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch1.27mm" H 3000 1200 50  0001 C CNN
+F 3 "~" H 3000 1200 50  0001 C CNN
+F 4 "-prod" H 3000 1200 50  0001 C CNN "Config"
+	1    3000 1200
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	3350 1100 3350 950 
+Wire Wire Line
+	3400 1100 3350 1100
+$Comp
+L power:+3V3 #PWR0103
+U 1 1 5CE1F49F
+P 3350 950
+F 0 "#PWR0103" H 3350 800 50  0001 C CNN
+F 1 "+3V3" H 3365 1123 50  0000 C CNN
+F 2 "" H 3350 950 50  0001 C CNN
+F 3 "" H 3350 950 50  0001 C CNN
+	1    3350 950 
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R101
+U 1 1 5CE1F394
+P 3550 1100
+F 0 "R101" V 3450 1100 50  0000 C CNN
+F 1 "10k" V 3550 1100 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" V 3480 1100 50  0001 C CNN
+F 3 "~" H 3550 1100 50  0001 C CNN
+	1    3550 1100
+	0    1    1    0   
+$EndComp
 $EndSCHEMATC

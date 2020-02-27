@@ -1294,7 +1294,8 @@ static void MX_GPIO_Init(void)
 #define currentScaling 0.6f
 #define voltageScaling 0.15f
 //#define ADC_step (3.3f/4095)
-float ADC_step = (3.3f/4095);
+#define ADC_Bits 12
+float ADC_step = (3.3f/(2^ADC_Bits));
 
 
 
@@ -1895,7 +1896,7 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
-	HAL_GPIO_WritePin(ERROR_LED_GPIO_Port, ERROR_LED_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(ERROR_LED_GPIO_Port, ERROR_LED_Pin, GPIO_PIN_SET);
 	while(1){
 	asm("nop");
 	}
