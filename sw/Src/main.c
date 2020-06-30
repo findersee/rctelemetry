@@ -396,7 +396,7 @@ static void MX_ADC1_Init(void)
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
   hadc1.Init.NbrOfConversion = 5;
   hadc1.Init.DMAContinuousRequests = DISABLE;
-  hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  hadc1.Init.EOCSelection = ADC_EOC_SEQ_CONV;
   hadc1.Init.LowPowerAutoWait = DISABLE;
   hadc1.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN;
   if (HAL_ADC_Init(&hadc1) != HAL_OK)
@@ -1618,7 +1618,10 @@ void StartPower(void const * argument)
 	powerMessage *msgPtr;
 
 	float temp = 0.0f;
-	powerQueue = xQueueCreate(1,sizeof(powerMessage * ));
+	while(powerQueue == NULL){
+		powerQueue = xQueueCreate(1,sizeof(powerMessage * ));
+		osDelay(10);
+	}
   /* Infinite loop */
   for(;;)
   {
@@ -1689,9 +1692,9 @@ void StartPower(void const * argument)
 
 		 power_new.ESC1_powerValue = (power_new.ESC1_currentValue*power_new.ESC1_voltageValue);
 		 power_new.ESC2_powerValue = (power_new.ESC2_currentValue*power_new.ESC2_voltageValue);
-		 msgPtr = & power_new;
-		 if(powerQueue != NULL)
-			 xQueueOverwrite(powerQueue,( void * ) &msgPtr);
+		 msgPtr = &power_new;
+
+		 xQueueOverwrite(powerQueue,( void * ) &msgPtr);
 		 osDelay(1000);
 
   }
@@ -1714,7 +1717,6 @@ void StartBattVoltage(void const * argument)
 	while(battQueue == NULL){
 		battQueue = xQueueCreate(1,sizeof(BatteryMessage * ));
 		osDelay(10);
-
 	}
 	/* Infinite loop */
 	for(;;)
@@ -1727,9 +1729,9 @@ void StartBattVoltage(void const * argument)
 	temp = (temp*ADC_step);
 	temp /= 0.15f ;
 	Bat.value = 100*temp;
-	msgPtr = & Bat;
-	if(battQueue != NULL)
-		xQueueOverwrite(battQueue,( void * ) &msgPtr);
+	msgPtr = &Bat;
+
+	xQueueOverwrite(battQueue,( void * ) &msgPtr);
 	osDelay(1000);
 	}
   /* USER CODE END StartBattVoltage */

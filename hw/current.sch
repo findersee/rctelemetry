@@ -19,7 +19,7 @@ U 1 1 5CE3A7DE
 P 2700 3550
 F 0 "U302" H 2750 3800 50  0000 L CNN
 F 1 "ACS758LCB-100B-PFF-T" H 2750 3300 50  0000 L CNN
-F 2 "PCBDecals:Allegro_PFF" H 2700 3550 50  0001 C CNN
+F 2 "Sensor_Current:Allegro_CB_PFF" H 2700 3550 50  0001 C CNN
 F 3 "http://www.allegromicro.com/~/media/Files/Datasheets/ACS758-Datasheet.ashx?la=en" H 2700 3550 50  0001 C CNN
 F 4 "-prod" H 2700 3550 50  0001 C CNN "Config"
 F 5 "ACS758LCB-100B-PFF-T" H 2700 3550 50  0001 C CNN "MPN"
@@ -659,7 +659,7 @@ U 1 1 5CE3A9FD
 P 7400 3600
 F 0 "U304" H 7450 3850 50  0000 L CNN
 F 1 "ACS758LCB-100B-PFF-T" H 7450 3350 50  0000 L CNN
-F 2 "PCBDecals:Allegro_PFF" H 7400 3600 50  0001 C CNN
+F 2 "Sensor_Current:Allegro_CB_PFF" H 7400 3600 50  0001 C CNN
 F 3 "http://www.allegromicro.com/~/media/Files/Datasheets/ACS758-Datasheet.ashx?la=en" H 7400 3600 50  0001 C CNN
 F 4 "-prod" H 7400 3600 50  0001 C CNN "Config"
 F 5 "ACS758LCB-100B-PFF-T" H 7400 3600 50  0001 C CNN "MPN"
