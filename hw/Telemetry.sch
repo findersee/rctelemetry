@@ -269,7 +269,6 @@ Wire Wire Line
 	9050 4000 8900 4000
 Wire Wire Line
 	8900 4000 8900 3900
-Connection ~ 8900 3900
 Wire Wire Line
 	9050 4100 8800 4100
 Wire Wire Line
@@ -399,9 +398,6 @@ F 3 "" H 10400 1850 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	8900 2700 8900 3900
-Connection ~ 8900 2700
-Wire Wire Line
 	8800 2900 8800 4100
 Connection ~ 8800 4100
 Wire Wire Line
@@ -516,7 +512,7 @@ U 1 1 5CE9AC78
 P 8900 2200
 F 0 "JP101" V 8946 2153 50  0000 R CNN
 F 1 "Jumper_NC_Small" V 8855 2153 50  0000 R CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 8900 2200 50  0001 C CNN
+F 2 "Connector_PinHeader_1.27mm:PinHeader_1x02_P1.27mm_Vertical" H 8900 2200 50  0001 C CNN
 F 3 "~" H 8900 2200 50  0001 C CNN
 F 4 "-prod" H 8900 2200 50  0001 C CNN "Config"
 	1    8900 2200
@@ -939,10 +935,8 @@ Wire Wire Line
 Connection ~ 4800 3750
 Wire Wire Line
 	4800 3750 4800 3950
-Text Notes 5000 7400 0    67   ~ 13
+Text Notes 4700 7350 0    67   ~ 13
 Changes to 1.0\n
-Text Notes 5000 7700 0    50   ~ 0
-Added 1k5 enumeration resistor\nRemoved 2 servo channels\nChanged UART Configurations for SBUS and S.port
 Text GLabel 9900 5000 0    50   BiDi ~ 0
 USB_D+
 Text GLabel 9900 5100 0    50   BiDi ~ 0
@@ -1218,4 +1212,34 @@ F 3 "~" H 3550 1100 50  0001 C CNN
 	1    3550 1100
 	0    1    1    0   
 $EndComp
+$Comp
+L Device:Jumper_NC_Small JP104
+U 1 1 5F08C822
+P 8900 3400
+F 0 "JP104" V 8946 3353 50  0000 R CNN
+F 1 "Jumper_NC_Small" V 8855 3353 50  0000 R CNN
+F 2 "Connector_PinHeader_1.27mm:PinHeader_1x02_P1.27mm_Vertical" H 8900 3400 50  0001 C CNN
+F 3 "~" H 8900 3400 50  0001 C CNN
+F 4 "-prod" H 8900 3400 50  0001 C CNN "Config"
+	1    8900 3400
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:VCC #PWR0145
+U 1 1 5F08D4E4
+P 8900 3200
+F 0 "#PWR0145" H 8900 3050 50  0001 C CNN
+F 1 "VCC" H 8917 3373 50  0000 C CNN
+F 2 "" H 8900 3200 50  0001 C CNN
+F 3 "" H 8900 3200 50  0001 C CNN
+	1    8900 3200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8900 3200 8900 3300
+Wire Wire Line
+	8900 3500 8900 3900
+Connection ~ 8900 3900
+Text Notes 4700 7700 0    50   ~ 0
+Added 1k5 enumeration resistor\nRemoved 2 servo channels\nChanged UART Configurations for SBUS and S.port\nChanged current sensor PCB decal pinout to correct one
 $EndSCHEMATC

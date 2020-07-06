@@ -444,7 +444,7 @@ U 1 1 5CE95F20
 P 1350 5250
 F 0 "JP401" V 1396 5203 50  0000 R CNN
 F 1 "Jumper_NC_Small" V 1305 5203 50  0000 R CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 1350 5250 50  0001 C CNN
+F 2 "Connector_PinHeader_1.27mm:PinHeader_1x02_P1.27mm_Vertical" H 1350 5250 50  0001 C CNN
 F 3 "~" H 1350 5250 50  0001 C CNN
 F 4 "-prod" H 1350 5250 50  0001 C CNN "Config"
 	1    1350 5250
